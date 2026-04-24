@@ -62,9 +62,15 @@
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
+  --radius: 0.5rem;
+  --background: oklch(0.985 0.005 240);
+  --foreground: oklch(0.18 0.03 250);
+  --clinical-alert: oklch(0.55 0.22 27);
+  --clinical-alert-bg: oklch(0.96 0.05 27);
+  --clinical-warn: oklch(0.78 0.16 85);
+  --clinical-warn-bg: oklch(0.97 0.06 90);
+  --clinical-ok: oklch(0.6 0.13 160);
+  --clinical-ok-bg: oklch(0.96 0.04 160);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.129 0.042 264.695);
   --popover: oklch(1 0 0);
