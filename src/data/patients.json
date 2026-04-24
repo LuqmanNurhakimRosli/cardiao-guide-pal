@@ -1,0 +1,137 @@
+[
+  {
+    "patient_id": "P001",
+    "name": "Aminah binti Ibrahim",
+    "age": 78,
+    "sex": "female",
+    "clinic_location": "Cardiology Clinic",
+    "diagnoses": ["I48.0", "E11.9", "I10"],
+    "ecg_results": ["AF"],
+    "medications": [
+      { "name": "Apixaban", "indication": "AF", "dose": "5 mg BD" },
+      { "name": "Metformin", "indication": "Diabetes", "dose": "1 g BD" },
+      { "name": "Amlodipine", "indication": "HTN", "dose": "10 mg OD" }
+    ],
+    "vitals": { "bp_latest": "150/95", "bp_second": "148/92", "weight": 55 },
+    "labs": {
+      "creatinine": 140,
+      "creatinine_unit": "umol/L",
+      "hba1c": 8.2,
+      "inr_history": []
+    },
+    "comorbidities": {
+      "chf": false,
+      "hypertension": true,
+      "diabetes": true,
+      "stroke": false,
+      "vascular": true
+    }
+  },
+  {
+    "patient_id": "P002",
+    "name": "Tan Wei Ming",
+    "age": 82,
+    "sex": "male",
+    "clinic_location": "Cardiology Clinic",
+    "diagnoses": ["I48.1", "I50.9"],
+    "ecg_results": ["AF"],
+    "medications": [
+      { "name": "Warfarin", "indication": "AF", "dose": "3 mg OD" },
+      { "name": "Bisoprolol", "indication": "AF rate control", "dose": "5 mg OD" }
+    ],
+    "vitals": { "bp_latest": "138/82", "bp_second": "135/80", "weight": 70 },
+    "labs": {
+      "creatinine": 110,
+      "creatinine_unit": "umol/L",
+      "hba1c": 6.4,
+      "inr_history": [1.4, 3.6, 2.1, 1.7, 3.8]
+    },
+    "comorbidities": {
+      "chf": true,
+      "hypertension": true,
+      "diabetes": false,
+      "stroke": true,
+      "vascular": false
+    }
+  },
+  {
+    "patient_id": "P003",
+    "name": "Devi a/p Ramasamy",
+    "age": 68,
+    "sex": "female",
+    "clinic_location": "Cardiology Clinic",
+    "diagnoses": ["I48.2"],
+    "ecg_results": ["AF"],
+    "medications": [
+      { "name": "Dabigatran", "indication": "AF", "dose": "150 mg BD" }
+    ],
+    "vitals": { "bp_latest": "128/78", "bp_second": "130/80", "weight": 62 },
+    "labs": { "creatinine": 180, "creatinine_unit": "umol/L", "hba1c": 5.9 },
+    "comorbidities": {
+      "chf": false,
+      "hypertension": true,
+      "diabetes": false,
+      "stroke": false,
+      "vascular": false
+    }
+  },
+  {
+    "patient_id": "P004",
+    "name": "Lim Chee Keong",
+    "age": 71,
+    "sex": "male",
+    "clinic_location": "Cardiology Clinic",
+    "diagnoses": ["I25.10"],
+    "ecg_results": ["Sinus rhythm"],
+    "medications": [
+      { "name": "Aspirin", "indication": "IHD", "dose": "100 mg OD" }
+    ],
+    "vitals": { "bp_latest": "142/88", "bp_second": "144/90", "weight": 80 },
+    "labs": { "creatinine": 95, "creatinine_unit": "umol/L" },
+    "comorbidities": {
+      "chf": false,
+      "hypertension": true,
+      "diabetes": false,
+      "stroke": false,
+      "vascular": true
+    }
+  },
+  {
+    "patient_id": "P005",
+    "name": "Siti Noraini",
+    "age": 76,
+    "sex": "female",
+    "clinic_location": "Cardiology Clinic",
+    "diagnoses": ["I48.0"],
+    "ecg_results": ["AF"],
+    "medications": [
+      { "name": "Rivaroxaban", "indication": "AF", "dose": "20 mg OD" }
+    ],
+    "vitals": { "bp_latest": "152/94", "bp_second": "150/96", "weight": 58 },
+    "labs": {
+      "creatinine": 165,
+      "creatinine_unit": "umol/L",
+      "hba1c": 7.4
+    },
+    "comorbidities": {
+      "chf": true,
+      "hypertension": true,
+      "diabetes": true,
+      "stroke": false,
+      "vascular": false
+    }
+  },
+  {
+    "patient_id": "P006",
+    "name": "Zainab (PCM Clinic)",
+    "age": 70,
+    "sex": "female",
+    "clinic_location": "PCM Clinic",
+    "diagnoses": ["I48.0"],
+    "ecg_results": ["AF"],
+    "medications": [{ "name": "Warfarin", "indication": "AF" }],
+    "vitals": { "bp_latest": "130/80", "bp_second": "128/78", "weight": 65 },
+    "labs": { "creatinine": 90, "creatinine_unit": "umol/L", "inr_history": [2.4] },
+    "comorbidities": { "chf": false, "hypertension": true, "diabetes": false, "stroke": false, "vascular": false }
+  }
+]
