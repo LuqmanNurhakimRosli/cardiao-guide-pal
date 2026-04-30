@@ -1,7 +1,6 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { z } from "zod";
 import {
-  listPatients,
   getPatientWithCdss,
 } from "@/cdss/server.functions";
 import { AppShell } from "@/components/cdss/AppShell";
@@ -15,10 +14,11 @@ export const Route = createFileRoute("/")({
   validateSearch: searchSchema,
   loaderDeps: ({ search }) => ({ p: search.p }),
   loader: async ({ deps }) => {
-    const patients = await listPatients();
-    const patient_id = deps.p ?? patients[0].patient_id;
-    const current = await getPatientWithCdss({ data: { patient_id } });
-    return { patients, current };
+    if (!deps.p) {
+      throw redirect({ to: "/patients" });
+    }
+    const current = await getPatientWithCdss({ data: { patient_id: deps.p } });
+    return { current };
   },
   component: PatientDashboard,
 });
