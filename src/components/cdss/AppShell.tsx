@@ -1,4 +1,4 @@
-import { Link, useLocation, useSearch } from "@tanstack/react-router";
+import { Link, useLocation } from "@tanstack/react-router";
 import { Heart, LayoutDashboard, Bell, FileText, Users, ClipboardList } from "lucide-react";
 import type { ReactNode } from "react";
 
@@ -104,8 +104,3 @@ export function AppShell({
   );
 }
 
-// helper to read ?p= search param with default
-export function useSelectedPatient(fallback: string): string {
-  const search = useSearch({ strict: false }) as { p?: string };
-  return search.p ?? fallback;
-}
