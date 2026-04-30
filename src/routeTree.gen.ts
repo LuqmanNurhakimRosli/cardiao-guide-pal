@@ -11,8 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SummaryRouteImport } from './routes/summary'
 import { Route as AuditRouteImport } from './routes/audit'
-import { Route as AlertsRouteImport } from './routes/alerts'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AlertsIndexRouteImport } from './routes/alerts.index'
 import { Route as AlertsAlertIdOverrideRouteImport } from './routes/alerts.$alertId.override'
 import { Route as AlertsAlertIdDeferRouteImport } from './routes/alerts.$alertId.defer'
 import { Route as AlertsAlertIdAcceptRouteImport } from './routes/alerts.$alertId.accept'
@@ -27,14 +27,14 @@ const AuditRoute = AuditRouteImport.update({
   path: '/audit',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AlertsRoute = AlertsRouteImport.update({
-  id: '/alerts',
-  path: '/alerts',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AlertsIndexRoute = AlertsIndexRouteImport.update({
+  id: '/alerts/',
+  path: '/alerts/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AlertsAlertIdOverrideRoute = AlertsAlertIdOverrideRouteImport.update({
@@ -55,18 +55,18 @@ const AlertsAlertIdAcceptRoute = AlertsAlertIdAcceptRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/alerts': typeof AlertsRouteWithChildren
   '/audit': typeof AuditRoute
   '/summary': typeof SummaryRoute
+  '/alerts/': typeof AlertsIndexRoute
   '/alerts/$alertId/accept': typeof AlertsAlertIdAcceptRoute
   '/alerts/$alertId/defer': typeof AlertsAlertIdDeferRoute
   '/alerts/$alertId/override': typeof AlertsAlertIdOverrideRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/alerts': typeof AlertsRouteWithChildren
   '/audit': typeof AuditRoute
   '/summary': typeof SummaryRoute
+  '/alerts': typeof AlertsIndexRoute
   '/alerts/$alertId/accept': typeof AlertsAlertIdAcceptRoute
   '/alerts/$alertId/defer': typeof AlertsAlertIdDeferRoute
   '/alerts/$alertId/override': typeof AlertsAlertIdOverrideRoute
@@ -74,9 +74,9 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/alerts': typeof AlertsRouteWithChildren
   '/audit': typeof AuditRoute
   '/summary': typeof SummaryRoute
+  '/alerts/': typeof AlertsIndexRoute
   '/alerts/$alertId/accept': typeof AlertsAlertIdAcceptRoute
   '/alerts/$alertId/defer': typeof AlertsAlertIdDeferRoute
   '/alerts/$alertId/override': typeof AlertsAlertIdOverrideRoute
@@ -85,27 +85,27 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/alerts'
     | '/audit'
     | '/summary'
+    | '/alerts/'
     | '/alerts/$alertId/accept'
     | '/alerts/$alertId/defer'
     | '/alerts/$alertId/override'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/alerts'
     | '/audit'
     | '/summary'
+    | '/alerts'
     | '/alerts/$alertId/accept'
     | '/alerts/$alertId/defer'
     | '/alerts/$alertId/override'
   id:
     | '__root__'
     | '/'
-    | '/alerts'
     | '/audit'
     | '/summary'
+    | '/alerts/'
     | '/alerts/$alertId/accept'
     | '/alerts/$alertId/defer'
     | '/alerts/$alertId/override'
@@ -113,9 +113,9 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AlertsRoute: typeof AlertsRouteWithChildren
   AuditRoute: typeof AuditRoute
   SummaryRoute: typeof SummaryRoute
+  AlertsIndexRoute: typeof AlertsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -134,18 +134,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuditRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/alerts': {
-      id: '/alerts'
-      path: '/alerts'
-      fullPath: '/alerts'
-      preLoaderRoute: typeof AlertsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/alerts/': {
+      id: '/alerts/'
+      path: '/alerts'
+      fullPath: '/alerts/'
+      preLoaderRoute: typeof AlertsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/alerts/$alertId/override': {
@@ -172,26 +172,11 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface AlertsRouteChildren {
-  AlertsAlertIdAcceptRoute: typeof AlertsAlertIdAcceptRoute
-  AlertsAlertIdDeferRoute: typeof AlertsAlertIdDeferRoute
-  AlertsAlertIdOverrideRoute: typeof AlertsAlertIdOverrideRoute
-}
-
-const AlertsRouteChildren: AlertsRouteChildren = {
-  AlertsAlertIdAcceptRoute: AlertsAlertIdAcceptRoute,
-  AlertsAlertIdDeferRoute: AlertsAlertIdDeferRoute,
-  AlertsAlertIdOverrideRoute: AlertsAlertIdOverrideRoute,
-}
-
-const AlertsRouteWithChildren =
-  AlertsRoute._addFileChildren(AlertsRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AlertsRoute: AlertsRouteWithChildren,
   AuditRoute: AuditRoute,
   SummaryRoute: SummaryRoute,
+  AlertsIndexRoute: AlertsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -17,7 +17,7 @@ import type { ClinicianAction, CdssAlert } from "@/cdss/types";
 
 const searchSchema = z.object({ p: z.string().optional() });
 
-export const Route = createFileRoute("/alerts")({
+export const Route = createFileRoute("/alerts/")({
   validateSearch: searchSchema,
   loaderDeps: ({ search }) => ({ p: search.p }),
   loader: async ({ deps }) => {
