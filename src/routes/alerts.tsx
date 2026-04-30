@@ -192,9 +192,6 @@ function AlertsReview() {
             </Button>
           </div>
         )}
-
-        {/* unused to satisfy linter — exposes quickLog if needed */}
-        <span className="hidden">{String(!!quickLog)}</span>
       </div>
     </AppShell>
   );
