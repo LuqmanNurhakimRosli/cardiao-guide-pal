@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SummaryRouteImport } from './routes/summary'
+import { Route as PatientsRouteImport } from './routes/patients'
 import { Route as AuditRouteImport } from './routes/audit'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AlertsIndexRouteImport } from './routes/alerts.index'
@@ -20,6 +21,11 @@ import { Route as AlertsAlertIdAcceptRouteImport } from './routes/alerts.$alertI
 const SummaryRoute = SummaryRouteImport.update({
   id: '/summary',
   path: '/summary',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PatientsRoute = PatientsRouteImport.update({
+  id: '/patients',
+  path: '/patients',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuditRoute = AuditRouteImport.update({
@@ -56,6 +62,7 @@ const AlertsAlertIdAcceptRoute = AlertsAlertIdAcceptRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/audit': typeof AuditRoute
+  '/patients': typeof PatientsRoute
   '/summary': typeof SummaryRoute
   '/alerts/': typeof AlertsIndexRoute
   '/alerts/$alertId/accept': typeof AlertsAlertIdAcceptRoute
@@ -65,6 +72,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/audit': typeof AuditRoute
+  '/patients': typeof PatientsRoute
   '/summary': typeof SummaryRoute
   '/alerts': typeof AlertsIndexRoute
   '/alerts/$alertId/accept': typeof AlertsAlertIdAcceptRoute
@@ -75,6 +83,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/audit': typeof AuditRoute
+  '/patients': typeof PatientsRoute
   '/summary': typeof SummaryRoute
   '/alerts/': typeof AlertsIndexRoute
   '/alerts/$alertId/accept': typeof AlertsAlertIdAcceptRoute
@@ -86,6 +95,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/audit'
+    | '/patients'
     | '/summary'
     | '/alerts/'
     | '/alerts/$alertId/accept'
@@ -95,6 +105,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/audit'
+    | '/patients'
     | '/summary'
     | '/alerts'
     | '/alerts/$alertId/accept'
@@ -104,6 +115,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/audit'
+    | '/patients'
     | '/summary'
     | '/alerts/'
     | '/alerts/$alertId/accept'
@@ -114,6 +126,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuditRoute: typeof AuditRoute
+  PatientsRoute: typeof PatientsRoute
   SummaryRoute: typeof SummaryRoute
   AlertsIndexRoute: typeof AlertsIndexRoute
 }
@@ -125,6 +138,13 @@ declare module '@tanstack/react-router' {
       path: '/summary'
       fullPath: '/summary'
       preLoaderRoute: typeof SummaryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/patients': {
+      id: '/patients'
+      path: '/patients'
+      fullPath: '/patients'
+      preLoaderRoute: typeof PatientsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/audit': {
@@ -175,6 +195,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuditRoute: AuditRoute,
+  PatientsRoute: PatientsRoute,
   SummaryRoute: SummaryRoute,
   AlertsIndexRoute: AlertsIndexRoute,
 }
