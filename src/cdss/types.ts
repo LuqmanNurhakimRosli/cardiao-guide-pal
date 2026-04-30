@@ -73,5 +73,7 @@ export interface AuditEntry {
   action: ClinicianAction;
   override_reason?: string;
   override_notes?: string;
+  defer_until?: string;
+  med_change?: { name: string; new_dose: string };
   timestamp: string;
 }
