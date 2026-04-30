@@ -77,7 +77,7 @@ function AlertsReview() {
 
 
   return (
-    <AppShell patients={patients} selectedId={patient.patient_id}>
+    <AppShell selectedId={patient.patient_id} selectedName={patient.name}>
       <div className="mx-auto max-w-4xl px-4 py-4">
         <div className="mb-4">
           <h1 className="text-lg font-bold">Clinician Review</h1>

@@ -24,6 +24,37 @@ export const listPatients = createServerFn({ method: "GET" }).handler(
   },
 );
 
+export const listPatientsWithAlerts = createServerFn({ method: "GET" }).handler(
+  async () => {
+    return patients.map((p) => {
+      const orders = medOrders[p.patient_id] ?? {};
+      const patched: Patient = {
+        ...p,
+        medications: p.medications.map((m) =>
+          orders[m.name] ? { ...m, dose: orders[m.name] } : m,
+        ),
+      };
+      const cdss = evaluate(patched);
+      const hasAF = cdss.hasAF;
+      return {
+        patient_id: p.patient_id,
+        name: p.name,
+        age: p.age,
+        sex: p.sex,
+        clinic_location: p.clinic_location,
+        af_status: hasAF
+          ? "AF"
+          : p.clinic_location !== "Cardiology Clinic"
+            ? "Not screened"
+            : "No AF",
+        alerts_count: cdss.alerts.length,
+        reminders_count: cdss.reminders.length,
+        executed: cdss.executed,
+      };
+    });
+  },
+);
+
 export const getPatientWithCdss = createServerFn({ method: "POST" })
   .inputValidator((d: { patient_id: string }) => d)
   .handler(async ({ data }) => {

@@ -1,7 +1,6 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { z } from "zod";
 import {
-  listPatients,
   getPatientWithCdss,
 } from "@/cdss/server.functions";
 import { AppShell } from "@/components/cdss/AppShell";
@@ -15,20 +14,21 @@ export const Route = createFileRoute("/")({
   validateSearch: searchSchema,
   loaderDeps: ({ search }) => ({ p: search.p }),
   loader: async ({ deps }) => {
-    const patients = await listPatients();
-    const patient_id = deps.p ?? patients[0].patient_id;
-    const current = await getPatientWithCdss({ data: { patient_id } });
-    return { patients, current };
+    if (!deps.p) {
+      throw redirect({ to: "/patients" });
+    }
+    const current = await getPatientWithCdss({ data: { patient_id: deps.p } });
+    return { current };
   },
   component: PatientDashboard,
 });
 
 function PatientDashboard() {
-  const { patients, current } = Route.useLoaderData();
+  const { current } = Route.useLoaderData();
   const { patient, cdss } = current;
 
   return (
-    <AppShell patients={patients} selectedId={patient.patient_id}>
+    <AppShell selectedId={patient.patient_id} selectedName={patient.name}>
       <div className="mx-auto max-w-[1600px] grid grid-cols-1 gap-4 px-4 py-4 lg:grid-cols-[260px_1fr_360px]">
         {/* LEFT */}
         <aside className="space-y-3">
