@@ -37,7 +37,7 @@ function SummaryPage() {
   );
 
   return (
-    <AppShell patients={patients} selectedId={patient.patient_id}>
+    <AppShell selectedId={patient.patient_id} selectedName={patient.name}>
       <div className="mx-auto max-w-5xl space-y-4 px-4 py-4">
         {/* Action Summary */}
         <div className="rounded-md border border-border bg-card p-4">

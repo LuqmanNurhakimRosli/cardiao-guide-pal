@@ -28,7 +28,7 @@ function PatientDashboard() {
   const { patient, cdss } = current;
 
   return (
-    <AppShell patients={patients} selectedId={patient.patient_id}>
+    <AppShell selectedId={patient.patient_id} selectedName={patient.name}>
       <div className="mx-auto max-w-[1600px] grid grid-cols-1 gap-4 px-4 py-4 lg:grid-cols-[260px_1fr_360px]">
         {/* LEFT */}
         <aside className="space-y-3">

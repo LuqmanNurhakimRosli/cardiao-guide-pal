@@ -23,7 +23,7 @@ function AuditPage() {
   const selectedId = search.p ?? patients[0].patient_id;
 
   return (
-    <AppShell patients={patients} selectedId={selectedId}>
+    <AppShell selectedId={selectedId}>
       <div className="mx-auto max-w-6xl px-4 py-4">
         <div className="mb-3">
           <h1 className="text-lg font-bold">Audit Log</h1>

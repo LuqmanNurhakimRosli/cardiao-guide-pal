@@ -53,7 +53,7 @@ function DeferFlow() {
   };
 
   return (
-    <AppShell patients={patients} selectedId={patient.patient_id}>
+    <AppShell selectedId={patient.patient_id} selectedName={patient.name}>
       <div className="mx-auto max-w-xl px-4 py-4">
         <Link to="/alerts" search={{ p: patient.patient_id }}>
           <Button variant="ghost" size="sm" className="mb-3">
