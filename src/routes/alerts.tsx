@@ -4,7 +4,6 @@ import { useState } from "react";
 import {
   listPatients,
   getPatientWithCdss,
-  logAction,
 } from "@/cdss/server.functions";
 import { AppShell } from "@/components/cdss/AppShell";
 import { Button } from "@/components/ui/button";
@@ -76,17 +75,6 @@ function AlertsReview() {
     navigate({ to: "/summary", search: { p: patient.patient_id } });
   };
 
-  // Quick log defer/accept for items that don't need a follow-up screen
-  const quickLog = async (al: CdssAlert, action: ClinicianAction) => {
-    await logAction({
-      data: {
-        patient_id: patient.patient_id,
-        alert_id: al.id,
-        alert_title: al.title,
-        action,
-      },
-    });
-  };
 
   return (
     <AppShell patients={patients} selectedId={patient.patient_id}>
