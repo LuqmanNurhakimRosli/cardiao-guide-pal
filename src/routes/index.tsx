@@ -24,7 +24,7 @@ export const Route = createFileRoute("/")({
 });
 
 function PatientDashboard() {
-  const { patients, current } = Route.useLoaderData();
+  const { current } = Route.useLoaderData();
   const { patient, cdss } = current;
 
   return (
