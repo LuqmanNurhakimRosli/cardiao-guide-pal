@@ -1,10 +1,14 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { useEffect, useRef } from "react";
 import { z } from "zod";
 import {
   getPatientWithCdss,
+  logScoreCalculation,
 } from "@/cdss/server.functions";
 import { AppShell } from "@/components/cdss/AppShell";
-import { HasBledCalculator } from "@/components/cdss/HasBledCalculator";
+import { HasBledCalculator, type HasBledState } from "@/components/cdss/HasBledCalculator";
+import { Cha2ds2VascHybrid, type Cha2VascState } from "@/components/cdss/Cha2ds2VascHybrid";
 import { Heart, Activity, FlaskConical, Pill, User, FileText, AlertTriangle, Info, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
