@@ -1,16 +1,10 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import type { Patient } from "@/cdss/types";
-import { Checkbox } from "@/components/ui/checkbox";
+import type { ClinicianInputs } from "@/cdss/usePatientState";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { CheckCircle2, PencilLine, AlertTriangle, Info } from "lucide-react";
 
 type Sex = "male" | "female";
-
-interface FieldState<T> {
-  value: T | undefined;
-  source: "emr" | "manual";
-}
 
 export interface Cha2VascState {
   total: number;
@@ -20,61 +14,46 @@ export interface Cha2VascState {
   threshold: string;
 }
 
-export function Cha2ds2VascHybrid({
-  patient,
-  onChange,
-}: {
-  patient: Patient;
-  onChange?: (s: Cha2VascState) => void;
-}) {
+interface Props {
+  patient: Patient; // raw EMR patient
+  draft: ClinicianInputs;
+  setField: <K extends keyof ClinicianInputs>(k: K, v: ClinicianInputs[K]) => void;
+}
+
+/**
+ * Resolve a field's effective value + source.
+ * - If clinician edited it → "manual"
+ * - Else if EMR has it → "emr"
+ * - Else → undefined (missing)
+ */
+function resolve<T>(
+  emrVal: T | undefined,
+  draftVal: T | undefined,
+): { value: T | undefined; source: "emr" | "manual" | "missing" } {
+  if (draftVal !== undefined && draftVal !== null) {
+    return { value: draftVal, source: "manual" };
+  }
+  if (emrVal !== undefined && emrVal !== null) {
+    return { value: emrVal, source: "emr" };
+  }
+  return { value: undefined, source: "missing" };
+}
+
+export function Cha2ds2VascHybrid({ patient, draft, setField }: Props) {
   const c = patient.comorbidities ?? {};
 
-  // Detect from EMR. A value is "from EMR" when explicitly defined.
-  const initial = useMemo(
-    () => ({
-      chf: { value: typeof c.chf === "boolean" ? c.chf : undefined, source: "emr" as const },
-      hypertension: {
-        value: typeof c.hypertension === "boolean" ? c.hypertension : undefined,
-        source: "emr" as const,
-      },
-      age: { value: typeof patient.age === "number" ? patient.age : undefined, source: "emr" as const },
-      diabetes: {
-        value: typeof c.diabetes === "boolean" ? c.diabetes : undefined,
-        source: "emr" as const,
-      },
-      stroke: {
-        value: typeof c.stroke === "boolean" ? c.stroke : undefined,
-        source: "emr" as const,
-      },
-      vascular: {
-        value: typeof c.vascular === "boolean" ? c.vascular : undefined,
-        source: "emr" as const,
-      },
-      sex: { value: patient.sex as Sex | undefined, source: "emr" as const },
-    }),
-    // patient identity is stable per render of this component instance
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [patient.patient_id],
-  );
+  const chf = resolve<boolean>(c.chf, draft.chf);
+  const htn = resolve<boolean>(c.hypertension, draft.hypertension);
+  const dm = resolve<boolean>(c.diabetes, draft.diabetes);
+  const stroke = resolve<boolean>(c.stroke, draft.stroke);
+  const vasc = resolve<boolean>(c.vascular, draft.vascular);
+  const age = resolve<number>(patient.age, draft.age);
+  const sex = resolve<Sex>(patient.sex, draft.sex);
 
-  const [chf, setChf] = useState<FieldState<boolean>>(initial.chf);
-  const [htn, setHtn] = useState<FieldState<boolean>>(initial.hypertension);
-  const [age, setAge] = useState<FieldState<number>>(initial.age);
-  const [dm, setDm] = useState<FieldState<boolean>>(initial.diabetes);
-  const [stroke, setStroke] = useState<FieldState<boolean>>(initial.stroke);
-  const [vasc, setVasc] = useState<FieldState<boolean>>(initial.vascular);
-  const [sex, setSex] = useState<FieldState<Sex>>(initial.sex);
-
-  const fields = { chf, htn, age, dm, stroke, vasc, sex };
-
-  const complete =
-    chf.value !== undefined &&
-    htn.value !== undefined &&
-    age.value !== undefined &&
-    dm.value !== undefined &&
-    stroke.value !== undefined &&
-    vasc.value !== undefined &&
-    sex.value !== undefined;
+  const fields = [chf, htn, dm, stroke, vasc, age, sex];
+  const complete = fields.every((f) => f.value !== undefined);
+  const anyManual = fields.some((f) => f.source === "manual");
+  const allManual = fields.every((f) => f.source === "manual");
 
   const totals = useMemo(() => {
     const breakdown: Record<string, number> = {
@@ -88,15 +67,16 @@ export function Cha2ds2VascHybrid({
       "Vascular disease": vasc.value ? 1 : 0,
       Female: sex.value === "female" ? 1 : 0,
     };
-    const total = Object.values(breakdown).reduce((s, v) => s + v, 0);
-    return { breakdown, total };
-  }, [chf, htn, age, dm, stroke, vasc, sex]);
+    return {
+      breakdown,
+      total: Object.values(breakdown).reduce((s, v) => s + v, 0),
+    };
+  }, [chf.value, htn.value, age.value, dm.value, stroke.value, vasc.value, sex.value]);
 
-  const anyManual = Object.values(fields).some((f) => f.source === "manual");
   const source: Cha2VascState["source"] = !complete
     ? "hybrid"
     : anyManual
-      ? Object.values(fields).every((f) => f.source === "manual")
+      ? allManual
         ? "manual"
         : "hybrid"
       : "auto";
@@ -107,22 +87,10 @@ export function Cha2ds2VascHybrid({
     ((sex.value === "male" && totals.total >= 2) ||
       (sex.value === "female" && totals.total >= 3));
 
-  // notify parent (avoid loop: depend only on primitives)
-  useMemo(() => {
-    onChange?.({
-      total: totals.total,
-      source,
-      complete,
-      highRisk,
-      threshold,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [totals.total, source, complete, highRisk, threshold]);
-
   return (
     <div className="rounded-md border border-border bg-card p-3">
       <div className="mb-2 flex items-center justify-between">
-        <h3 className="text-sm font-semibold">CHA₂DS₂-VASc (hybrid)</h3>
+        <h3 className="text-sm font-semibold">CHA₂DS₂-VASc (hybrid · live)</h3>
         <span
           className={`rounded px-2 py-0.5 text-xs font-bold ${
             highRisk
@@ -130,7 +98,8 @@ export function Cha2ds2VascHybrid({
               : "bg-muted text-muted-foreground"
           }`}
         >
-          Score: {complete ? totals.total : "—"}
+          Score: {totals.total}
+          {!complete && " *"}
         </span>
       </div>
 
@@ -140,64 +109,69 @@ export function Cha2ds2VascHybrid({
         <div className="mb-2 flex items-start gap-1.5 rounded border border-[var(--clinical-warn)] bg-[var(--clinical-warn-bg)] px-2 py-1.5 text-xs">
           <AlertTriangle className="mt-0.5 size-3.5 shrink-0 text-[var(--clinical-warn)]" />
           <span>
-            <strong>Incomplete data detected.</strong> Manual input required for
-            highlighted fields.
+            <strong>Incomplete data.</strong> Score below assumes "No" for missing
+            fields — confirm each before saving.
           </span>
         </div>
       )}
 
       <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
-        <BoolField
+        <YesNoField
           label="CHF / LV dysfunction"
-          state={chf}
-          onChange={(v) => setChf({ value: v, source: "manual" })}
+          value={chf.value}
+          source={chf.source}
+          onChange={(v) => setField("chf", v)}
         />
-        <BoolField
+        <YesNoField
           label="Hypertension"
-          state={htn}
-          onChange={(v) => setHtn({ value: v, source: "manual" })}
+          value={htn.value}
+          source={htn.source}
+          onChange={(v) => setField("hypertension", v)}
         />
         <NumField
           label="Age (years)"
-          state={age}
-          onChange={(v) => setAge({ value: v, source: "manual" })}
+          value={age.value}
+          source={age.source}
+          onChange={(v) => setField("age", v)}
         />
-        <BoolField
+        <YesNoField
           label="Diabetes"
-          state={dm}
-          onChange={(v) => setDm({ value: v, source: "manual" })}
+          value={dm.value}
+          source={dm.source}
+          onChange={(v) => setField("diabetes", v)}
         />
-        <BoolField
+        <YesNoField
           label="Stroke / TIA"
-          state={stroke}
-          onChange={(v) => setStroke({ value: v, source: "manual" })}
+          value={stroke.value}
+          source={stroke.source}
+          onChange={(v) => setField("stroke", v)}
         />
-        <BoolField
+        <YesNoField
           label="Vascular disease"
-          state={vasc}
-          onChange={(v) => setVasc({ value: v, source: "manual" })}
+          value={vasc.value}
+          source={vasc.source}
+          onChange={(v) => setField("vascular", v)}
         />
         <SexField
-          state={sex}
-          onChange={(v) => setSex({ value: v, source: "manual" })}
+          value={sex.value}
+          source={sex.source}
+          onChange={(v) => setField("sex", v)}
         />
       </div>
 
-      {complete && (
-        <div className="mt-2 grid grid-cols-2 gap-1 text-[11px] sm:grid-cols-4">
-          {Object.entries(totals.breakdown).map(([k, v]) => (
-            <div
-              key={k}
-              className={`flex items-center justify-between rounded px-1.5 py-0.5 ${
-                v > 0 ? "bg-muted font-medium" : "text-muted-foreground"
-              }`}
-            >
-              <span>{k}</span>
-              <span>+{v}</span>
-            </div>
-          ))}
-        </div>
-      )}
+      <div className="mt-2 grid grid-cols-2 gap-1 text-[11px] sm:grid-cols-4">
+        {Object.entries(totals.breakdown).map(([k, v]) => (
+          <div
+            key={k}
+            className={`flex items-center justify-between rounded px-1.5 py-0.5 ${
+              v > 0 ? "bg-muted font-medium" : "text-muted-foreground"
+            }`}
+          >
+            <span>{k}</span>
+            <span>+{v}</span>
+          </div>
+        ))}
+      </div>
 
       {highRisk && (
         <p className="mt-2 text-xs font-medium text-[var(--clinical-alert)]">
@@ -215,7 +189,7 @@ export function Cha2ds2VascHybrid({
   );
 }
 
-export function SourceLabel({
+function SourceLabel({
   source,
   complete,
 }: {
@@ -234,71 +208,70 @@ export function SourceLabel({
       ? "✅ Auto-calculated from EMR data"
       : source === "manual"
         ? "✏️ Fully completed by clinician"
-        : "🟡 Partially completed by clinician";
-  return (
-    <p
-      className="mb-2 text-[11px] font-medium"
-      title="This score is partially auto-calculated. Please confirm missing inputs."
-    >
-      {label}
-    </p>
-  );
+        : "🟡 Updated by clinician";
+  return <p className="mb-2 text-[11px] font-medium">{label}</p>;
 }
 
 function FieldChrome({
   label,
-  state,
+  source,
   children,
 }: {
   label: string;
-  state: FieldState<unknown>;
+  source: "emr" | "manual" | "missing";
   children: React.ReactNode;
 }) {
-  const isEmr = state.source === "emr" && state.value !== undefined;
-  const isMissing = state.value === undefined;
-  const ring = isMissing
-    ? "border-[var(--clinical-warn)] bg-[var(--clinical-warn-bg)]/40"
-    : isEmr
-      ? "border-[var(--clinical-ok)]/60 bg-[var(--clinical-ok-bg)]/30"
-      : "border-border bg-background";
+  const ring =
+    source === "missing"
+      ? "border-[var(--clinical-warn)] bg-[var(--clinical-warn-bg)]/40"
+      : source === "emr"
+        ? "border-[var(--clinical-ok)]/60 bg-[var(--clinical-ok-bg)]/30"
+        : "border-primary/60 bg-primary/5";
+  const Icon =
+    source === "missing"
+      ? AlertTriangle
+      : source === "emr"
+        ? CheckCircle2
+        : PencilLine;
+  const iconClass =
+    source === "missing"
+      ? "text-[var(--clinical-warn)]"
+      : source === "emr"
+        ? "text-[var(--clinical-ok)]"
+        : "text-primary";
   return (
     <div
       className={`flex items-center justify-between gap-2 rounded border px-2 py-1.5 text-xs ${ring}`}
     >
-      <div className="flex items-center gap-1.5">
-        {isMissing ? (
-          <PencilLine className="size-3 text-[var(--clinical-warn)]" />
-        ) : isEmr ? (
-          <CheckCircle2 className="size-3 text-[var(--clinical-ok)]" />
-        ) : (
-          <PencilLine className="size-3 text-muted-foreground" />
-        )}
-        <span>{label}</span>
+      <div className="flex min-w-0 items-center gap-1.5">
+        <Icon className={`size-3 shrink-0 ${iconClass}`} />
+        <span className="truncate">{label}</span>
       </div>
       {children}
     </div>
   );
 }
 
-function BoolField({
+function YesNoField({
   label,
-  state,
+  value,
+  source,
   onChange,
 }: {
   label: string;
-  state: FieldState<boolean>;
+  value: boolean | undefined;
+  source: "emr" | "manual" | "missing";
   onChange: (v: boolean) => void;
 }) {
   return (
-    <FieldChrome label={label} state={state}>
-      <div className="flex items-center gap-2">
-        <label className="flex cursor-pointer items-center gap-1">
-          <Checkbox
-            checked={state.value === true}
-            onCheckedChange={(c) => onChange(c === true)}
-          />
-          <span className="text-[10px] text-muted-foreground">Yes</span>
-        </label>
+    <FieldChrome label={label} source={source}>
+      <div className="flex gap-1">
+        <Pill active={value === true} onClick={() => onChange(true)}>
+          Yes
+        </Pill>
+        <Pill active={value === false} onClick={() => onChange(false)}>
+          No
+        </Pill>
       </div>
     </FieldChrome>
   );
@@ -306,18 +279,20 @@ function BoolField({
 
 function NumField({
   label,
-  state,
+  value,
+  source,
   onChange,
 }: {
   label: string;
-  state: FieldState<number>;
+  value: number | undefined;
+  source: "emr" | "manual" | "missing";
   onChange: (v: number) => void;
 }) {
   return (
-    <FieldChrome label={label} state={state}>
+    <FieldChrome label={label} source={source}>
       <Input
         type="number"
-        value={state.value ?? ""}
+        value={value ?? ""}
         onChange={(e) => {
           const n = Number(e.target.value);
           if (!Number.isNaN(n) && e.target.value !== "") onChange(n);
@@ -329,34 +304,48 @@ function NumField({
 }
 
 function SexField({
-  state,
+  value,
+  source,
   onChange,
 }: {
-  state: FieldState<Sex>;
+  value: Sex | undefined;
+  source: "emr" | "manual" | "missing";
   onChange: (v: Sex) => void;
 }) {
   return (
-    <FieldChrome label="Sex" state={state}>
-      <div className="flex gap-1 text-[10px]">
-        {(["male", "female"] as Sex[]).map((s) => (
-          <Label
-            key={s}
-            className={`cursor-pointer rounded border px-1.5 py-0.5 ${
-              state.value === s
-                ? "border-primary bg-primary text-primary-foreground"
-                : "border-border"
-            }`}
-          >
-            <input
-              type="radio"
-              className="hidden"
-              checked={state.value === s}
-              onChange={() => onChange(s)}
-            />
-            {s[0].toUpperCase() + s.slice(1)}
-          </Label>
-        ))}
+    <FieldChrome label="Sex" source={source}>
+      <div className="flex gap-1">
+        <Pill active={value === "male"} onClick={() => onChange("male")}>
+          Male
+        </Pill>
+        <Pill active={value === "female"} onClick={() => onChange("female")}>
+          Female
+        </Pill>
       </div>
     </FieldChrome>
+  );
+}
+
+function Pill({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`rounded border px-2 py-0.5 text-[10px] font-medium transition-colors ${
+        active
+          ? "border-primary bg-primary text-primary-foreground"
+          : "border-border bg-background hover:bg-muted"
+      }`}
+    >
+      {children}
+    </button>
   );
 }

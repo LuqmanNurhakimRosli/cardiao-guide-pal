@@ -1,20 +1,8 @@
-import { useMemo, useState } from "react";
-import { Checkbox } from "@/components/ui/checkbox";
+import { useMemo } from "react";
 import { hasBled, type HasBledInputs } from "@/cdss/engine";
 import type { Patient } from "@/cdss/types";
+import type { ClinicianInputs } from "@/cdss/usePatientState";
 import { CheckCircle2, PencilLine, Info, AlertTriangle } from "lucide-react";
-
-const ITEMS: { key: keyof HasBledInputs; label: string }[] = [
-  { key: "hypertension", label: "Hypertension (uncontrolled, sys >160)" },
-  { key: "abnormalRenal", label: "Abnormal renal function" },
-  { key: "abnormalLiver", label: "Abnormal liver function" },
-  { key: "stroke", label: "Stroke" },
-  { key: "bleedingHistory", label: "Prior major bleeding" },
-  { key: "labileINR", label: "Labile INR (TTR <60%)" },
-  { key: "elderly", label: "Elderly (>65)" },
-  { key: "drugs", label: "Drugs (aspirin/NSAIDs)" },
-  { key: "alcohol", label: "Excess alcohol" },
-];
 
 export interface HasBledState {
   total: number;
@@ -22,100 +10,115 @@ export interface HasBledState {
   source: "auto" | "hybrid" | "manual";
 }
 
-function prefillFromEMR(patient?: Patient): {
-  values: HasBledInputs;
-  fromEmr: Partial<Record<keyof HasBledInputs, boolean>>;
-} {
-  const values: HasBledInputs = {
-    hypertension: false,
-    abnormalRenal: false,
-    abnormalLiver: false,
-    stroke: false,
-    bleedingHistory: false,
-    labileINR: false,
-    elderly: false,
-    drugs: false,
-    alcohol: false,
-  };
-  const fromEmr: Partial<Record<keyof HasBledInputs, boolean>> = {};
-  if (!patient) return { values, fromEmr };
-
-  // Hypertension uncontrolled — sys >160 in latest BP
-  const m = /^(\d+)\s*\/\s*(\d+)$/.exec(patient.vitals?.bp_latest ?? "");
-  if (m) {
-    values.hypertension = Number(m[1]) > 160;
-    fromEmr.hypertension = true;
-  }
-  // Abnormal renal — creatinine ≥200 µmol/L (proxy)
-  if (patient.labs?.creatinine != null) {
-    values.abnormalRenal = patient.labs.creatinine >= 200;
-    fromEmr.abnormalRenal = true;
-  }
-  // Stroke from comorbidities
-  if (typeof patient.comorbidities?.stroke === "boolean") {
-    values.stroke = patient.comorbidities.stroke;
-    fromEmr.stroke = true;
-  }
-  // Elderly (>65)
-  if (typeof patient.age === "number") {
-    values.elderly = patient.age > 65;
-    fromEmr.elderly = true;
-  }
-  // Labile INR — TTR <60% across history
-  const inr = patient.labs?.inr_history ?? [];
-  if (inr.length >= 3) {
-    const inRange = inr.filter((v) => v >= 2 && v <= 3).length;
-    const ttr = (inRange / inr.length) * 100;
-    values.labileINR = ttr < 60;
-    fromEmr.labileINR = true;
-  }
-  // Drugs — antiplatelet/NSAID in med list
-  const meds = patient.medications ?? [];
-  const antiPlt = meds.some((med) =>
-    /aspirin|clopidogrel|nsaid|ibuprofen|naproxen/i.test(med.name),
-  );
-  if (antiPlt) {
-    values.drugs = true;
-    fromEmr.drugs = true;
-  }
-  return { values, fromEmr };
+interface Props {
+  patient: Patient;
+  draft: ClinicianInputs;
+  setField: <K extends keyof ClinicianInputs>(k: K, v: ClinicianInputs[K]) => void;
 }
 
-export function HasBledCalculator({
-  patient,
-  onScoreChange,
-}: {
-  patient?: Patient;
-  onScoreChange?: (s: HasBledState) => void;
-}) {
-  const initial = useMemo(
-    () => prefillFromEMR(patient),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [patient?.patient_id],
-  );
+/** Compute EMR-derived defaults for HAS-BLED items (with origin info). */
+function emrDerive(p: Patient) {
+  const out: Partial<Record<keyof HasBledInputs, boolean>> = {};
+  const fromEmr: Partial<Record<keyof HasBledInputs, true>> = {};
 
-  const [v, setV] = useState<HasBledInputs>(initial.values);
-  const [touched, setTouched] = useState<Partial<Record<keyof HasBledInputs, boolean>>>({});
+  const m = /^(\d+)\s*\/\s*(\d+)$/.exec(p.vitals?.bp_latest ?? "");
+  if (m) {
+    out.hypertension = Number(m[1]) > 160;
+    fromEmr.hypertension = true;
+  }
+  if (p.labs?.creatinine != null) {
+    out.abnormalRenal = p.labs.creatinine >= 200;
+    fromEmr.abnormalRenal = true;
+  }
+  if (typeof p.comorbidities?.stroke === "boolean") {
+    out.stroke = p.comorbidities.stroke;
+    fromEmr.stroke = true;
+  }
+  if (typeof p.age === "number") {
+    out.elderly = p.age > 65;
+    fromEmr.elderly = true;
+  }
+  const inr = p.labs?.inr_history ?? [];
+  if (inr.length >= 3) {
+    const inRange = inr.filter((v) => v >= 2 && v <= 3).length;
+    out.labileINR = inRange / inr.length < 0.6;
+    fromEmr.labileINR = true;
+  }
+  const meds = p.medications ?? [];
+  if (meds.some((md) => /aspirin|clopidogrel|nsaid|ibuprofen|naproxen/i.test(md.name))) {
+    out.drugs = true;
+    fromEmr.drugs = true;
+  }
+  return { out, fromEmr };
+}
 
-  const score = useMemo(() => hasBled(v), [v]);
-  const emrCount = Object.keys(initial.fromEmr).length;
-  const manualEdits = Object.keys(touched).length;
-  const source: HasBledState["source"] =
-    emrCount > 0 && manualEdits === 0
-      ? "auto"
-      : emrCount > 0 && manualEdits > 0
-        ? "hybrid"
-        : "manual";
+export function HasBledCalculator({ patient, draft, setField }: Props) {
+  const { out: emr, fromEmr } = useMemo(() => emrDerive(patient), [patient]);
 
-  useMemo(() => {
-    onScoreChange?.({ total: score.total, highRisk: score.highRisk, source });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [score.total, score.highRisk, source]);
+  // Map of HAS-BLED key -> resolved value & source
+  type HBKey = keyof HasBledInputs;
+  const draftKey: Record<HBKey, keyof ClinicianInputs> = {
+    hypertension: "hb_hypertension",
+    abnormalRenal: "hb_abnormalRenal",
+    stroke: "hb_stroke",
+    labileINR: "hb_labileINR",
+    elderly: "hb_elderly",
+    drugs: "hb_drugs",
+    abnormalLiver: "abnormalLiver",
+    bleedingHistory: "bleedingHistory",
+    alcohol: "alcohol",
+  };
+
+  const resolved: Record<HBKey, { value: boolean; source: "emr" | "manual" | "default" }> = {} as never;
+  (Object.keys(draftKey) as HBKey[]).forEach((k) => {
+    const dk = draftKey[k];
+    const dv = draft[dk] as boolean | undefined;
+    if (dv !== undefined) {
+      resolved[k] = { value: dv, source: "manual" };
+    } else if (fromEmr[k]) {
+      resolved[k] = { value: emr[k] ?? false, source: "emr" };
+    } else {
+      resolved[k] = { value: false, source: "default" };
+    }
+  });
+
+  const inputs: HasBledInputs = {
+    hypertension: resolved.hypertension.value,
+    abnormalRenal: resolved.abnormalRenal.value,
+    abnormalLiver: resolved.abnormalLiver.value,
+    stroke: resolved.stroke.value,
+    bleedingHistory: resolved.bleedingHistory.value,
+    labileINR: resolved.labileINR.value,
+    elderly: resolved.elderly.value,
+    drugs: resolved.drugs.value,
+    alcohol: resolved.alcohol.value,
+  };
+  const score = hasBled(inputs);
+
+  const anyManual = Object.values(resolved).some((r) => r.source === "manual");
+  const anyEmr = Object.values(resolved).some((r) => r.source === "emr");
+  const source: HasBledState["source"] = anyManual
+    ? anyEmr
+      ? "hybrid"
+      : "manual"
+    : "auto";
+
+  const ITEMS: { key: HBKey; label: string }[] = [
+    { key: "hypertension", label: "Hypertension (uncontrolled, sys >160)" },
+    { key: "abnormalRenal", label: "Abnormal renal function" },
+    { key: "abnormalLiver", label: "Abnormal liver function" },
+    { key: "stroke", label: "Stroke" },
+    { key: "bleedingHistory", label: "Prior major bleeding" },
+    { key: "labileINR", label: "Labile INR (TTR <60%)" },
+    { key: "elderly", label: "Elderly (>65)" },
+    { key: "drugs", label: "Drugs (aspirin/NSAIDs)" },
+    { key: "alcohol", label: "Excess alcohol" },
+  ];
 
   return (
     <div className="rounded-md border border-border bg-card p-3">
       <div className="mb-2 flex items-center justify-between">
-        <h3 className="text-sm font-semibold">HAS-BLED (hybrid)</h3>
+        <h3 className="text-sm font-semibold">HAS-BLED (hybrid · live)</h3>
         <span
           className={`rounded px-2 py-0.5 text-xs font-bold ${
             score.highRisk
@@ -127,44 +130,59 @@ export function HasBledCalculator({
         </span>
       </div>
 
-      <p
-        className="mb-2 text-[11px] font-medium"
-        title="This score is partially auto-calculated. Please confirm missing inputs."
-      >
+      <p className="mb-2 text-[11px] font-medium">
         {source === "auto"
-          ? `✅ Auto-prefilled from EMR (${emrCount} field${emrCount === 1 ? "" : "s"}) — please confirm`
+          ? "✅ Auto-prefilled from EMR — please confirm clinical items"
           : source === "hybrid"
-            ? "🟡 Partially completed by clinician"
+            ? "🟡 Updated by clinician"
             : "✏️ Manually entered"}
       </p>
 
       <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
         {ITEMS.map((it) => {
-          const isEmr = initial.fromEmr[it.key] && !touched[it.key];
-          const ring = isEmr
-            ? "border-[var(--clinical-ok)]/60 bg-[var(--clinical-ok-bg)]/30"
-            : touched[it.key]
-              ? "border-border bg-background"
-              : "border-border";
+          const r = resolved[it.key];
+          const ring =
+            r.source === "manual"
+              ? "border-primary/60 bg-primary/5"
+              : r.source === "emr"
+                ? "border-[var(--clinical-ok)]/60 bg-[var(--clinical-ok-bg)]/30"
+                : "border-border";
+          const Icon =
+            r.source === "manual"
+              ? PencilLine
+              : r.source === "emr"
+                ? CheckCircle2
+                : Info;
+          const iconClass =
+            r.source === "manual"
+              ? "text-primary"
+              : r.source === "emr"
+                ? "text-[var(--clinical-ok)]"
+                : "text-muted-foreground";
           return (
-            <label
+            <div
               key={it.key}
-              className={`flex cursor-pointer items-center gap-2 rounded border px-2 py-1 text-xs ${ring}`}
+              className={`flex items-center justify-between gap-2 rounded border px-2 py-1.5 text-xs ${ring}`}
             >
-              <Checkbox
-                checked={v[it.key]}
-                onCheckedChange={(c) => {
-                  setV((s) => ({ ...s, [it.key]: c === true }));
-                  setTouched((t) => ({ ...t, [it.key]: true }));
-                }}
-              />
-              {isEmr ? (
-                <CheckCircle2 className="size-3 text-[var(--clinical-ok)]" />
-              ) : (
-                <PencilLine className="size-3 text-muted-foreground" />
-              )}
-              <span>{it.label}</span>
-            </label>
+              <div className="flex min-w-0 items-center gap-1.5">
+                <Icon className={`size-3 shrink-0 ${iconClass}`} />
+                <span className="truncate">{it.label}</span>
+              </div>
+              <div className="flex gap-1">
+                <Pill
+                  active={r.value === true}
+                  onClick={() => setField(draftKey[it.key], true)}
+                >
+                  Yes
+                </Pill>
+                <Pill
+                  active={r.value === false}
+                  onClick={() => setField(draftKey[it.key], false)}
+                >
+                  No
+                </Pill>
+              </div>
+            </div>
           );
         })}
       </div>
@@ -185,5 +203,29 @@ export function HasBledCalculator({
         clinician judgement.
       </p>
     </div>
+  );
+}
+
+function Pill({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`rounded border px-2 py-0.5 text-[10px] font-medium transition-colors ${
+        active
+          ? "border-primary bg-primary text-primary-foreground"
+          : "border-border bg-background hover:bg-muted"
+      }`}
+    >
+      {children}
+    </button>
   );
 }
