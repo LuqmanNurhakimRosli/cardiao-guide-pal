@@ -1,15 +1,30 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useEffect, useRef } from "react";
+import { useMemo, useState } from "react";
 import { z } from "zod";
 import {
   getPatientWithCdss,
+  logFieldChange,
   logScoreCalculation,
 } from "@/cdss/server.functions";
+import { usePatientState, type ClinicianInputs } from "@/cdss/usePatientState";
 import { AppShell } from "@/components/cdss/AppShell";
-import { HasBledCalculator, type HasBledState } from "@/components/cdss/HasBledCalculator";
-import { Cha2ds2VascHybrid, type Cha2VascState } from "@/components/cdss/Cha2ds2VascHybrid";
-import { Heart, Activity, FlaskConical, Pill, User, FileText, AlertTriangle, Info, ArrowRight } from "lucide-react";
+import { HasBledCalculator } from "@/components/cdss/HasBledCalculator";
+import { Cha2ds2VascHybrid } from "@/components/cdss/Cha2ds2VascHybrid";
+import {
+  Heart,
+  Activity,
+  FlaskConical,
+  Pill,
+  User,
+  FileText,
+  AlertTriangle,
+  Info,
+  ArrowRight,
+  Save,
+  RotateCcw,
+  CheckCircle2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const searchSchema = z.object({ p: z.string().optional() });
@@ -27,51 +42,98 @@ export const Route = createFileRoute("/")({
   component: PatientDashboard,
 });
 
+const FIELD_LABELS: Partial<Record<keyof ClinicianInputs, string>> = {
+  chf: "CHF / LV dysfunction",
+  hypertension: "Hypertension",
+  diabetes: "Diabetes",
+  stroke: "Stroke / TIA",
+  vascular: "Vascular disease",
+  age: "Age",
+  sex: "Sex",
+  abnormalLiver: "Abnormal liver",
+  bleedingHistory: "Prior bleeding",
+  alcohol: "Excess alcohol",
+  hb_hypertension: "HAS-BLED Hypertension",
+  hb_abnormalRenal: "HAS-BLED Abnormal renal",
+  hb_stroke: "HAS-BLED Stroke",
+  hb_labileINR: "HAS-BLED Labile INR",
+  hb_elderly: "HAS-BLED Elderly",
+  hb_drugs: "HAS-BLED Drugs",
+};
+
 function PatientDashboard() {
   const { current } = Route.useLoaderData();
-  const { patient, cdss } = current;
+  const { patient } = current;
 
+  const state = usePatientState(patient);
+  const { draft, inputs, dirty, setField, reset, saveAndRecalculate, draftCdss, cdss } = state;
+
+  const logField = useServerFn(logFieldChange);
   const logScore = useServerFn(logScoreCalculation);
-  const chaRef = useRef<Cha2VascState | null>(null);
-  const hbRef = useRef<HasBledState | null>(null);
-  const loggedKeys = useRef<Set<string>>(new Set());
+  const [saveFlash, setSaveFlash] = useState(false);
 
-  const maybeLogChads = (s: Cha2VascState) => {
-    if (!s.complete) return;
-    const key = `${patient.patient_id}:CHA:${s.total}:${s.source}`;
-    if (loggedKeys.current.has(key)) return;
-    loggedKeys.current.add(key);
-    logScore({
-      data: {
-        patient_id: patient.patient_id,
-        score_name: "CHA2DS2-VASc",
-        total: s.total,
-        source: s.source,
-        high_risk: s.highRisk,
-      },
-    }).catch(() => {});
-  };
-  const maybeLogHasBled = (s: HasBledState) => {
-    const key = `${patient.patient_id}:HB:${s.total}:${s.source}`;
-    if (loggedKeys.current.has(key)) return;
-    loggedKeys.current.add(key);
-    logScore({
-      data: {
-        patient_id: patient.patient_id,
-        score_name: "HAS-BLED",
-        total: s.total,
-        source: s.source,
-        high_risk: s.highRisk,
-      },
-    }).catch(() => {});
+  const handleSave = async () => {
+    // diff before saving
+    const before = inputs;
+    const after = draft;
+    const changedKeys: (keyof ClinicianInputs)[] = [];
+    (Object.keys(after) as (keyof ClinicianInputs)[]).forEach((k) => {
+      if (k === "_lastSavedAt") return;
+      if (before[k] !== after[k]) changedKeys.push(k);
+    });
+
+    saveAndRecalculate();
+
+    // log each field change
+    await Promise.all(
+      changedKeys.map((k) =>
+        logField({
+          data: {
+            patient_id: patient.patient_id,
+            field: FIELD_LABELS[k] ?? String(k),
+            old_value: String(before[k] ?? "—"),
+            new_value: String(after[k] ?? "—"),
+          },
+        }).catch(() => {}),
+      ),
+    );
+
+    // log final scores
+    if (draftCdss.scores.cha2ds2vasc) {
+      const s = draftCdss.scores.cha2ds2vasc;
+      const highRisk =
+        (patient.sex === "male" && s.total >= 2) ||
+        (patient.sex === "female" && s.total >= 3);
+      logScore({
+        data: {
+          patient_id: patient.patient_id,
+          score_name: "CHA2DS2-VASc",
+          total: s.total,
+          source: changedKeys.length ? "hybrid" : "auto",
+          high_risk: highRisk,
+        },
+      }).catch(() => {});
+    }
+
+    setSaveFlash(true);
+    setTimeout(() => setSaveFlash(false), 2000);
   };
 
-  // reset log dedupe when patient switches
-  useEffect(() => {
-    loggedKeys.current = new Set();
-    chaRef.current = null;
-    hbRef.current = null;
-  }, [patient.patient_id]);
+  // safety: incomplete CHA inputs?
+  const incompleteCha = useMemo(() => {
+    const c = patient.comorbidities ?? {};
+    const checks: (boolean | undefined)[] = [
+      draft.chf ?? c.chf,
+      draft.hypertension ?? c.hypertension,
+      draft.diabetes ?? c.diabetes,
+      draft.stroke ?? c.stroke,
+      draft.vascular ?? c.vascular,
+    ];
+    return checks.some((v) => v === undefined || v === null);
+  }, [draft, patient.comorbidities]);
+
+  // Use draft CDSS for live preview in panel
+  const livecdss = draftCdss;
 
   return (
     <AppShell selectedId={patient.patient_id} selectedName={patient.name}>
@@ -85,14 +147,14 @@ function PatientDashboard() {
             <Row k="Sex" v={patient.sex} />
             <Row k="Clinic" v={patient.clinic_location} />
           </Section>
-          <Section icon={<Heart className="size-4" />} title="Comorbidities">
+          <Section icon={<Heart className="size-4" />} title="Comorbidities (EMR)">
             {Object.entries(patient.comorbidities).map(([k, v]) => (
               <Row
                 key={k}
                 k={k}
                 v={
                   <span className={v ? "font-medium" : "text-muted-foreground"}>
-                    {v ? "Yes" : "No"}
+                    {v === undefined ? "—" : v ? "Yes" : "No"}
                   </span>
                 }
               />
@@ -110,17 +172,30 @@ function PatientDashboard() {
               ECG: {patient.ecg_results.join(", ")}
             </p>
           </Section>
+
+          {inputs._lastSavedAt && (
+            <div className="rounded-md border border-[var(--clinical-ok)]/40 bg-[var(--clinical-ok-bg)]/40 px-3 py-2 text-[11px]">
+              <p className="font-medium text-[var(--clinical-ok)]">
+                Session saved
+              </p>
+              <p className="text-muted-foreground">
+                {new Date(inputs._lastSavedAt).toLocaleString()}
+              </p>
+              <p className="mt-1 text-muted-foreground">
+                Restored automatically on refresh.
+              </p>
+            </div>
+          )}
         </aside>
 
         {/* CENTER */}
         <section className="space-y-3">
           <div className="rounded-md border border-dashed border-[var(--clinical-ok)] bg-[var(--clinical-ok-bg)]/40 px-3 py-2 text-xs">
             <span className="font-semibold text-[var(--clinical-ok)]">
-              CDSS engine running in background
+              CDSS engine running live
             </span>
             {" — "}
-            triggered automatically because{" "}
-            <span className="font-mono">clinic = {patient.clinic_location}</span>.
+            scores and alerts re-evaluate on every input change.
           </div>
 
           <Section icon={<Activity className="size-4" />} title="Vitals">
@@ -150,35 +225,13 @@ function PatientDashboard() {
               />
               <Stat
                 label="ClCr (CG)"
-                value={cdss.scores.clcr ? `${cdss.scores.clcr} mL/min` : "insufficient"}
+                value={livecdss.scores.clcr ? `${livecdss.scores.clcr} mL/min` : "insufficient"}
               />
               <Stat
                 label="CHA₂DS₂-VASc"
-                value={cdss.scores.cha2ds2vasc?.total ?? "—"}
+                value={livecdss.scores.cha2ds2vasc?.total ?? "—"}
               />
             </div>
-            {patient.labs.inr_history && patient.labs.inr_history.length > 0 && (
-              <div className="mt-2">
-                <p className="text-xs text-muted-foreground">INR history</p>
-                <div className="mt-1 flex flex-wrap gap-1">
-                  {patient.labs.inr_history.map((v, i) => {
-                    const ok = v >= 2 && v <= 3;
-                    return (
-                      <span
-                        key={i}
-                        className={`rounded px-1.5 py-0.5 font-mono text-xs ${
-                          ok
-                            ? "bg-[var(--clinical-ok-bg)] text-[var(--clinical-ok)]"
-                            : "bg-[var(--clinical-alert-bg)] text-[var(--clinical-alert)]"
-                        }`}
-                      >
-                        {v}
-                      </span>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
           </Section>
 
           <Section icon={<Pill className="size-4" />} title="Medications">
@@ -206,19 +259,47 @@ function PatientDashboard() {
 
           <Cha2ds2VascHybrid
             patient={patient}
-            onChange={(s) => {
-              chaRef.current = s;
-              maybeLogChads(s);
-            }}
+            draft={draft}
+            setField={setField}
           />
 
           <HasBledCalculator
             patient={patient}
-            onScoreChange={(s) => {
-              hbRef.current = s;
-              maybeLogHasBled(s);
-            }}
+            draft={draft}
+            setField={setField}
           />
+
+          {/* Save & Recalculate */}
+          <div className="sticky bottom-2 z-10 rounded-md border border-border bg-card/95 p-3 shadow-md backdrop-blur">
+            <div className="flex items-center justify-between gap-2">
+              <div className="min-w-0">
+                <p className="text-sm font-semibold">
+                  {dirty
+                    ? "🟡 Unsaved clinician input"
+                    : saveFlash
+                      ? "✅ Saved & CDSS recalculated"
+                      : "All changes saved"}
+                </p>
+                <p className="text-[11px] text-muted-foreground">
+                  Saving recalculates all scores, re-runs the alert engine, and
+                  writes to the audit log. Inputs persist on refresh.
+                </p>
+              </div>
+              <div className="flex shrink-0 gap-2">
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={reset}
+                  disabled={!dirty}
+                >
+                  <RotateCcw className="mr-1 size-3" /> Reset
+                </Button>
+                <Button size="sm" onClick={handleSave} disabled={!dirty}>
+                  <Save className="mr-1 size-3" /> Save & Recalculate
+                </Button>
+              </div>
+            </div>
+          </div>
         </section>
 
         {/* RIGHT panel */}
@@ -227,36 +308,61 @@ function PatientDashboard() {
             <div className="border-b border-border px-3 py-2">
               <h2 className="text-sm font-bold">Combined Clinical Alert Panel</h2>
               <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
-                CDSS Recommendation (Advisory Only)
+                Live · re-evaluates on every input
               </p>
               <p className="mt-1 text-xs text-muted-foreground">
-                {cdss.executed
-                  ? cdss.hasAF
-                    ? `${cdss.alerts.length} alert(s) · ${cdss.reminders.length} reminder(s)`
+                {livecdss.executed
+                  ? livecdss.hasAF
+                    ? `${livecdss.alerts.length} alert(s) · ${livecdss.reminders.length} reminder(s)`
                     : "AF not detected"
                   : "CDSS not executed"}
               </p>
+              {dirty && (
+                <p className="mt-1 text-[10px] font-medium text-[var(--clinical-warn)]">
+                  Showing draft — save to commit to audit trail.
+                </p>
+              )}
             </div>
             <div className="space-y-2 p-3">
-              {!cdss.executed && (
-                <EmptyNote>{cdss.reason ?? "Cardiology Clinic only."}</EmptyNote>
+              {incompleteCha && (
+                <div className="flex items-start gap-1.5 rounded border border-[var(--clinical-warn)] bg-[var(--clinical-warn-bg)] px-2 py-1.5 text-xs">
+                  <AlertTriangle className="mt-0.5 size-3.5 shrink-0 text-[var(--clinical-warn)]" />
+                  <span>
+                    <strong>Incomplete clinical data</strong> may affect
+                    recommendation accuracy. Confirm CHA₂DS₂-VASc inputs before
+                    final decision.
+                  </span>
+                </div>
               )}
-              {cdss.executed && !cdss.hasAF && <EmptyNote>{cdss.reason}</EmptyNote>}
 
-              {cdss.alerts.length > 0 && (
+              {!livecdss.executed && (
+                <EmptyNote>{livecdss.reason ?? "Cardiology Clinic only."}</EmptyNote>
+              )}
+              {livecdss.executed && !livecdss.hasAF && (
+                <EmptyNote>{livecdss.reason}</EmptyNote>
+              )}
+
+              {livecdss.alerts.length > 0 && (
                 <div>
                   <p className="mb-1.5 text-[10px] font-bold uppercase tracking-wider text-[var(--clinical-alert)]">
-                    🔴 Alerts ({cdss.alerts.length})
+                    🔴 Alerts ({livecdss.alerts.length})
                   </p>
                   <ul className="space-y-1.5">
-                    {cdss.alerts.map((al) => (
+                    {livecdss.alerts.map((al) => (
                       <li
                         key={al.id}
                         className="rounded border border-l-4 border-border border-l-[var(--clinical-alert)] bg-[var(--clinical-alert-bg)] px-2 py-1.5"
                       >
                         <div className="flex items-start gap-1.5">
                           <AlertTriangle className="mt-0.5 size-3.5 shrink-0 text-[var(--clinical-alert)]" />
-                          <p className="text-xs font-medium leading-snug">{al.title}</p>
+                          <div className="min-w-0">
+                            <p className="text-xs font-medium leading-snug">
+                              {al.title}
+                            </p>
+                            <p className="mt-0.5 text-[10px] text-muted-foreground">
+                              {al.detail}
+                            </p>
+                          </div>
                         </div>
                       </li>
                     ))}
@@ -264,20 +370,22 @@ function PatientDashboard() {
                 </div>
               )}
 
-              {cdss.reminders.length > 0 && (
+              {livecdss.reminders.length > 0 && (
                 <div>
                   <p className="mb-1.5 mt-2 text-[10px] font-bold uppercase tracking-wider text-[var(--clinical-warn)]">
-                    🟡 Reminders ({cdss.reminders.length})
+                    🟡 Reminders ({livecdss.reminders.length})
                   </p>
                   <ul className="space-y-1.5">
-                    {cdss.reminders.map((al) => (
+                    {livecdss.reminders.map((al) => (
                       <li
                         key={al.id}
                         className="rounded border border-l-4 border-border border-l-[var(--clinical-warn)] bg-[var(--clinical-warn-bg)] px-2 py-1.5"
                       >
                         <div className="flex items-start gap-1.5">
                           <Info className="mt-0.5 size-3.5 shrink-0 text-[var(--clinical-warn)]" />
-                          <p className="text-xs font-medium leading-snug">{al.title}</p>
+                          <p className="text-xs font-medium leading-snug">
+                            {al.title}
+                          </p>
                         </div>
                       </li>
                     ))}
@@ -285,11 +393,14 @@ function PatientDashboard() {
                 </div>
               )}
 
-              {cdss.executed &&
-                cdss.hasAF &&
-                cdss.alerts.length === 0 &&
-                cdss.reminders.length === 0 && (
-                  <EmptyNote>No alerts triggered.</EmptyNote>
+              {livecdss.executed &&
+                livecdss.hasAF &&
+                livecdss.alerts.length === 0 &&
+                livecdss.reminders.length === 0 && (
+                  <EmptyNote>
+                    <CheckCircle2 className="mx-auto mb-1 size-4 text-[var(--clinical-ok)]" />
+                    No alerts triggered with current inputs.
+                  </EmptyNote>
                 )}
 
               {(cdss.alerts.length > 0 || cdss.reminders.length > 0) && (
@@ -298,10 +409,26 @@ function PatientDashboard() {
                   search={{ p: patient.patient_id }}
                   className="mt-2 block"
                 >
-                  <Button className="w-full" size="sm">
+                  <Button
+                    className="w-full"
+                    size="sm"
+                    disabled={dirty || incompleteCha}
+                    title={
+                      dirty
+                        ? "Save changes first"
+                        : incompleteCha
+                          ? "Complete clinical data first"
+                          : ""
+                    }
+                  >
                     Review alerts <ArrowRight className="ml-1 size-3" />
                   </Button>
                 </Link>
+              )}
+              {dirty && (
+                <p className="text-center text-[10px] text-muted-foreground">
+                  Save before proceeding to Clinician Review.
+                </p>
               )}
             </div>
           </div>

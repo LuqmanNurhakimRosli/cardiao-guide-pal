@@ -136,6 +136,29 @@ export const logScoreCalculation = createServerFn({ method: "POST" })
     return { ok: true, entry };
   });
 
+export const logFieldChange = createServerFn({ method: "POST" })
+  .inputValidator(
+    (d: {
+      patient_id: string;
+      field: string;
+      old_value: string;
+      new_value: string;
+    }) => d,
+  )
+  .handler(async ({ data }) => {
+    const entry: AuditEntry = {
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      patient_id: data.patient_id,
+      alert_id: `field:${data.field}`,
+      alert_title: `Clinician edited ${data.field}: ${data.old_value} → ${data.new_value}`,
+      action: "accept",
+      override_notes: `field=${data.field}`,
+      timestamp: new Date().toISOString(),
+    };
+    auditLog.unshift(entry);
+    return { ok: true, entry };
+  });
+
 export const getPatientActions = createServerFn({ method: "POST" })
   .inputValidator((d: { patient_id: string }) => d)
   .handler(async ({ data }) => {
