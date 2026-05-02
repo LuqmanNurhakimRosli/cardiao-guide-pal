@@ -44,19 +44,19 @@ const AlertsIndexRoute = AlertsIndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const AlertsAlertIdOverrideRoute = AlertsAlertIdOverrideRouteImport.update({
-  id: '/$alertId/override',
-  path: '/$alertId/override',
-  getParentRoute: () => AlertsRoute,
+  id: '/alerts/$alertId/override',
+  path: '/alerts/$alertId/override',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AlertsAlertIdDeferRoute = AlertsAlertIdDeferRouteImport.update({
-  id: '/$alertId/defer',
-  path: '/$alertId/defer',
-  getParentRoute: () => AlertsRoute,
+  id: '/alerts/$alertId/defer',
+  path: '/alerts/$alertId/defer',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AlertsAlertIdAcceptRoute = AlertsAlertIdAcceptRouteImport.update({
-  id: '/$alertId/accept',
-  path: '/$alertId/accept',
-  getParentRoute: () => AlertsRoute,
+  id: '/alerts/$alertId/accept',
+  path: '/alerts/$alertId/accept',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -129,6 +129,9 @@ export interface RootRouteChildren {
   PatientsRoute: typeof PatientsRoute
   SummaryRoute: typeof SummaryRoute
   AlertsIndexRoute: typeof AlertsIndexRoute
+  AlertsAlertIdAcceptRoute: typeof AlertsAlertIdAcceptRoute
+  AlertsAlertIdDeferRoute: typeof AlertsAlertIdDeferRoute
+  AlertsAlertIdOverrideRoute: typeof AlertsAlertIdOverrideRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -170,24 +173,24 @@ declare module '@tanstack/react-router' {
     }
     '/alerts/$alertId/override': {
       id: '/alerts/$alertId/override'
-      path: '/$alertId/override'
+      path: '/alerts/$alertId/override'
       fullPath: '/alerts/$alertId/override'
       preLoaderRoute: typeof AlertsAlertIdOverrideRouteImport
-      parentRoute: typeof AlertsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/alerts/$alertId/defer': {
       id: '/alerts/$alertId/defer'
-      path: '/$alertId/defer'
+      path: '/alerts/$alertId/defer'
       fullPath: '/alerts/$alertId/defer'
       preLoaderRoute: typeof AlertsAlertIdDeferRouteImport
-      parentRoute: typeof AlertsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/alerts/$alertId/accept': {
       id: '/alerts/$alertId/accept'
-      path: '/$alertId/accept'
+      path: '/alerts/$alertId/accept'
       fullPath: '/alerts/$alertId/accept'
       preLoaderRoute: typeof AlertsAlertIdAcceptRouteImport
-      parentRoute: typeof AlertsRoute
+      parentRoute: typeof rootRouteImport
     }
   }
 }
@@ -198,6 +201,9 @@ const rootRouteChildren: RootRouteChildren = {
   PatientsRoute: PatientsRoute,
   SummaryRoute: SummaryRoute,
   AlertsIndexRoute: AlertsIndexRoute,
+  AlertsAlertIdAcceptRoute: AlertsAlertIdAcceptRoute,
+  AlertsAlertIdDeferRoute: AlertsAlertIdDeferRoute,
+  AlertsAlertIdOverrideRoute: AlertsAlertIdOverrideRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

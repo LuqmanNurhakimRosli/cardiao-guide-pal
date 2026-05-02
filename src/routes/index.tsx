@@ -1,10 +1,14 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { useEffect, useRef } from "react";
 import { z } from "zod";
 import {
   getPatientWithCdss,
+  logScoreCalculation,
 } from "@/cdss/server.functions";
 import { AppShell } from "@/components/cdss/AppShell";
-import { HasBledCalculator } from "@/components/cdss/HasBledCalculator";
+import { HasBledCalculator, type HasBledState } from "@/components/cdss/HasBledCalculator";
+import { Cha2ds2VascHybrid, type Cha2VascState } from "@/components/cdss/Cha2ds2VascHybrid";
 import { Heart, Activity, FlaskConical, Pill, User, FileText, AlertTriangle, Info, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -26,6 +30,48 @@ export const Route = createFileRoute("/")({
 function PatientDashboard() {
   const { current } = Route.useLoaderData();
   const { patient, cdss } = current;
+
+  const logScore = useServerFn(logScoreCalculation);
+  const chaRef = useRef<Cha2VascState | null>(null);
+  const hbRef = useRef<HasBledState | null>(null);
+  const loggedKeys = useRef<Set<string>>(new Set());
+
+  const maybeLogChads = (s: Cha2VascState) => {
+    if (!s.complete) return;
+    const key = `${patient.patient_id}:CHA:${s.total}:${s.source}`;
+    if (loggedKeys.current.has(key)) return;
+    loggedKeys.current.add(key);
+    logScore({
+      data: {
+        patient_id: patient.patient_id,
+        score_name: "CHA2DS2-VASc",
+        total: s.total,
+        source: s.source,
+        high_risk: s.highRisk,
+      },
+    }).catch(() => {});
+  };
+  const maybeLogHasBled = (s: HasBledState) => {
+    const key = `${patient.patient_id}:HB:${s.total}:${s.source}`;
+    if (loggedKeys.current.has(key)) return;
+    loggedKeys.current.add(key);
+    logScore({
+      data: {
+        patient_id: patient.patient_id,
+        score_name: "HAS-BLED",
+        total: s.total,
+        source: s.source,
+        high_risk: s.highRisk,
+      },
+    }).catch(() => {});
+  };
+
+  // reset log dedupe when patient switches
+  useEffect(() => {
+    loggedKeys.current = new Set();
+    chaRef.current = null;
+    hbRef.current = null;
+  }, [patient.patient_id]);
 
   return (
     <AppShell selectedId={patient.patient_id} selectedName={patient.name}>
@@ -158,25 +204,21 @@ function PatientDashboard() {
             </ul>
           </Section>
 
-          {cdss.scores.cha2ds2vasc && (
-            <Section icon={<Heart className="size-4" />} title="CHA₂DS₂-VASc breakdown">
-              <div className="grid grid-cols-2 gap-1 text-xs sm:grid-cols-4">
-                {Object.entries(cdss.scores.cha2ds2vasc.breakdown).map(([k, v]) => (
-                  <div
-                    key={k}
-                    className={`flex items-center justify-between rounded px-2 py-1 ${
-                      v > 0 ? "bg-muted font-medium" : "text-muted-foreground"
-                    }`}
-                  >
-                    <span>{k}</span>
-                    <span>+{v}</span>
-                  </div>
-                ))}
-              </div>
-            </Section>
-          )}
+          <Cha2ds2VascHybrid
+            patient={patient}
+            onChange={(s) => {
+              chaRef.current = s;
+              maybeLogChads(s);
+            }}
+          />
 
-          <HasBledCalculator />
+          <HasBledCalculator
+            patient={patient}
+            onScoreChange={(s) => {
+              hbRef.current = s;
+              maybeLogHasBled(s);
+            }}
+          />
         </section>
 
         {/* RIGHT panel */}

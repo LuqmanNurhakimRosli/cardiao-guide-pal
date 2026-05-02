@@ -112,6 +112,30 @@ export const getAuditLog = createServerFn({ method: "GET" }).handler(
   async () => auditLog.slice(0, 200),
 );
 
+export const logScoreCalculation = createServerFn({ method: "POST" })
+  .inputValidator(
+    (d: {
+      patient_id: string;
+      score_name: "CHA2DS2-VASc" | "HAS-BLED";
+      total: number;
+      source: "auto" | "hybrid" | "manual";
+      high_risk: boolean;
+    }) => d,
+  )
+  .handler(async ({ data }) => {
+    const entry: AuditEntry = {
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      patient_id: data.patient_id,
+      alert_id: `score:${data.score_name}`,
+      alert_title: `${data.score_name} score = ${data.total} (${data.source}${data.high_risk ? ", high-risk" : ""})`,
+      action: "accept",
+      override_notes: `source=${data.source}`,
+      timestamp: new Date().toISOString(),
+    };
+    auditLog.unshift(entry);
+    return { ok: true, entry };
+  });
+
 export const getPatientActions = createServerFn({ method: "POST" })
   .inputValidator((d: { patient_id: string }) => d)
   .handler(async ({ data }) => {
