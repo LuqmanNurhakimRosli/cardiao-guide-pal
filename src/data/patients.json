@@ -133,5 +133,18 @@
     "vitals": { "bp_latest": "130/80", "bp_second": "128/78", "weight": 65 },
     "labs": { "creatinine": 90, "creatinine_unit": "umol/L", "inr_history": [2.4] },
     "comorbidities": { "chf": false, "hypertension": true, "diabetes": false, "stroke": false, "vascular": false }
+  },
+  {
+    "patient_id": "P007",
+    "name": "Rajesh Kumar (incomplete EMR)",
+    "age": 72,
+    "sex": "male",
+    "clinic_location": "Cardiology Clinic",
+    "diagnoses": ["I48.0"],
+    "ecg_results": ["AF"],
+    "medications": [{ "name": "Apixaban", "indication": "AF", "dose": "5 mg BD" }],
+    "vitals": { "bp_latest": "138/85", "weight": 72 },
+    "labs": { "creatinine": 105, "creatinine_unit": "umol/L" },
+    "comorbidities": { "hypertension": true, "stroke": false }
   }
 ]
