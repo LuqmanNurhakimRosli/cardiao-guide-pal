@@ -31,6 +31,48 @@ function PatientDashboard() {
   const { current } = Route.useLoaderData();
   const { patient, cdss } = current;
 
+  const logScore = useServerFn(logScoreCalculation);
+  const chaRef = useRef<Cha2VascState | null>(null);
+  const hbRef = useRef<HasBledState | null>(null);
+  const loggedKeys = useRef<Set<string>>(new Set());
+
+  const maybeLogChads = (s: Cha2VascState) => {
+    if (!s.complete) return;
+    const key = `${patient.patient_id}:CHA:${s.total}:${s.source}`;
+    if (loggedKeys.current.has(key)) return;
+    loggedKeys.current.add(key);
+    logScore({
+      data: {
+        patient_id: patient.patient_id,
+        score_name: "CHA2DS2-VASc",
+        total: s.total,
+        source: s.source,
+        high_risk: s.highRisk,
+      },
+    }).catch(() => {});
+  };
+  const maybeLogHasBled = (s: HasBledState) => {
+    const key = `${patient.patient_id}:HB:${s.total}:${s.source}`;
+    if (loggedKeys.current.has(key)) return;
+    loggedKeys.current.add(key);
+    logScore({
+      data: {
+        patient_id: patient.patient_id,
+        score_name: "HAS-BLED",
+        total: s.total,
+        source: s.source,
+        high_risk: s.highRisk,
+      },
+    }).catch(() => {});
+  };
+
+  // reset log dedupe when patient switches
+  useEffect(() => {
+    loggedKeys.current = new Set();
+    chaRef.current = null;
+    hbRef.current = null;
+  }, [patient.patient_id]);
+
   return (
     <AppShell selectedId={patient.patient_id} selectedName={patient.name}>
       <div className="mx-auto max-w-[1600px] grid grid-cols-1 gap-4 px-4 py-4 lg:grid-cols-[260px_1fr_360px]">
