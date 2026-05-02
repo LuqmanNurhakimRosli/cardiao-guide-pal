@@ -162,25 +162,21 @@ function PatientDashboard() {
             </ul>
           </Section>
 
-          {cdss.scores.cha2ds2vasc && (
-            <Section icon={<Heart className="size-4" />} title="CHA₂DS₂-VASc breakdown">
-              <div className="grid grid-cols-2 gap-1 text-xs sm:grid-cols-4">
-                {Object.entries(cdss.scores.cha2ds2vasc.breakdown).map(([k, v]) => (
-                  <div
-                    key={k}
-                    className={`flex items-center justify-between rounded px-2 py-1 ${
-                      v > 0 ? "bg-muted font-medium" : "text-muted-foreground"
-                    }`}
-                  >
-                    <span>{k}</span>
-                    <span>+{v}</span>
-                  </div>
-                ))}
-              </div>
-            </Section>
-          )}
+          <Cha2ds2VascHybrid
+            patient={patient}
+            onChange={(s) => {
+              chaRef.current = s;
+              maybeLogChads(s);
+            }}
+          />
 
-          <HasBledCalculator />
+          <HasBledCalculator
+            patient={patient}
+            onScoreChange={(s) => {
+              hbRef.current = s;
+              maybeLogHasBled(s);
+            }}
+          />
         </section>
 
         {/* RIGHT panel */}
