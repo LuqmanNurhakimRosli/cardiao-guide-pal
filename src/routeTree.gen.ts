@@ -14,6 +14,7 @@ import { Route as PatientsRouteImport } from './routes/patients'
 import { Route as AuditRouteImport } from './routes/audit'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AlertsIndexRouteImport } from './routes/alerts.index'
+import { Route as ApiCdssAnalyzeRouteImport } from './routes/api/cdss.analyze'
 import { Route as AlertsAlertIdOverrideRouteImport } from './routes/alerts.$alertId.override'
 import { Route as AlertsAlertIdDeferRouteImport } from './routes/alerts.$alertId.defer'
 import { Route as AlertsAlertIdAcceptRouteImport } from './routes/alerts.$alertId.accept'
@@ -43,6 +44,11 @@ const AlertsIndexRoute = AlertsIndexRouteImport.update({
   path: '/alerts/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiCdssAnalyzeRoute = ApiCdssAnalyzeRouteImport.update({
+  id: '/api/cdss/analyze',
+  path: '/api/cdss/analyze',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AlertsAlertIdOverrideRoute = AlertsAlertIdOverrideRouteImport.update({
   id: '/alerts/$alertId/override',
   path: '/alerts/$alertId/override',
@@ -68,6 +74,7 @@ export interface FileRoutesByFullPath {
   '/alerts/$alertId/accept': typeof AlertsAlertIdAcceptRoute
   '/alerts/$alertId/defer': typeof AlertsAlertIdDeferRoute
   '/alerts/$alertId/override': typeof AlertsAlertIdOverrideRoute
+  '/api/cdss/analyze': typeof ApiCdssAnalyzeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -78,6 +85,7 @@ export interface FileRoutesByTo {
   '/alerts/$alertId/accept': typeof AlertsAlertIdAcceptRoute
   '/alerts/$alertId/defer': typeof AlertsAlertIdDeferRoute
   '/alerts/$alertId/override': typeof AlertsAlertIdOverrideRoute
+  '/api/cdss/analyze': typeof ApiCdssAnalyzeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -89,6 +97,7 @@ export interface FileRoutesById {
   '/alerts/$alertId/accept': typeof AlertsAlertIdAcceptRoute
   '/alerts/$alertId/defer': typeof AlertsAlertIdDeferRoute
   '/alerts/$alertId/override': typeof AlertsAlertIdOverrideRoute
+  '/api/cdss/analyze': typeof ApiCdssAnalyzeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -101,6 +110,7 @@ export interface FileRouteTypes {
     | '/alerts/$alertId/accept'
     | '/alerts/$alertId/defer'
     | '/alerts/$alertId/override'
+    | '/api/cdss/analyze'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -111,6 +121,7 @@ export interface FileRouteTypes {
     | '/alerts/$alertId/accept'
     | '/alerts/$alertId/defer'
     | '/alerts/$alertId/override'
+    | '/api/cdss/analyze'
   id:
     | '__root__'
     | '/'
@@ -121,6 +132,7 @@ export interface FileRouteTypes {
     | '/alerts/$alertId/accept'
     | '/alerts/$alertId/defer'
     | '/alerts/$alertId/override'
+    | '/api/cdss/analyze'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -132,6 +144,7 @@ export interface RootRouteChildren {
   AlertsAlertIdAcceptRoute: typeof AlertsAlertIdAcceptRoute
   AlertsAlertIdDeferRoute: typeof AlertsAlertIdDeferRoute
   AlertsAlertIdOverrideRoute: typeof AlertsAlertIdOverrideRoute
+  ApiCdssAnalyzeRoute: typeof ApiCdssAnalyzeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -171,6 +184,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AlertsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/cdss/analyze': {
+      id: '/api/cdss/analyze'
+      path: '/api/cdss/analyze'
+      fullPath: '/api/cdss/analyze'
+      preLoaderRoute: typeof ApiCdssAnalyzeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/alerts/$alertId/override': {
       id: '/alerts/$alertId/override'
       path: '/alerts/$alertId/override'
@@ -204,6 +224,7 @@ const rootRouteChildren: RootRouteChildren = {
   AlertsAlertIdAcceptRoute: AlertsAlertIdAcceptRoute,
   AlertsAlertIdDeferRoute: AlertsAlertIdDeferRoute,
   AlertsAlertIdOverrideRoute: AlertsAlertIdOverrideRoute,
+  ApiCdssAnalyzeRoute: ApiCdssAnalyzeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
