@@ -36,11 +36,16 @@ export const Route = createRootRoute({
           "Clinical Decision Support System for Atrial Fibrillation management integrated with EMR.",
       },
       { name: "author", content: "CDSS Demo" },
-      { property: "og:title", content: "My HEART:AFCArE — CDSS for AF" },
-      { property: "og:description", content: "AF management decision support." },
+      { property: "og:title", content: "My HEART:AFCArE — CDSS for Atrial Fibrillation" },
+      { property: "og:description", content: "Web app for Atrial Fibrillation management, simulating EMR integration for clinical decision support." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "My HEART:AFCArE — CDSS for Atrial Fibrillation" },
+      { name: "description", content: "Web app for Atrial Fibrillation management, simulating EMR integration for clinical decision support." },
+      { name: "twitter:description", content: "Web app for Atrial Fibrillation management, simulating EMR integration for clinical decision support." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/66a2a192-af3a-47b6-bc10-d0f9c86f289a/id-preview-8751bbb7--bac7b008-5ec1-4e12-a6f8-1ee1f19f1ad9.lovable.app-1777797469070.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/66a2a192-af3a-47b6-bc10-d0f9c86f289a/id-preview-8751bbb7--bac7b008-5ec1-4e12-a6f8-1ee1f19f1ad9.lovable.app-1777797469070.png" },
     ],
     links: [
       {
