@@ -51,7 +51,7 @@ function AcceptFlow() {
   const navigate = useNavigate();
   const suggestion = alert ? suggestionFor(alert.id) : null;
   const currentMed = suggestion
-    ? patient.medications.find((m) => m.name === suggestion.name)
+    ? patient.medications.find((m: import("@/cdss/types").Medication) => m.name === suggestion.name)
     : undefined;
   const [dose, setDose] = useState(suggestion?.newDose ?? currentMed?.dose ?? "");
   const [saving, setSaving] = useState(false);

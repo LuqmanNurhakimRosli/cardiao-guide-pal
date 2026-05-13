@@ -162,7 +162,7 @@ function PatientDashboard() {
           </Section>
           <Section icon={<FileText className="size-4" />} title="Diagnoses">
             <ul className="space-y-1">
-              {patient.diagnoses.map((d) => (
+              {patient.diagnoses.map((d: string) => (
                 <li key={d} className="rounded bg-muted px-2 py-1 font-mono text-xs">
                   {d}
                 </li>
@@ -236,7 +236,7 @@ function PatientDashboard() {
 
           <Section icon={<Pill className="size-4" />} title="Medications">
             <ul className="space-y-1.5">
-              {patient.medications.map((m) => (
+              {patient.medications.map((m: import("@/cdss/types").Medication) => (
                 <li
                   key={m.name}
                   className="flex items-start justify-between rounded border border-border bg-card px-2 py-1.5 text-xs"
