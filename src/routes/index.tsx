@@ -66,7 +66,7 @@ function PatientDashboard() {
   const { patient } = current;
 
   const state = usePatientState(patient);
-  const { draft, inputs, dirty, setField, reset, saveAndRecalculate, draftCdss, cdss } = state;
+  const { draft, inputs, dirty, setField, reset, saveAndRecalculate, draftCdss, cdss, loading, error, source } = state;
 
   const logField = useServerFn(logFieldChange);
   const logScore = useServerFn(logScoreCalculation);
@@ -308,7 +308,7 @@ function PatientDashboard() {
             <div className="border-b border-border px-3 py-2">
               <h2 className="text-sm font-bold">Combined Clinical Alert Panel</h2>
               <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
-                Live · re-evaluates on every input
+                {loading ? "⏳ Calling CDSS API…" : `Live · API source: ${source}`}
               </p>
               <p className="mt-1 text-xs text-muted-foreground">
                 {livecdss.executed
@@ -317,6 +317,11 @@ function PatientDashboard() {
                     : "AF not detected"
                   : "CDSS not executed"}
               </p>
+              {error && (
+                <p className="mt-1 rounded border border-[var(--clinical-alert)] bg-[var(--clinical-alert-bg)] px-2 py-1 text-[10px] font-medium text-[var(--clinical-alert)]">
+                  ⚠ CDSS engine unavailable — showing last known result. ({error})
+                </p>
+              )}
               {dirty && (
                 <p className="mt-1 text-[10px] font-medium text-[var(--clinical-warn)]">
                   Showing draft — save to commit to audit trail.
