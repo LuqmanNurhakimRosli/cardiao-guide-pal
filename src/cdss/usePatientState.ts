@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Patient, CdssResult } from "./types";
 import { evaluate } from "./engine";
+import { runCDSS, type CdssRunResult } from "@/services/cdssService";
 
 /**
  * Clinician inputs that override / supplement the EMR-loaded patient.
@@ -33,6 +34,7 @@ export interface ClinicianInputs {
 }
 
 const KEY = (id: string) => `cdss:inputs:${id}`;
+const RESP_KEY = (id: string) => `cdss:response:${id}`;
 
 function load(id: string): ClinicianInputs {
   if (typeof window === "undefined") return {};
@@ -53,9 +55,29 @@ function save(id: string, v: ClinicianInputs) {
   }
 }
 
+function loadResponse(id: string): CdssRunResult | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.localStorage.getItem(RESP_KEY(id));
+    return raw ? (JSON.parse(raw) as CdssRunResult) : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveResponse(id: string, r: CdssRunResult) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(RESP_KEY(id), JSON.stringify(r));
+  } catch {
+    // ignore
+  }
+}
+
 export function clearPatientInputs(id: string) {
   if (typeof window === "undefined") return;
   window.localStorage.removeItem(KEY(id));
+  window.localStorage.removeItem(RESP_KEY(id));
 }
 
 /**
@@ -78,6 +100,19 @@ export function mergePatient(p: Patient, i: ClinicianInputs): Patient {
   };
 }
 
+/** Convert an API response into the legacy CdssResult shape used by the UI. */
+function toResult(r: CdssRunResult, fallback: CdssResult): CdssResult {
+  if (!r.ok) return fallback;
+  return {
+    executed: r.executed,
+    hasAF: r.hasAF,
+    reason: r.reason,
+    scores: r.scores ?? {},
+    alerts: r.alerts,
+    reminders: r.reminders,
+  };
+}
+
 export interface PatientStateApi {
   inputs: ClinicianInputs;
   draft: ClinicianInputs;
@@ -87,20 +122,42 @@ export interface PatientStateApi {
   saveAndRecalculate: () => ClinicianInputs;
   mergedPatient: Patient;
   draftPatient: Patient;
-  cdss: CdssResult; // computed from saved inputs
-  draftCdss: CdssResult; // computed from current draft (live preview)
+  cdss: CdssResult; // last API response computed from saved inputs
+  draftCdss: CdssResult; // live preview computed from current draft (API)
+  loading: boolean;
+  error?: string;
+  source: CdssRunResult["source"];
 }
 
 export function usePatientState(patient: Patient): PatientStateApi {
   const [inputs, setInputs] = useState<ClinicianInputs>(() => ({}));
   const [draft, setDraft] = useState<ClinicianInputs>(() => ({}));
 
+  // local fallback so the UI is never empty while the API call is in flight
+  const localFallback = useMemo(() => evaluate(patient), [patient]);
+
+  const [cdss, setCdss] = useState<CdssResult>(localFallback);
+  const [draftCdss, setDraftCdss] = useState<CdssResult>(localFallback);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | undefined>(undefined);
+  const [source, setSource] = useState<CdssRunResult["source"]>("auto");
+
   // hydrate from localStorage on patient change
   useEffect(() => {
     const stored = load(patient.patient_id);
     setInputs(stored);
     setDraft(stored);
-  }, [patient.patient_id]);
+    const cached = loadResponse(patient.patient_id);
+    if (cached) {
+      const r = toResult(cached, localFallback);
+      setCdss(r);
+      setDraftCdss(r);
+      setSource(cached.source);
+    } else {
+      setCdss(localFallback);
+      setDraftCdss(localFallback);
+    }
+  }, [patient.patient_id, localFallback]);
 
   const setField = useCallback(
     <K extends keyof ClinicianInputs>(k: K, v: ClinicianInputs[K]) => {
@@ -111,6 +168,23 @@ export function usePatientState(patient: Patient): PatientStateApi {
 
   const reset = useCallback(() => setDraft(inputs), [inputs]);
 
+  // Debounced live re-fetch when the draft changes
+  const draftReqId = useRef(0);
+  useEffect(() => {
+    const myId = ++draftReqId.current;
+    setLoading(true);
+    setError(undefined);
+    const handle = setTimeout(async () => {
+      const r = await runCDSS({ patient_id: patient.patient_id }, draft);
+      if (myId !== draftReqId.current) return; // stale
+      setDraftCdss(toResult(r, localFallback));
+      setSource(r.source);
+      setError(r.error);
+      setLoading(false);
+    }, 300);
+    return () => clearTimeout(handle);
+  }, [draft, patient.patient_id, localFallback]);
+
   const saveAndRecalculate = useCallback(() => {
     const next: ClinicianInputs = {
       ...draft,
@@ -119,14 +193,22 @@ export function usePatientState(patient: Patient): PatientStateApi {
     save(patient.patient_id, next);
     setInputs(next);
     setDraft(next);
+    // Hard-commit: re-fetch and persist the response
+    setLoading(true);
+    runCDSS({ patient_id: patient.patient_id }, next).then((r) => {
+      const result = toResult(r, localFallback);
+      setCdss(result);
+      setDraftCdss(result);
+      setSource(r.source);
+      setError(r.error);
+      setLoading(false);
+      saveResponse(patient.patient_id, r);
+    });
     return next;
-  }, [draft, patient.patient_id]);
+  }, [draft, patient.patient_id, localFallback]);
 
   const mergedPatient = useMemo(() => mergePatient(patient, inputs), [patient, inputs]);
   const draftPatient = useMemo(() => mergePatient(patient, draft), [patient, draft]);
-
-  const cdss = useMemo(() => evaluate(mergedPatient), [mergedPatient]);
-  const draftCdss = useMemo(() => evaluate(draftPatient), [draftPatient]);
 
   const dirty = useMemo(() => {
     const a = { ...inputs };
@@ -147,5 +229,8 @@ export function usePatientState(patient: Patient): PatientStateApi {
     draftPatient,
     cdss,
     draftCdss,
+    loading,
+    error,
+    source,
   };
 }

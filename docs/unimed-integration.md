@@ -285,3 +285,48 @@ and integration-ready** for any modern hospital EMR.
 
 > *This system supports clinical decision-making and does not replace
 > clinician judgement.*
+
+---
+
+## 15. Frontend ↔ API wiring (this repo)
+
+The bundled web UI is now an **API client**, not a direct consumer of the
+rules engine. End-to-end call path:
+
+```
+React component
+  → usePatientState (src/cdss/usePatientState.ts)
+  → runCDSS         (src/services/cdssService.ts)
+  → analyzePatient  (src/api/cdssApi.ts)
+  → POST ${VITE_CDSS_API_URL}/api/cdss/analyze
+  → evaluate()      (src/cdss/engine.ts)
+```
+
+Behavior contract:
+
+- **Debounced live preview** — every clinician edit triggers a 300 ms
+  debounced `POST /api/cdss/analyze`. The right-hand alert panel updates
+  from `draftCdss`.
+- **Hard commit on Save** — `saveAndRecalculate()` re-fetches the engine,
+  writes the response to `localStorage[cdss:response:<id>]`, and updates
+  `cdss` (the value used by Review / Summary / Audit pages).
+- **Loading state** — the alert panel shows `⏳ Calling CDSS API…` while a
+  request is in flight.
+- **Error fallback** — on network or HTTP failure, `runCDSS` returns a
+  `cdss-unavailable` reminder, the panel shows
+  `⚠ CDSS engine unavailable — showing last known result.`, and the last
+  cached result remains on screen so the clinician is never left blank.
+- **Persistence** — both clinician inputs and the latest API response are
+  cached per `patient_id` in `localStorage` and rehydrated on refresh.
+- **Source flag** — every response carries `meta.input_source = "auto" | "hybrid"`,
+  surfaced to the clinician as the panel's source label.
+
+### Configuration
+
+| Variable             | Purpose                                                              |
+|----------------------|----------------------------------------------------------------------|
+| `VITE_CDSS_API_URL`  | Base URL of the CDSS engine. Empty string = same-origin server route. |
+
+To point the UI at an external CDSS engine (e.g. a separately deployed
+microservice exposed by UNIMED), set `VITE_CDSS_API_URL=https://cdss.example.org`
+at build time. No code change required.

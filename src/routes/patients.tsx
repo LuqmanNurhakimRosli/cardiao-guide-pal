@@ -14,6 +14,17 @@ export const Route = createFileRoute("/patients")({
 });
 
 type Filter = "all" | "high-risk" | "no-alerts";
+interface PatientRow {
+  patient_id: string;
+  name: string;
+  age: number;
+  sex: string;
+  clinic_location: string;
+  af_status: string;
+  alerts_count: number;
+  reminders_count: number;
+  executed: boolean;
+}
 
 function PatientsPage() {
   const { patients } = Route.useLoaderData();
@@ -22,7 +33,7 @@ function PatientsPage() {
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return patients.filter((p) => {
+    return patients.filter((p: PatientRow) => {
       if (q && !p.name.toLowerCase().includes(q) && !p.patient_id.toLowerCase().includes(q))
         return false;
       if (filter === "high-risk" && p.alerts_count === 0) return false;
@@ -33,8 +44,8 @@ function PatientsPage() {
 
   const counts = {
     all: patients.length,
-    highRisk: patients.filter((p) => p.alerts_count > 0).length,
-    noAlerts: patients.filter((p) => p.alerts_count === 0).length,
+    highRisk: patients.filter((p: PatientRow) => p.alerts_count > 0).length,
+    noAlerts: patients.filter((p: PatientRow) => p.alerts_count === 0).length,
   };
 
   return (
@@ -93,7 +104,7 @@ function PatientsPage() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((p) => {
+              {filtered.map((p: PatientRow) => {
                 const highRisk = p.alerts_count > 0;
                 return (
                   <tr

@@ -51,7 +51,7 @@ function AuditPage() {
                 </tr>
               </thead>
               <tbody>
-                {audit.map((a) => (
+                {audit.map((a: import("@/cdss/types").AuditEntry) => (
                   <tr key={a.id} className="border-t border-border align-top">
                     <td className="px-3 py-2 font-mono">
                       {new Date(a.timestamp).toLocaleString()}

@@ -30,10 +30,12 @@ function SummaryPage() {
   const { patients, current, actions } = Route.useLoaderData();
   const { patient, cdss } = current;
   const remainingAlerts = cdss.alerts.filter(
-    (a) => !actions.some((act) => act.alert_id === a.id),
+    (a: import("@/cdss/types").CdssAlert) =>
+      !actions.some((act: import("@/cdss/types").AuditEntry) => act.alert_id === a.id),
   );
   const remainingReminders = cdss.reminders.filter(
-    (a) => !actions.some((act) => act.alert_id === a.id),
+    (a: import("@/cdss/types").CdssAlert) =>
+      !actions.some((act: import("@/cdss/types").AuditEntry) => act.alert_id === a.id),
   );
 
   return (
@@ -67,7 +69,7 @@ function SummaryPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {actions.map((a) => (
+                  {actions.map((a: import("@/cdss/types").AuditEntry) => (
                     <tr key={a.id} className="border-t border-border align-top">
                       <td className="px-3 py-2 font-medium">{a.alert_title}</td>
                       <td className="px-3 py-2 capitalize">
@@ -118,7 +120,7 @@ function SummaryPage() {
               </p>
             ) : (
               <ul className="space-y-1.5">
-                {remainingAlerts.map((al) => (
+                {remainingAlerts.map((al: import("@/cdss/types").CdssAlert) => (
                   <li
                     key={al.id}
                     className="flex items-start gap-1.5 rounded border border-l-4 border-border border-l-[var(--clinical-alert)] bg-[var(--clinical-alert-bg)] px-2 py-1.5 text-xs"
@@ -127,7 +129,7 @@ function SummaryPage() {
                     {al.title}
                   </li>
                 ))}
-                {remainingReminders.map((al) => (
+                {remainingReminders.map((al: import("@/cdss/types").CdssAlert) => (
                   <li
                     key={al.id}
                     className="flex items-start gap-1.5 rounded border border-l-4 border-border border-l-[var(--clinical-warn)] bg-[var(--clinical-warn-bg)] px-2 py-1.5 text-xs"
