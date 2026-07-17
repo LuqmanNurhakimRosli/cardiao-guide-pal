@@ -27,9 +27,13 @@ export interface AnalyzeResponse {
   executed?: boolean;
   reason?: string;
   hasAF?: boolean;
+  clinicEligible?: boolean;
+  afEvidence?: import("@/cdss/types").AfEvidence[];
+  afConfirmed?: boolean | null;
   scores?: {
     cha2ds2vasc?: { total: number; breakdown: Record<string, number> };
     clcr?: number;
+    pinrr?: number;
   };
   alerts?: CdssAlert[];
   reminders?: CdssAlert[];

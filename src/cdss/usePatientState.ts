@@ -29,6 +29,9 @@ export interface ClinicianInputs {
   hb_elderly?: boolean;
   hb_drugs?: boolean;
 
+  // AF confirmation nudge (Stage 2): null = awaiting, true = confirmed, false = rejected
+  afConfirmed?: boolean | null;
+
   // metadata
   _lastSavedAt?: string;
 }
