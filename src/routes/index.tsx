@@ -194,13 +194,39 @@ function PatientDashboard() {
 
         {/* CENTER */}
         <section className="space-y-3">
-          <div className="rounded-md border border-dashed border-[var(--clinical-ok)] bg-[var(--clinical-ok-bg)]/40 px-3 py-2 text-xs">
-            <span className="font-semibold text-[var(--clinical-ok)]">
-              CDSS engine running live
-            </span>
-            {" — "}
-            scores and alerts re-evaluate on every input change.
-          </div>
+          {!livecdss.clinicEligible ? (
+            <ClinicGateBanner
+              clinic={patient.clinic_location}
+              reason={livecdss.reason}
+            />
+          ) : (
+            <div className="rounded-md border border-dashed border-[var(--clinical-ok)] bg-[var(--clinical-ok-bg)]/40 px-3 py-2 text-xs">
+              <span className="font-semibold text-[var(--clinical-ok)]">
+                CDSS engine running live
+              </span>
+              {" — "}
+              scores and alerts re-evaluate on every input change.
+            </div>
+          )}
+
+          {livecdss.clinicEligible && livecdss.afEvidence.length > 0 && (
+            <AfEvidenceCard
+              evidence={livecdss.afEvidence}
+              confirmed={draft.afConfirmed ?? livecdss.afConfirmed}
+            />
+          )}
+
+          <AfConfirmationModal
+            open={
+              livecdss.clinicEligible &&
+              livecdss.afEvidence.length > 0 &&
+              (draft.afConfirmed ?? null) === null
+            }
+            evidence={livecdss.afEvidence}
+            onConfirm={() => setField("afConfirmed", true)}
+            onReject={() => setField("afConfirmed", false)}
+          />
+
 
           <Section icon={<Activity className="size-4" />} title="Vitals">
             <div className="grid grid-cols-3 gap-2">
