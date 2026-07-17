@@ -34,22 +34,23 @@ export const listPatientsWithAlerts = createServerFn({ method: "GET" }).handler(
           orders[m.name] ? { ...m, dose: orders[m.name] } : m,
         ),
       };
-      const cdss = evaluate(patched);
-      const hasAF = cdss.hasAF;
+      // For the list view, run engine assuming AF has been confirmed so the
+      // clinician sees the counts they would face on opening the record.
+      const cdss = evaluate(patched, { afConfirmed: true });
+      let af_status = "No AF";
+      if (!cdss.clinicEligible) af_status = "CDSS N/A";
+      else if (cdss.afEvidence.length > 0) af_status = "AF";
       return {
         patient_id: p.patient_id,
         name: p.name,
         age: p.age,
         sex: p.sex,
         clinic_location: p.clinic_location,
-        af_status: hasAF
-          ? "AF"
-          : p.clinic_location !== "Cardiology Clinic"
-            ? "Not screened"
-            : "No AF",
+        af_status,
         alerts_count: cdss.alerts.length,
         reminders_count: cdss.reminders.length,
         executed: cdss.executed,
+        clinic_eligible: cdss.clinicEligible,
       };
     });
   },
@@ -60,7 +61,6 @@ export const getPatientWithCdss = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const patient = patients.find((p) => p.patient_id === data.patient_id);
     if (!patient) throw new Error("Patient not found");
-    // apply any saved med order overrides for display
     const orders = medOrders[patient.patient_id] ?? {};
     const patched: Patient = {
       ...patient,
@@ -68,7 +68,10 @@ export const getPatientWithCdss = createServerFn({ method: "POST" })
         orders[m.name] ? { ...m, dose: orders[m.name] } : m,
       ),
     };
-    const cdss = evaluate(patched);
+    // Loader-side snapshot: engine runs assuming AF confirmed so downstream
+    // pages (alerts, summary) always see the full result set. Live UI on the
+    // dashboard remains gated by the clinician's actual confirmation.
+    const cdss = evaluate(patched, { afConfirmed: true });
     return { patient: patched, cdss };
   });
 
@@ -83,6 +86,7 @@ export const logAction = createServerFn({ method: "POST" })
       override_notes?: string;
       defer_until?: string;
       med_change?: { name: string; new_dose: string };
+      snapshot?: AuditEntry["snapshot"];
     }) => d,
   )
   .handler(async ({ data }) => {
@@ -96,6 +100,7 @@ export const logAction = createServerFn({ method: "POST" })
       override_notes: data.override_notes,
       defer_until: data.defer_until,
       med_change: data.med_change,
+      snapshot: data.snapshot,
       timestamp: new Date().toISOString(),
     };
     auditLog.unshift(entry);

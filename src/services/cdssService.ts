@@ -3,7 +3,7 @@
  * Components should depend on this file, not on cdssApi directly.
  */
 import { analyzePatient, type AnalyzeResponse } from "@/api/cdssApi";
-import type { Patient, CdssAlert } from "@/cdss/types";
+import type { Patient, CdssAlert, AfEvidence } from "@/cdss/types";
 import type { ClinicianInputs } from "@/cdss/usePatientState";
 
 export interface CdssRunResult {
@@ -11,6 +11,9 @@ export interface CdssRunResult {
   executed: boolean;
   hasAF: boolean;
   reason?: string;
+  clinicEligible: boolean;
+  afEvidence: AfEvidence[];
+  afConfirmed: boolean | null;
   alerts: CdssAlert[];
   reminders: CdssAlert[];
   scores: NonNullable<AnalyzeResponse["scores"]>;
@@ -22,6 +25,9 @@ const EMPTY: CdssRunResult = {
   ok: false,
   executed: false,
   hasAF: false,
+  clinicEligible: false,
+  afEvidence: [],
+  afConfirmed: null,
   alerts: [],
   reminders: [],
   scores: {},
@@ -60,6 +66,9 @@ export async function runCDSS(
       executed: r.executed ?? false,
       hasAF: r.hasAF ?? false,
       reason: r.reason,
+      clinicEligible: r.clinicEligible ?? true,
+      afEvidence: r.afEvidence ?? [],
+      afConfirmed: r.afConfirmed ?? null,
       alerts: r.alerts ?? [],
       reminders: r.reminders ?? [],
       scores: r.scores ?? {},

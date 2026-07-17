@@ -29,6 +29,9 @@ export interface ClinicianInputs {
   hb_elderly?: boolean;
   hb_drugs?: boolean;
 
+  // AF confirmation nudge (Stage 2): null = awaiting, true = confirmed, false = rejected
+  afConfirmed?: boolean | null;
+
   // metadata
   _lastSavedAt?: string;
 }
@@ -107,6 +110,9 @@ function toResult(r: CdssRunResult, fallback: CdssResult): CdssResult {
     executed: r.executed,
     hasAF: r.hasAF,
     reason: r.reason,
+    clinicEligible: r.clinicEligible ?? true,
+    afEvidence: r.afEvidence ?? [],
+    afConfirmed: r.afConfirmed ?? null,
     scores: r.scores ?? {},
     alerts: r.alerts,
     reminders: r.reminders,

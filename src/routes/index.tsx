@@ -11,6 +11,10 @@ import { usePatientState, type ClinicianInputs } from "@/cdss/usePatientState";
 import { AppShell } from "@/components/cdss/AppShell";
 import { HasBledCalculator } from "@/components/cdss/HasBledCalculator";
 import { Cha2ds2VascHybrid } from "@/components/cdss/Cha2ds2VascHybrid";
+import { AfEvidenceCard } from "@/components/cdss/AfEvidenceCard";
+import { AfConfirmationModal } from "@/components/cdss/AfConfirmationModal";
+import { MissingDataCard } from "@/components/cdss/MissingDataCard";
+import { ClinicGateBanner } from "@/components/cdss/ClinicGateBanner";
 import {
   Heart,
   Activity,
@@ -190,13 +194,39 @@ function PatientDashboard() {
 
         {/* CENTER */}
         <section className="space-y-3">
-          <div className="rounded-md border border-dashed border-[var(--clinical-ok)] bg-[var(--clinical-ok-bg)]/40 px-3 py-2 text-xs">
-            <span className="font-semibold text-[var(--clinical-ok)]">
-              CDSS engine running live
-            </span>
-            {" — "}
-            scores and alerts re-evaluate on every input change.
-          </div>
+          {!livecdss.clinicEligible ? (
+            <ClinicGateBanner
+              clinic={patient.clinic_location}
+              reason={livecdss.reason}
+            />
+          ) : (
+            <div className="rounded-md border border-dashed border-[var(--clinical-ok)] bg-[var(--clinical-ok-bg)]/40 px-3 py-2 text-xs">
+              <span className="font-semibold text-[var(--clinical-ok)]">
+                CDSS engine running live
+              </span>
+              {" — "}
+              scores and alerts re-evaluate on every input change.
+            </div>
+          )}
+
+          {livecdss.clinicEligible && livecdss.afEvidence.length > 0 && (
+            <AfEvidenceCard
+              evidence={livecdss.afEvidence}
+              confirmed={draft.afConfirmed ?? livecdss.afConfirmed}
+            />
+          )}
+
+          <AfConfirmationModal
+            open={
+              livecdss.clinicEligible &&
+              livecdss.afEvidence.length > 0 &&
+              (draft.afConfirmed ?? null) === null
+            }
+            evidence={livecdss.afEvidence}
+            onConfirm={() => setField("afConfirmed", true)}
+            onReject={() => setField("afConfirmed", false)}
+          />
+
 
           <Section icon={<Activity className="size-4" />} title="Vitals">
             <div className="grid grid-cols-3 gap-2">
@@ -210,7 +240,7 @@ function PatientDashboard() {
           </Section>
 
           <Section icon={<FlaskConical className="size-4" />} title="Labs">
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
               <Stat
                 label="Creatinine"
                 value={
@@ -230,6 +260,14 @@ function PatientDashboard() {
               <Stat
                 label="CHA₂DS₂-VASc"
                 value={livecdss.scores.cha2ds2vasc?.total ?? "—"}
+              />
+              <Stat
+                label="PINRR"
+                value={
+                  livecdss.scores.pinrr != null
+                    ? `${livecdss.scores.pinrr}%`
+                    : "—"
+                }
               />
             </div>
           </Section>
@@ -257,17 +295,24 @@ function PatientDashboard() {
             </ul>
           </Section>
 
-          <Cha2ds2VascHybrid
-            patient={patient}
-            draft={draft}
-            setField={setField}
-          />
+          {livecdss.clinicEligible && (draft.afConfirmed ?? livecdss.afConfirmed) === true && (
+            <>
+              <Cha2ds2VascHybrid
+                patient={patient}
+                draft={draft}
+                setField={setField}
+              />
 
-          <HasBledCalculator
-            patient={patient}
-            draft={draft}
-            setField={setField}
-          />
+              <HasBledCalculator
+                patient={patient}
+                draft={draft}
+                setField={setField}
+              />
+
+              <MissingDataCard reminders={livecdss.reminders} />
+            </>
+          )}
+
 
           {/* Save & Recalculate */}
           <div className="sticky bottom-2 z-10 rounded-md border border-border bg-card/95 p-3 shadow-md backdrop-blur">

@@ -123,7 +123,7 @@
   },
   {
     "patient_id": "P006",
-    "name": "Zainab (PCM Clinic)",
+    "name": "Zainab binti Osman",
     "age": 70,
     "sex": "female",
     "clinic_location": "PCM Clinic",
@@ -146,5 +146,44 @@
     "vitals": { "bp_latest": "138/85", "weight": 72 },
     "labs": { "creatinine": 105, "creatinine_unit": "umol/L" },
     "comorbidities": { "hypertension": true, "stroke": false }
+  },
+  {
+    "patient_id": "P008",
+    "name": "Chong Mei Ling (Family Medicine)",
+    "age": 74,
+    "sex": "female",
+    "clinic_location": "Family Medicine Clinic",
+    "diagnoses": ["BC81.0", "Atrial fibrillation, paroxysmal"],
+    "ecg_results": ["Atrial fibrillation, controlled"],
+    "medications": [
+      { "name": "Warfarin", "indication": "AF", "dose": "3 mg OD" }
+    ],
+    "vitals": { "bp_latest": "146/92", "bp_second": "148/94", "weight": 68 },
+    "labs": {
+      "creatinine": 115,
+      "creatinine_unit": "umol/L",
+      "hba1c": 6.8,
+      "inr_history": [1.6, 3.4, 1.8, 3.7, 1.9, 2.1]
+    },
+    "comorbidities": {
+      "chf": false,
+      "hypertension": true,
+      "diabetes": false,
+      "stroke": false,
+      "vascular": false
+    }
+  },
+  {
+    "patient_id": "P009",
+    "name": "Ahmad bin Yusof (no AF)",
+    "age": 66,
+    "sex": "male",
+    "clinic_location": "Cardiology Clinic",
+    "diagnoses": ["I10", "E11.9"],
+    "ecg_results": ["Sinus rhythm"],
+    "medications": [{ "name": "Metformin", "indication": "Diabetes", "dose": "1 g BD" }],
+    "vitals": { "bp_latest": "132/82", "bp_second": "128/80", "weight": 78 },
+    "labs": { "creatinine": 88, "creatinine_unit": "umol/L", "hba1c": 6.5 },
+    "comorbidities": { "chf": false, "hypertension": true, "diabetes": true, "stroke": false, "vascular": false }
   }
 ]
