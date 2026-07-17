@@ -11,6 +11,10 @@ import { usePatientState, type ClinicianInputs } from "@/cdss/usePatientState";
 import { AppShell } from "@/components/cdss/AppShell";
 import { HasBledCalculator } from "@/components/cdss/HasBledCalculator";
 import { Cha2ds2VascHybrid } from "@/components/cdss/Cha2ds2VascHybrid";
+import { AfEvidenceCard } from "@/components/cdss/AfEvidenceCard";
+import { AfConfirmationModal } from "@/components/cdss/AfConfirmationModal";
+import { MissingDataCard } from "@/components/cdss/MissingDataCard";
+import { ClinicGateBanner } from "@/components/cdss/ClinicGateBanner";
 import {
   Heart,
   Activity,
