@@ -40,7 +40,7 @@ export interface CdssAlert {
   severity: AlertSeverity;
   title: string;
   detail: string;
-  rationale: string[]; // "why this triggered"
+  rationale: string[];
   category:
     | "stroke-risk"
     | "bleeding-risk"
@@ -48,16 +48,27 @@ export interface CdssAlert {
     | "bp"
     | "glycaemic"
     | "anticoagulant"
+    | "drug-dose"
+    | "pinrr"
     | "data";
+}
+
+export interface AfEvidence {
+  source: "ICD-10" | "ICD-11" | "ECG" | "Medication" | "PMH";
+  value: string;
 }
 
 export interface CdssResult {
   executed: boolean;
   reason?: string;
   hasAF: boolean;
+  clinicEligible: boolean;
+  afEvidence: AfEvidence[];
+  afConfirmed: boolean | null; // null = awaiting clinician confirmation
   scores: {
     cha2ds2vasc?: { total: number; breakdown: Record<string, number> };
     clcr?: number; // mL/min
+    pinrr?: number; // %
   };
   alerts: CdssAlert[];
   reminders: CdssAlert[];
@@ -75,5 +86,14 @@ export interface AuditEntry {
   override_notes?: string;
   defer_until?: string;
   med_change?: { name: string; new_dose: string };
+  snapshot?: {
+    cha2ds2vasc?: number;
+    hasbled?: number;
+    clcr?: number;
+    pinrr?: number;
+    clinicEligible?: boolean;
+    afConfirmed?: boolean | null;
+    values_used?: Record<string, string | number | boolean>;
+  };
   timestamp: string;
 }
