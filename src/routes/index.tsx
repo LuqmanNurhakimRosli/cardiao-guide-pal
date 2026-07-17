@@ -240,7 +240,7 @@ function PatientDashboard() {
           </Section>
 
           <Section icon={<FlaskConical className="size-4" />} title="Labs">
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
               <Stat
                 label="Creatinine"
                 value={
@@ -260,6 +260,14 @@ function PatientDashboard() {
               <Stat
                 label="CHA₂DS₂-VASc"
                 value={livecdss.scores.cha2ds2vasc?.total ?? "—"}
+              />
+              <Stat
+                label="PINRR"
+                value={
+                  livecdss.scores.pinrr != null
+                    ? `${livecdss.scores.pinrr}%`
+                    : "—"
+                }
               />
             </div>
           </Section>
@@ -287,17 +295,24 @@ function PatientDashboard() {
             </ul>
           </Section>
 
-          <Cha2ds2VascHybrid
-            patient={patient}
-            draft={draft}
-            setField={setField}
-          />
+          {livecdss.clinicEligible && (draft.afConfirmed ?? livecdss.afConfirmed) === true && (
+            <>
+              <Cha2ds2VascHybrid
+                patient={patient}
+                draft={draft}
+                setField={setField}
+              />
 
-          <HasBledCalculator
-            patient={patient}
-            draft={draft}
-            setField={setField}
-          />
+              <HasBledCalculator
+                patient={patient}
+                draft={draft}
+                setField={setField}
+              />
+
+              <MissingDataCard reminders={livecdss.reminders} />
+            </>
+          )}
+
 
           {/* Save & Recalculate */}
           <div className="sticky bottom-2 z-10 rounded-md border border-border bg-card/95 p-3 shadow-md backdrop-blur">
