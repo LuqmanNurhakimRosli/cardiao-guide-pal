@@ -55,7 +55,8 @@ export const Route = createFileRoute("/api/cdss/analyze")({
           ? mergePatient(patient, body.clinician_inputs)
           : patient;
 
-        const result = evaluate(merged);
+        const afConfirmed = body.clinician_inputs?.afConfirmed ?? null;
+        const result = evaluate(merged, { afConfirmed });
 
         return Response.json({
           ok: true,
@@ -69,11 +70,14 @@ export const Route = createFileRoute("/api/cdss/analyze")({
           executed: result.executed,
           reason: result.reason,
           hasAF: result.hasAF,
+          clinicEligible: result.clinicEligible,
+          afEvidence: result.afEvidence,
+          afConfirmed: result.afConfirmed,
           scores: result.scores,
           alerts: result.alerts,
           reminders: result.reminders,
           meta: {
-            engine_version: "1.0.0",
+            engine_version: "1.1.0",
             evaluated_at: new Date().toISOString(),
             input_source: body.clinician_inputs ? "hybrid" : "auto",
           },
