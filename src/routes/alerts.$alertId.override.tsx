@@ -62,6 +62,13 @@ function OverrideFlow() {
         action: "override",
         override_reason: reason === "Other" ? `Other: ${other}` : reason,
         override_notes: notes || undefined,
+        snapshot: {
+          cha2ds2vasc: current.cdss.scores.cha2ds2vasc?.total,
+          clcr: current.cdss.scores.clcr,
+          pinrr: current.cdss.scores.pinrr,
+          clinicEligible: current.cdss.clinicEligible,
+          afConfirmed: current.cdss.afConfirmed,
+        },
       },
     });
     navigate({ to: "/summary", search: { p: patient.patient_id } });

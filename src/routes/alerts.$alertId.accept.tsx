@@ -68,6 +68,19 @@ function AcceptFlow() {
         med_change: suggestion
           ? { name: suggestion.name, new_dose: dose }
           : undefined,
+        snapshot: {
+          cha2ds2vasc: current.cdss.scores.cha2ds2vasc?.total,
+          clcr: current.cdss.scores.clcr,
+          pinrr: current.cdss.scores.pinrr,
+          clinicEligible: current.cdss.clinicEligible,
+          afConfirmed: current.cdss.afConfirmed,
+          values_used: {
+            age: patient.age,
+            sex: patient.sex,
+            weight: patient.vitals?.weight ?? "—",
+            creatinine: patient.labs?.creatinine ?? "—",
+          },
+        },
       },
     });
     navigate({ to: "/summary", search: { p: patient.patient_id } });
