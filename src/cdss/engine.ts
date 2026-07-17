@@ -1,4 +1,17 @@
-import type { Patient, CdssAlert, CdssResult } from "./types";
+import type {
+  Patient,
+  CdssAlert,
+  CdssResult,
+  AfEvidence,
+} from "./types";
+import { detectAfEvidence } from "./afDetection";
+import { pinrr as computePinrr } from "./pinrr";
+
+// ---------- config ----------
+export const ALLOWED_CLINICS = [
+  "Cardiology Clinic",
+  "Family Medicine Clinic",
+];
 
 // ---------- helpers ----------
 const parseBP = (s?: string): { sys: number; dia: number } | null => {
@@ -17,21 +30,18 @@ const a = (
   rationale: string[],
 ): CdssAlert => ({ id, severity, category, title, detail, rationale });
 
-// ---------- AF detection ----------
-export function detectAF(p: Patient): { hasAF: boolean; reasons: string[] } {
-  const reasons: string[] = [];
-  if (p.diagnoses?.some((d) => d.toUpperCase().includes("I48")))
-    reasons.push(`ICD-10 diagnosis includes I48 (${p.diagnoses.join(", ")})`);
-  if (p.ecg_results?.some((e) => e.toUpperCase().includes("AF")))
-    reasons.push(`ECG result indicates AF (${p.ecg_results.join(", ")})`);
-  if (p.medications?.some((m) => (m.indication ?? "").toUpperCase() === "AF"))
-    reasons.push(
-      `On anticoagulant for AF (${p.medications
-        .filter((m) => (m.indication ?? "").toUpperCase() === "AF")
-        .map((m) => m.name)
-        .join(", ")})`,
-    );
-  return { hasAF: reasons.length > 0, reasons };
+// ---------- AF detection (legacy shape kept for callers) ----------
+export function detectAF(p: Patient): {
+  hasAF: boolean;
+  reasons: string[];
+  evidence: AfEvidence[];
+} {
+  const evidence = detectAfEvidence(p);
+  return {
+    hasAF: evidence.length > 0,
+    reasons: evidence.map((e) => `${e.source}: ${e.value}`),
+    evidence,
+  };
 }
 
 // ---------- CHA2DS2-VASc ----------
@@ -71,31 +81,59 @@ export function creatinineClearance(p: Patient): {
 }
 
 // ---------- main evaluator ----------
-export function evaluate(p: Patient): CdssResult {
+export interface EvaluateOptions {
+  /** null = awaiting clinician confirmation (default), true = confirmed, false = rejected */
+  afConfirmed?: boolean | null;
+}
+
+export function evaluate(
+  p: Patient,
+  opts: EvaluateOptions = {},
+): CdssResult {
+  const afConfirmed = opts.afConfirmed ?? null;
+
   const result: CdssResult = {
     executed: false,
     hasAF: false,
+    clinicEligible: false,
+    afEvidence: [],
+    afConfirmed,
     scores: {},
     alerts: [],
     reminders: [],
   };
 
-  // 1. Trigger
-  if (p.clinic_location !== "Cardiology Clinic") {
-    result.reason = "CDSS only executes in Cardiology Clinic.";
+  // 1. Clinic gating (Stage 2 in workflow: location-based gating)
+  const clinicEligible = ALLOWED_CLINICS.includes(p.clinic_location);
+  result.clinicEligible = clinicEligible;
+  if (!clinicEligible) {
+    result.reason = `AF-CDSS inactive for ${p.clinic_location}. Enabled only in: ${ALLOWED_CLINICS.join(", ")}.`;
+    return result;
+  }
+
+  // 2. Multi-source AF detection
+  const af = detectAF(p);
+  result.afEvidence = af.evidence;
+  result.hasAF = af.hasAF;
+  if (!af.hasAF) {
+    result.executed = true;
+    result.reason = "No AF evidence in ICD, ECG, medications, or PMH.";
+    return result;
+  }
+
+  // 3. Clinician confirmation gate
+  if (afConfirmed === null) {
+    result.reason =
+      "AF evidence detected — awaiting clinician confirmation before running full CDSS.";
+    return result;
+  }
+  if (afConfirmed === false) {
+    result.reason = "AF diagnosis rejected by clinician. Workflow terminated.";
     return result;
   }
   result.executed = true;
 
-  // 2. AF detection
-  const af = detectAF(p);
-  result.hasAF = af.hasAF;
-  if (!af.hasAF) {
-    result.reason = "No AF indicators found (ICD-10, ECG, or AF anticoagulant).";
-    return result;
-  }
-
-  // 3. CHA2DS2-VASc
+  // 4. CHA2DS2-VASc
   const chads = cha2ds2vasc(p);
   result.scores.cha2ds2vasc = chads;
   const triggerScore =
@@ -116,7 +154,7 @@ export function evaluate(p: Patient): CdssResult {
     );
   }
 
-  // 4. ClCr
+  // 5. ClCr
   const cl = creatinineClearance(p);
   if (cl.clcr != null) result.scores.clcr = cl.clcr;
   else
@@ -131,7 +169,7 @@ export function evaluate(p: Patient): CdssResult {
       ),
     );
 
-  // 5. Blood pressure
+  // 6. Blood pressure — use two latest readings, do NOT average
   const bp1 = parseBP(p.vitals?.bp_latest);
   const bp2 = parseBP(p.vitals?.bp_second);
   if (!bp1 || !bp2) {
@@ -162,7 +200,7 @@ export function evaluate(p: Patient): CdssResult {
     );
   }
 
-  // 6. HbA1c
+  // 7. HbA1c
   if (p.labs?.hba1c == null) {
     result.reminders.push(
       a(
@@ -180,19 +218,33 @@ export function evaluate(p: Patient): CdssResult {
         "hba1c-high",
         "alert",
         "glycaemic",
-        "HbA1c above target — review therapy",
+        "HbA1c above target — review therapy and adherence",
         `HbA1c = ${p.labs.hba1c}% (target ≤7%).`,
         [`Measured HbA1c: ${p.labs.hba1c}%`, "Threshold: >7%."],
       ),
     );
   }
 
-  // 7. Anticoagulant review
+  // 8. Weight missing reminder (needed for ClCr / dose adjustments)
+  if (p.vitals?.weight == null) {
+    result.reminders.push(
+      a(
+        "weight-missing",
+        "reminder",
+        "data",
+        "No weight recorded",
+        "Weight required for Cockcroft–Gault and DOAC dose criteria.",
+        [],
+      ),
+    );
+  }
+
+  // 9. Anticoagulant review
   const meds = p.medications ?? [];
   const onMed = (name: string) =>
     meds.find((m) => m.name.toLowerCase().includes(name.toLowerCase()));
 
-  // Warfarin
+  // Warfarin — INR + PINRR
   const warf = onMed("warfarin");
   if (warf) {
     const inr = p.labs?.inr_history ?? [];
@@ -202,8 +254,8 @@ export function evaluate(p: Patient): CdssResult {
           "warfarin-no-inr",
           "reminder",
           "data",
-          "No INR data available for warfarin patient",
-          "Recent INR is required to assess therapeutic range.",
+          "No INR available in last 12 months",
+          "Recent INR required to assess therapeutic range and PINRR.",
           [],
         ),
       );
@@ -221,18 +273,21 @@ export function evaluate(p: Patient): CdssResult {
           ),
         );
       }
-      if (inr.length >= 3) {
-        const inRange = inr.filter((v) => v >= 2 && v <= 3).length;
-        const ttr = (inRange / inr.length) * 100;
-        if (ttr < 65) {
+      const pct = computePinrr(inr);
+      if (pct != null) {
+        result.scores.pinrr = pct;
+        if (pct < 55) {
           result.alerts.push(
             a(
-              "warfarin-ttr-low",
+              "warfarin-pinrr-low",
               "alert",
-              "anticoagulant",
-              "Warfarin control suboptimal (TTR <65%)",
-              `Estimated TTR = ${ttr.toFixed(0)}%.`,
-              [`INR history: ${inr.join(", ")}`, `${inRange}/${inr.length} in range`],
+              "pinrr",
+              "Suboptimal INR control (PINRR <55%)",
+              `PINRR = ${pct}% over last ${inr.length} INR readings.`,
+              [
+                `INR history: ${inr.join(", ")}`,
+                "Review adherence, drug interactions, diet.",
+              ],
             ),
           );
         }
@@ -240,7 +295,7 @@ export function evaluate(p: Patient): CdssResult {
     }
   }
 
-  // Apixaban
+  // Apixaban — 2 of 3 criteria
   if (onMed("apixaban")) {
     const crit: string[] = [];
     if (p.age >= 80) crit.push(`Age ${p.age} ≥80`);
@@ -253,8 +308,8 @@ export function evaluate(p: Patient): CdssResult {
         a(
           "apixaban-reduce",
           "alert",
-          "anticoagulant",
-          "Consider reducing Apixaban dose to 2.5 mg BD",
+          "drug-dose",
+          "Reduce Apixaban to 2.5 mg BD",
           `${crit.length} of 3 dose-reduction criteria met.`,
           crit,
         ),
@@ -262,17 +317,17 @@ export function evaluate(p: Patient): CdssResult {
     }
   }
 
-  // Rivaroxaban
+  // Rivaroxaban — renal
   if (onMed("rivaroxaban") && cl.clcr != null) {
     if (cl.clcr < 15)
       result.alerts.push(
         a(
           "rivaroxaban-avoid",
           "alert",
-          "anticoagulant",
-          "Rivaroxaban not recommended (ClCr <15)",
+          "drug-dose",
+          "Avoid Rivaroxaban (ClCr <15)",
           `ClCr = ${cl.clcr} mL/min.`,
-          ["Threshold: ClCr <15 → avoid."],
+          ["Threshold: ClCr <15 → contraindicated."],
         ),
       );
     else if (cl.clcr < 50)
@@ -280,15 +335,15 @@ export function evaluate(p: Patient): CdssResult {
         a(
           "rivaroxaban-reduce",
           "alert",
-          "anticoagulant",
-          "Reduce Rivaroxaban dose (15 mg OD)",
+          "drug-dose",
+          "Reduce Rivaroxaban to 15 mg OD",
           `ClCr = ${cl.clcr} mL/min (15–49).`,
           ["Threshold: ClCr 15–49 → reduce."],
         ),
       );
   }
 
-  // Dabigatran
+  // Dabigatran — renal + age + verapamil
   if (onMed("dabigatran")) {
     if (cl.clcr != null) {
       if (cl.clcr < 30)
@@ -296,10 +351,10 @@ export function evaluate(p: Patient): CdssResult {
           a(
             "dabigatran-avoid",
             "alert",
-            "anticoagulant",
-            "Dabigatran contraindicated (ClCr <30)",
+            "drug-dose",
+            "Avoid Dabigatran (ClCr <30)",
             `ClCr = ${cl.clcr} mL/min.`,
-            ["Threshold: ClCr <30 → avoid."],
+            ["Threshold: ClCr <30 → contraindicated."],
           ),
         );
       else if (cl.clcr <= 50)
@@ -307,27 +362,40 @@ export function evaluate(p: Patient): CdssResult {
           a(
             "dabigatran-reduce-renal",
             "alert",
-            "anticoagulant",
-            "Consider reducing Dabigatran to 110 mg BD",
+            "drug-dose",
+            "Reduce Dabigatran to 110 mg BD",
             `ClCr = ${cl.clcr} mL/min (30–50).`,
             ["Threshold: ClCr 30–50 → reduce."],
           ),
         );
     }
-    if (p.age > 80)
-      result.alerts.push(
+    if (p.age >= 60) {
+      result.reminders.push(
         a(
-          "dabigatran-reduce-age",
-          "alert",
-          "anticoagulant",
-          "Reduce Dabigatran to 110 mg BD (age >80)",
-          `Age = ${p.age}.`,
-          ["Threshold: age >80 → reduce."],
+          "dabigatran-age",
+          "reminder",
+          "drug-dose",
+          "Review Dabigatran dose (age ≥60)",
+          `Age = ${p.age}. Consider 110 mg BD if bleeding risk elevated.`,
+          ["Age ≥60 is a dose-reduction consideration."],
         ),
       );
+    }
+    if (onMed("verapamil")) {
+      result.alerts.push(
+        a(
+          "dabigatran-verapamil",
+          "alert",
+          "drug-dose",
+          "Dabigatran + Verapamil interaction — reduce to 110 mg BD",
+          "Verapamil increases dabigatran exposure.",
+          ["Concomitant verapamil use."],
+        ),
+      );
+    }
   }
 
-  // Edoxaban
+  // Edoxaban — weight / renal
   if (onMed("edoxaban")) {
     const reasons: string[] = [];
     if (cl.clcr != null && cl.clcr >= 15 && cl.clcr <= 50)
@@ -339,7 +407,7 @@ export function evaluate(p: Patient): CdssResult {
         a(
           "edoxaban-reduce",
           "alert",
-          "anticoagulant",
+          "drug-dose",
           "Reduce Edoxaban to 30 mg OD",
           reasons.join("; "),
           reasons,
@@ -353,18 +421,17 @@ export function evaluate(p: Patient): CdssResult {
 
 // ---------- HAS-BLED (manual) ----------
 export interface HasBledInputs {
-  hypertension: boolean; // uncontrolled, sys >160
+  hypertension: boolean;
   abnormalRenal: boolean;
   abnormalLiver: boolean;
   stroke: boolean;
   bleedingHistory: boolean;
   labileINR: boolean;
-  elderly: boolean; // >65
-  drugs: boolean; // antiplatelet/NSAID
+  elderly: boolean;
+  drugs: boolean;
   alcohol: boolean;
 }
 export function hasBled(i: HasBledInputs) {
-  let total = 0;
   const breakdown: Record<string, number> = {};
   breakdown["Hypertension"] = i.hypertension ? 1 : 0;
   breakdown["Abnormal renal"] = i.abnormalRenal ? 1 : 0;
@@ -375,6 +442,6 @@ export function hasBled(i: HasBledInputs) {
   breakdown["Elderly >65"] = i.elderly ? 1 : 0;
   breakdown["Drugs"] = i.drugs ? 1 : 0;
   breakdown["Alcohol"] = i.alcohol ? 1 : 0;
-  total = Object.values(breakdown).reduce((s, v) => s + v, 0);
-  return { total, breakdown, highRisk: total > 3 };
+  const total = Object.values(breakdown).reduce((s, v) => s + v, 0);
+  return { total, breakdown, highRisk: total >= 3 };
 }
