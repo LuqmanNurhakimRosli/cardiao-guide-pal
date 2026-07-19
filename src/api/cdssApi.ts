@@ -4,9 +4,9 @@
  */
 import type { Patient, CdssAlert } from "@/cdss/types";
 import type { ClinicianInputs } from "@/cdss/usePatientState";
+import { cdssConfig } from "@/cdss/config";
 
-const BASE_URL =
-  (import.meta.env.VITE_CDSS_API_URL as string | undefined) ?? "";
+const BASE_URL = cdssConfig.apiBaseUrl;
 
 export interface AnalyzeRequest {
   patient_id?: string;
