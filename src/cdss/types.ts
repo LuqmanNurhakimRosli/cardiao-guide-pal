@@ -35,6 +35,16 @@ export interface Patient {
 
 export type AlertSeverity = "alert" | "reminder";
 
+export type AlertGroup =
+  | "Stroke Prevention"
+  | "Bleeding Risk"
+  | "Drug Safety"
+  | "BP"
+  | "HbA1c"
+  | "Renal Function"
+  | "Missing Data"
+  | "Other";
+
 export interface CdssAlert {
   id: string;
   severity: AlertSeverity;
@@ -51,6 +61,14 @@ export interface CdssAlert {
     | "drug-dose"
     | "pinrr"
     | "data";
+  /** Optional grouping label for the alert panel. */
+  group?: AlertGroup;
+  /** Clinical guideline reference (e.g. "ESC 2020 AF Guideline"). */
+  guideline?: string;
+  /** Suggested clinician action. */
+  recommendation?: string;
+  /** Structured values that drove the alert; used in audit snapshots. */
+  supporting_values?: Record<string, string | number | boolean>;
 }
 
 export interface AfEvidence {
@@ -94,6 +112,14 @@ export interface AuditEntry {
     clinicEligible?: boolean;
     afConfirmed?: boolean | null;
     values_used?: Record<string, string | number | boolean>;
+    alert_evidence?: string[];
+    recommendation?: string;
   };
+  /** Request ID that produced the alert being actioned. */
+  request_id?: string;
+  /** Engine version used at the time of the action. */
+  engine_version?: string;
+  /** Encounter/visit identifier — defaults to timestamp when not supplied. */
+  visit_id?: string;
   timestamp: string;
 }
