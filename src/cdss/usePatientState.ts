@@ -41,7 +41,7 @@ const KEY = (id: string) => `cdss:inputs:${id}`;
 const RESP_KEY = (id: string) => `cdss:response:${id}`;
 
 function load(id: string): ClinicianInputs {
-  if (typeof window === "undefined") return {};
+  if (typeof window === "undefined" || !cdssConfig.persistDrafts) return {};
   try {
     const raw = window.localStorage.getItem(KEY(id));
     return raw ? (JSON.parse(raw) as ClinicianInputs) : {};
@@ -51,7 +51,7 @@ function load(id: string): ClinicianInputs {
 }
 
 function save(id: string, v: ClinicianInputs) {
-  if (typeof window === "undefined") return;
+  if (typeof window === "undefined" || !cdssConfig.persistDrafts) return;
   try {
     window.localStorage.setItem(KEY(id), JSON.stringify(v));
   } catch {
@@ -60,7 +60,7 @@ function save(id: string, v: ClinicianInputs) {
 }
 
 function loadResponse(id: string): CdssRunResult | null {
-  if (typeof window === "undefined") return null;
+  if (typeof window === "undefined" || !cdssConfig.persistDrafts) return null;
   try {
     const raw = window.localStorage.getItem(RESP_KEY(id));
     return raw ? (JSON.parse(raw) as CdssRunResult) : null;
@@ -70,7 +70,7 @@ function loadResponse(id: string): CdssRunResult | null {
 }
 
 function saveResponse(id: string, r: CdssRunResult) {
-  if (typeof window === "undefined") return;
+  if (typeof window === "undefined" || !cdssConfig.persistDrafts) return;
   try {
     window.localStorage.setItem(RESP_KEY(id), JSON.stringify(r));
   } catch {
