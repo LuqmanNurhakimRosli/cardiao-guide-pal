@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Patient, CdssResult } from "./types";
 import { evaluate } from "./engine";
 import { runCDSS, type CdssRunResult } from "@/services/cdssService";
+import { cdssConfig } from "./config";
 
 /**
  * Clinician inputs that override / supplement the EMR-loaded patient.
