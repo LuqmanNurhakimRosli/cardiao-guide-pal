@@ -192,7 +192,10 @@ export function usePatientState(patient: Patient): PatientStateApi {
     return () => clearTimeout(handle);
   }, [draft, patient.patient_id, localFallback]);
 
+  const savingRef = useRef(false);
   const saveAndRecalculate = useCallback(() => {
+    if (savingRef.current) return inputs; // guard duplicate submits
+    savingRef.current = true;
     const next: ClinicianInputs = {
       ...draft,
       _lastSavedAt: new Date().toISOString(),
@@ -200,19 +203,22 @@ export function usePatientState(patient: Patient): PatientStateApi {
     save(patient.patient_id, next);
     setInputs(next);
     setDraft(next);
-    // Hard-commit: re-fetch and persist the response
     setLoading(true);
-    runCDSS({ patient_id: patient.patient_id }, next).then((r) => {
-      const result = toResult(r, localFallback);
-      setCdss(result);
-      setDraftCdss(result);
-      setSource(r.source);
-      setError(r.error);
-      setLoading(false);
-      saveResponse(patient.patient_id, r);
-    });
+    runCDSS({ patient_id: patient.patient_id }, next)
+      .then((r) => {
+        const result = toResult(r, localFallback);
+        setCdss(result);
+        setDraftCdss(result);
+        setSource(r.source);
+        setError(r.error);
+        saveResponse(patient.patient_id, r);
+      })
+      .finally(() => {
+        setLoading(false);
+        savingRef.current = false;
+      });
     return next;
-  }, [draft, patient.patient_id, localFallback]);
+  }, [draft, inputs, patient.patient_id, localFallback]);
 
   const mergedPatient = useMemo(() => mergePatient(patient, inputs), [patient, inputs]);
   const draftPatient = useMemo(() => mergePatient(patient, draft), [patient, draft]);
