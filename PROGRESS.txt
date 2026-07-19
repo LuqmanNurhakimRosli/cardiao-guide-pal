@@ -1,0 +1,86 @@
+AF-CDSS PRODUCTION-READINESS PROGRESS
+=======================================
+Legend: [x] done  [ ] pending  [~] partial / follow-up
+
+1. BACKEND HARDENING (POST /api/cdss/analyze)
+   [x] Zod request/response schemas (src/cdss/schemas.ts)
+   [x] Unified response envelope { success, alerts, scores, recommendations, audit, meta }
+   [x] Legacy top-level fields preserved (backward compatible with current UI)
+   [x] Bearer token check (enforced when CDSS_API_TOKEN is set)
+   [x] Typed error shape { success:false, error:{code,message,details?} }
+   [x] Body size guard + strict schema (reject unknown fields)
+   [~] Rate limiting — deferred to platform/edge layer
+
+2. MODULAR ENGINE (src/cdss/rules/*)
+   [x] clinicGating.ts
+   [x] afDetection.ts (re-export)
+   [x] cha2ds2vasc.ts
+   [x] hasBled.ts
+   [x] cockcroftGault.ts
+   [x] pinrr.ts (re-export)
+   [x] bloodPressure.ts
+   [x] hba1c.ts
+   [x] anticoagulants.ts (warfarin/apixaban/rivaroxaban/dabigatran/edoxaban)
+   [x] missingData.ts (with reason, clinical_impact, action_required, manual_entry_allowed)
+   [x] alertBuilder.ts (grouping + guideline + supporting_values)
+   [x] engine.ts becomes thin orchestrator (evaluate() signature preserved)
+
+3. EMR ADAPTER (src/lib/emr/*)
+   [x] types.ts — EmrAdapter interface
+   [x] mockAdapter.server.ts (wraps patients.json)
+   [x] unimedAdapter.server.ts (stub with TODOs)
+   [x] fhirAdapter.server.ts (stub)
+   [x] index.server.ts factory (CDSS_EMR_ADAPTER env)
+   [x] analyze route uses factory
+   [x] server.functions.ts uses factory
+
+4. ALERTS & AUDIT ENRICHMENT
+   [x] CdssAlert extended with guideline, recommendation, supporting_values, group
+   [x] Audit snapshot gains request_id, engine_version, alert_evidence, recommendation, visit_id
+   [x] MissingDataCard reads new optional fields (progressive enhancement)
+
+5. FRONTEND WIRING
+   [x] src/cdss/config.ts (persistDrafts flag, apiBaseUrl)
+   [x] usePatientState: AbortController per patient switch
+   [x] usePatientState: in-flight duplicate-submit guard for saveAndRecalculate
+   [x] usePatientState: honours persistDrafts (skip localStorage in prod)
+
+6. FOLLOW-UPS (out of scope this pass)
+   [ ] Real UNIMED endpoint + credentials
+   [ ] JWT issuance / user session
+   [ ] Rate-limiter middleware
+   [ ] HTTPS enforcement at deploy layer
+   [ ] Server-side persistence of audit log (currently in-memory)
+   [ ] Automated tests for rule modules
+
+FILES ADDED / MODIFIED THIS REFACTOR
+------------------------------------
+Added:
+  PROGRESS.txt
+  src/cdss/config.ts
+  src/cdss/schemas.ts
+  src/cdss/rules/clinicGating.ts
+  src/cdss/rules/afDetection.ts
+  src/cdss/rules/cha2ds2vasc.ts
+  src/cdss/rules/hasBled.ts
+  src/cdss/rules/cockcroftGault.ts
+  src/cdss/rules/pinrr.ts
+  src/cdss/rules/bloodPressure.ts
+  src/cdss/rules/hba1c.ts
+  src/cdss/rules/anticoagulants.ts
+  src/cdss/rules/missingData.ts
+  src/cdss/rules/alertBuilder.ts
+  src/lib/emr/types.ts
+  src/lib/emr/mockAdapter.server.ts
+  src/lib/emr/unimedAdapter.server.ts
+  src/lib/emr/fhirAdapter.server.ts
+  src/lib/emr/index.server.ts
+
+Modified:
+  src/cdss/engine.ts               (thin orchestrator)
+  src/cdss/types.ts                (extended CdssAlert + AuditEntry)
+  src/routes/api/cdss.analyze.ts   (Zod + envelope + bearer + adapter)
+  src/cdss/server.functions.ts     (adapter + enriched audit)
+  src/cdss/usePatientState.ts      (abort + in-flight guard + config)
+  src/api/cdssApi.ts               (extended response type)
+  src/components/cdss/MissingDataCard.tsx (progressive enhancement)
