@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Patient, CdssResult } from "./types";
 import { evaluate } from "./engine";
 import { runCDSS, type CdssRunResult } from "@/services/cdssService";
+import { cdssConfig } from "./config";
 
 /**
  * Clinician inputs that override / supplement the EMR-loaded patient.
@@ -40,7 +41,7 @@ const KEY = (id: string) => `cdss:inputs:${id}`;
 const RESP_KEY = (id: string) => `cdss:response:${id}`;
 
 function load(id: string): ClinicianInputs {
-  if (typeof window === "undefined") return {};
+  if (typeof window === "undefined" || !cdssConfig.persistDrafts) return {};
   try {
     const raw = window.localStorage.getItem(KEY(id));
     return raw ? (JSON.parse(raw) as ClinicianInputs) : {};
@@ -50,7 +51,7 @@ function load(id: string): ClinicianInputs {
 }
 
 function save(id: string, v: ClinicianInputs) {
-  if (typeof window === "undefined") return;
+  if (typeof window === "undefined" || !cdssConfig.persistDrafts) return;
   try {
     window.localStorage.setItem(KEY(id), JSON.stringify(v));
   } catch {
@@ -59,7 +60,7 @@ function save(id: string, v: ClinicianInputs) {
 }
 
 function loadResponse(id: string): CdssRunResult | null {
-  if (typeof window === "undefined") return null;
+  if (typeof window === "undefined" || !cdssConfig.persistDrafts) return null;
   try {
     const raw = window.localStorage.getItem(RESP_KEY(id));
     return raw ? (JSON.parse(raw) as CdssRunResult) : null;
@@ -69,7 +70,7 @@ function loadResponse(id: string): CdssRunResult | null {
 }
 
 function saveResponse(id: string, r: CdssRunResult) {
-  if (typeof window === "undefined") return;
+  if (typeof window === "undefined" || !cdssConfig.persistDrafts) return;
   try {
     window.localStorage.setItem(RESP_KEY(id), JSON.stringify(r));
   } catch {
@@ -191,7 +192,10 @@ export function usePatientState(patient: Patient): PatientStateApi {
     return () => clearTimeout(handle);
   }, [draft, patient.patient_id, localFallback]);
 
+  const savingRef = useRef(false);
   const saveAndRecalculate = useCallback(() => {
+    if (savingRef.current) return inputs; // guard duplicate submits
+    savingRef.current = true;
     const next: ClinicianInputs = {
       ...draft,
       _lastSavedAt: new Date().toISOString(),
@@ -199,19 +203,22 @@ export function usePatientState(patient: Patient): PatientStateApi {
     save(patient.patient_id, next);
     setInputs(next);
     setDraft(next);
-    // Hard-commit: re-fetch and persist the response
     setLoading(true);
-    runCDSS({ patient_id: patient.patient_id }, next).then((r) => {
-      const result = toResult(r, localFallback);
-      setCdss(result);
-      setDraftCdss(result);
-      setSource(r.source);
-      setError(r.error);
-      setLoading(false);
-      saveResponse(patient.patient_id, r);
-    });
+    runCDSS({ patient_id: patient.patient_id }, next)
+      .then((r) => {
+        const result = toResult(r, localFallback);
+        setCdss(result);
+        setDraftCdss(result);
+        setSource(r.source);
+        setError(r.error);
+        saveResponse(patient.patient_id, r);
+      })
+      .finally(() => {
+        setLoading(false);
+        savingRef.current = false;
+      });
     return next;
-  }, [draft, patient.patient_id, localFallback]);
+  }, [draft, inputs, patient.patient_id, localFallback]);
 
   const mergedPatient = useMemo(() => mergePatient(patient, inputs), [patient, inputs]);
   const draftPatient = useMemo(() => mergePatient(patient, draft), [patient, draft]);

@@ -1,99 +1,74 @@
 
-## Goal
+# AF-CDSS Production-Readiness Refactor
 
-Upgrade the existing prototype to match the latest AF-CDSS specification. Preserve current UI/navigation/pages. All work is additive on top of the existing API-driven architecture (`/api/cdss/analyze` → `runCDSS` → `usePatientState`).
+Goal: keep the current UI and workflow untouched; harden the backend, modularize the engine, prepare for UNIMED integration, and improve alerts / missing-data / audit fidelity. Progress tracked in a plain-text file.
 
-## What already exists (no rebuild)
+## Guardrails
+- No UI redesign, no page removals, no flow changes.
+- Existing routes (`/patients`, `/`, `/alerts*`, `/summary`, `/audit`) stay.
+- Frontend keeps calling `runCDSS` → `POST /api/cdss/analyze`. No React-side clinical calculation in production path (draft preview via API stays debounced).
+- localStorage stays for the prototype but gated behind a config flag so it can be turned off for production.
 
-- Patients list page, Patient Dashboard, Alerts, Audit, Summary
-- Hybrid CHA₂DS₂-VASc and HAS-BLED calculators with clinician overrides
-- API layer: `src/routes/api/cdss.analyze.ts`, `src/api/cdssApi.ts`, `src/services/cdssService.ts`
-- Persistence in localStorage (`cdss:inputs:<id>`, `cdss:response:<id>`)
-- Accept / Override / Defer flows and audit log
+## 1. Backend hardening — `src/routes/api/cdss.analyze.ts`
+- Add Zod schemas for request + response (`src/cdss/schemas.ts`).
+- Return unified envelope: `{ success, alerts, scores, recommendations, audit, meta:{engine_version, request_id, execution_time_ms, timestamp} }`. Keep legacy top-level fields for backward compatibility with current UI (`hasAF`, `executed`, `reason`, `afEvidence`, `afConfirmed`, `patient`).
+- Bearer token check (optional in dev, required when `CDSS_API_TOKEN` is set). Config read via `process.env` inside handler.
+- Reject unknown fields, size-limit body, return typed error shape `{ success:false, error:{code,message,details?} }`.
 
-## What changes
+## 2. Modularize the engine — split `src/cdss/engine.ts`
+Create `src/cdss/rules/`:
+- `clinicGating.ts`
+- `afDetection.ts` (re-export existing)
+- `cha2ds2vasc.ts`
+- `hasBled.ts`
+- `cockcroftGault.ts`
+- `pinrr.ts` (re-export existing)
+- `bloodPressure.ts`
+- `hba1c.ts`
+- `drugs/warfarin.ts`, `apixaban.ts`, `rivaroxaban.ts`, `dabigatran.ts`, `edoxaban.ts`
+- `missingData.ts` — richer reminders with `reason`, `clinical_impact`, `action_required`, `manual_entry_allowed`.
+- `alertBuilder.ts` — groups alerts by category (Stroke Prevention, Bleeding Risk, Drug Safety, BP, HbA1c, Renal, Missing Data) and attaches `guideline` + `supporting_values`.
 
-### 1. Backend engine (`src/cdss/engine.ts` + `/api/cdss/analyze`)
+`engine.ts` becomes a thin orchestrator that composes rule modules; keeps the current `evaluate()` signature so callers don't break.
 
-- **Clinic gating**: allowlist = `["Cardiology Clinic", "Family Medicine Clinic"]`. If patient's `clinic_location` not in list → return `{ executed: false, reason: "Clinic not eligible" }`, no scores, no alerts.
-- **Multi-source AF detection** (`src/cdss/afDetection.ts`): scan ICD-10, ICD-11, ECG interpretations, active anticoagulant meds (with AF indication), and PMH free text. Return `{ afDetected, evidence: string[] }`.
-- **AF confirmation gate**: engine only runs full rules when `clinician_inputs.afConfirmed === true`. If evidence exists but not confirmed → return evidence + `reason: "Awaiting AF confirmation"`. If explicitly rejected → `reason: "AF rejected by clinician"`.
-- **PINRR calculator** (`src/cdss/pinrr.ts`): compute % of INR readings in 2.0–3.0 range from `labs.inr_history`. Alert if `<55%` and patient is on warfarin.
-- **Missing-data reminders**: dedicated pass emitting reminders (not alerts) for HbA1c, INR (warfarin only), creatinine, weight.
-- **DOAC rule modules** (`src/cdss/drugRules/{apixaban,edoxaban,rivaroxaban,dabigatran}.ts`): explicit dose-reduction / contraindication logic per spec (Apixaban 2-of-3, Edoxaban ≤60 kg, Rivaroxaban ClCr 15–49 caution / <15 avoid, Dabigatran age ≥60 or verapamil, avoid <30 ClCr).
-- **BP rule**: use two latest readings, alert only when both >140/90 (no averaging).
-- **HbA1c rule**: latest value > 7%.
+## 3. EMR Adapter layer — `src/server/emr/`
+- `types.ts` — `EmrAdapter` interface (`getPatient(id)`, `listPatients()`).
+- `mockAdapter.ts` — wraps `src/data/patients.json` (current behaviour).
+- `unimedAdapter.ts` — stub with TODOs + shape mapping notes.
+- `fhirAdapter.ts` — stub.
+- `index.ts` — factory selects adapter via `process.env.CDSS_EMR_ADAPTER` (default: `mock`).
+- Analyze route + `listPatientsWithAlerts` go through the factory. No route imports `patients.json` directly.
 
-### 2. API response additions (`src/routes/api/cdss.analyze.ts`)
+## 4. Alerts & audit enrichment
+- Extend `CdssAlert` with optional `guideline`, `recommendation`, `supporting_values`, `group`.
+- Audit snapshot (`src/cdss/server.functions.ts` `logAction`) gains `request_id`, `engine_version`, `alert_evidence`, `recommendation`, `visit_id` (encounter timestamp). Keep existing fields.
+- Missing-data reminders carry the richer metadata described above; `MissingDataCard` reads new optional fields without visual redesign (progressive enhancement — falls back if absent).
 
-Extend `AnalyzeResponse`:
-```ts
-afEvidence: string[]
-afConfirmed: boolean | null   // null = awaiting
-clinicEligible: boolean
-```
+## 5. Frontend wiring (minimal)
+- `src/cdss/config.ts` — `{ persistDrafts: !import.meta.env.PROD, apiBaseUrl }`. `usePatientState` honours the flag.
+- `usePatientState`:
+  - Keep 300ms debounce for draft recompute (UX unchanged), but abort in-flight requests on patient switch (AbortController).
+  - "Save & Recalculate" remains the only path that writes inputs; unchanged UX.
+  - Prevent duplicate submissions with an in-flight guard.
+- No component-level calculations added; existing hybrid calculators keep their live preview via the API (already the case).
 
-### 3. Types & service layer
+## 6. Progress tracker
+- Create `PROGRESS.txt` at repo root with a checklist mirroring these sections; update as items land.
 
-- `CdssAlert` gains new categories: `"pinrr"`, `"drug-dose"`.
-- `ClinicianInputs` gains `afConfirmed?: boolean | null`.
-- `runCDSS` / `CdssRunResult` pass through the new fields.
+## 7. Out of scope this pass
+- Real UNIMED endpoints, JWT issuance, rate-limiter middleware, HTTPS enforcement (documented as follow-ups in `docs/unimed-integration.md` and `PROGRESS.txt`; adapter + bearer scaffolding prepares for them).
+- Any visual/layout changes.
 
-### 4. UI (minimal, additive)
+## Technical notes
+- Response envelope is additive: existing `AnalyzeResponse` fields remain so `src/api/cdssApi.ts` and `cdssService.ts` need no breaking edits — just extend the type.
+- Rule modules export pure functions taking `Patient` (+ optional context) and returning `{ alerts, reminders, scores }` fragments merged by orchestrator.
+- Keep `evaluate()` re-export from `src/cdss/engine.ts` so `cdss.analyze.ts` and any tests keep working during the refactor.
+- Zod is already an available pattern in the codebase guidance; add via `bun add zod` if not present.
 
-- **AF Evidence card** on dashboard: lists evidence sources when found.
-- **AF Confirmation modal**: shown on dashboard when evidence exists and `afConfirmed == null`. Buttons: Confirm AF / Reject AF. Selection persisted via `setField('afConfirmed', …)` and sent to the API.
-- **Clinic gating banner**: when `!clinicEligible`, dashboard shows "AF-CDSS Not Applicable — {clinic}" and hides calculators.
-- **Missing Data card**: new component under the alert panel listing monitoring reminders separately from clinical alerts.
-- **Combined Alert Panel** already exists — inject PINRR + DOAC dose alerts through the same channel; add explicit priority ordering (critical > high > moderate > reminder).
-- Patients list already exists — add an "AF Status" column derived from stored `afConfirmed`.
-
-### 5. Audit log enhancements
-
-Extend `AuditEntry` snapshot with:
-```
-cha2ds2vasc, hasbled, clcr, pinrr, clinicEligible, afConfirmed, valuesUsed
-```
-Written from the accept/override/defer routes using the current CDSS snapshot.
-
-### 6. Data
-
-Add to `src/data/patients.json` where missing: `inr_history`, extra BP readings, at least one patient in an ineligible clinic (to demo gating), and one with AF evidence only via ECG/meds (to demo multi-source detection).
-
-## Files touched
-
-Created:
-- `src/cdss/afDetection.ts`
-- `src/cdss/pinrr.ts`
-- `src/cdss/drugRules/{apixaban,edoxaban,rivaroxaban,dabigatran}.ts`
-- `src/components/cdss/AfEvidenceCard.tsx`
-- `src/components/cdss/AfConfirmationModal.tsx`
-- `src/components/cdss/MissingDataCard.tsx`
-- `src/components/cdss/ClinicGateBanner.tsx`
-
-Edited:
-- `src/cdss/engine.ts` (gating, AF gate, PINRR, DOAC integration, BP-two-reading rule, HbA1c, missing-data reminders)
-- `src/cdss/types.ts` (new categories, AuditEntry snapshot)
-- `src/cdss/usePatientState.ts` (afConfirmed field, expose evidence/eligibility)
-- `src/api/cdssApi.ts`, `src/services/cdssService.ts` (new response fields)
-- `src/routes/api/cdss.analyze.ts` (return afEvidence, clinicEligible, afConfirmed)
-- `src/routes/index.tsx` (mount new cards + modal + gating banner)
-- `src/routes/patients.tsx` (AF status column)
-- `src/routes/alerts.$alertId.{accept,override,defer}.tsx` (richer audit snapshot)
-- `src/data/patients.json` (test fixtures)
-
-## Out of scope
-
-- No redesign of existing pages, navigation, or theming.
-- No backend server outside the existing TanStack `/api/cdss/analyze` route.
-- No auth or real EMR connector; UNIMED integration doc already covers the contract.
-
-## Verification
-
-- `bunx tsgo --noEmit` clean.
-- Manual walk-through in preview:
-  1. Ineligible-clinic patient → CDSS Not Applicable banner, no alerts.
-  2. Multi-source AF patient → evidence card + confirmation modal → Reject stops workflow; Confirm runs full engine.
-  3. Warfarin patient with poor INR history → PINRR alert.
-  4. Patient missing HbA1c/weight → reminders card populated.
-  5. Apixaban patient with 2-of-3 criteria → dose-reduction alert.
+## Rollout order
+1. `PROGRESS.txt` + `config.ts` + Zod install.
+2. Split rules into `src/cdss/rules/` behind existing `evaluate()`.
+3. EMR adapter + route swap.
+4. Response envelope + bearer + validation.
+5. Alert/audit enrichment.
+6. `usePatientState` abort + in-flight guard + persistDrafts flag.

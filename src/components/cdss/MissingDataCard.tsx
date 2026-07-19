@@ -14,19 +14,32 @@ export function MissingDataCard({ reminders }: { reminders: CdssAlert[] }) {
         <Info className="size-4" /> Monitoring Reminders
       </h3>
       <ul className="space-y-1">
-        {missing.map((r) => (
-          <li
-            key={r.id}
-            className="rounded border border-border bg-card px-2 py-1.5 text-xs"
-          >
-            <p className="font-medium">{r.title}</p>
-            {r.detail && (
-              <p className="mt-0.5 text-[11px] text-muted-foreground">
-                {r.detail}
-              </p>
-            )}
-          </li>
-        ))}
+        {missing.map((r) => {
+          const sv = r.supporting_values ?? {};
+          const impact = typeof sv.clinical_impact === "string" ? sv.clinical_impact : undefined;
+          const action = typeof sv.action_required === "string" ? sv.action_required : undefined;
+          return (
+            <li
+              key={r.id}
+              className="rounded border border-border bg-card px-2 py-1.5 text-xs"
+            >
+              <p className="font-medium">{r.title}</p>
+              {r.detail && (
+                <p className="mt-0.5 text-[11px] text-muted-foreground">{r.detail}</p>
+              )}
+              {impact && (
+                <p className="mt-0.5 text-[10px] text-muted-foreground">
+                  <span className="font-semibold">Impact:</span> {impact}
+                </p>
+              )}
+              {action && (
+                <p className="text-[10px] text-muted-foreground">
+                  <span className="font-semibold">Action:</span> {action}
+                </p>
+              )}
+            </li>
+          );
+        })}
       </ul>
       <p className="mt-2 text-[10px] italic text-muted-foreground">
         Arrange monitoring to complete the clinical picture.

@@ -4,9 +4,9 @@
  */
 import type { Patient, CdssAlert } from "@/cdss/types";
 import type { ClinicianInputs } from "@/cdss/usePatientState";
+import { cdssConfig } from "@/cdss/config";
 
-const BASE_URL =
-  (import.meta.env.VITE_CDSS_API_URL as string | undefined) ?? "";
+const BASE_URL = cdssConfig.apiBaseUrl;
 
 export interface AnalyzeRequest {
   patient_id?: string;
@@ -37,9 +37,26 @@ export interface AnalyzeResponse {
   };
   alerts?: CdssAlert[];
   reminders?: CdssAlert[];
+  /** Unified envelope fields (optional to stay backward compatible). */
+  success?: boolean;
+  recommendations?: Array<{
+    alert_id: string;
+    group?: string;
+    recommendation: string;
+  }>;
+  audit?: {
+    request_id: string;
+    engine_version: string;
+    patient_id: string;
+    input_source: "auto" | "hybrid";
+    evaluated_at: string;
+  };
   meta?: {
     engine_version: string;
-    evaluated_at: string;
+    evaluated_at?: string;
+    timestamp?: string;
+    request_id?: string;
+    execution_time_ms?: number;
     input_source: "auto" | "hybrid";
   };
 }
