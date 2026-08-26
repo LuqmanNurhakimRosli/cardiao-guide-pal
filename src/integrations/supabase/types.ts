@@ -14,7 +14,132 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      cdss_audit_events: {
+        Row: {
+          action: string | null
+          alert_id: string | null
+          alert_title: string | null
+          clinician_id: string
+          created_at: string
+          doctor_plan: string | null
+          engine_version: string
+          event_category: string
+          id: string
+          index_alert_date: string | null
+          medication_change: Json | null
+          monitoring_plan: string | null
+          mrn: string
+          next_appointment_date: string | null
+          notes: string | null
+          occurred_at: string
+          patient_id: string
+          reason_code: string | null
+          reason_text: string | null
+          request_id: string | null
+          research_window: string | null
+          rule_version: string
+          snapshot: Json
+          visit_id: string
+        }
+        Insert: {
+          action?: string | null
+          alert_id?: string | null
+          alert_title?: string | null
+          clinician_id?: string
+          created_at?: string
+          doctor_plan?: string | null
+          engine_version: string
+          event_category: string
+          id?: string
+          index_alert_date?: string | null
+          medication_change?: Json | null
+          monitoring_plan?: string | null
+          mrn: string
+          next_appointment_date?: string | null
+          notes?: string | null
+          occurred_at?: string
+          patient_id: string
+          reason_code?: string | null
+          reason_text?: string | null
+          request_id?: string | null
+          research_window?: string | null
+          rule_version: string
+          snapshot?: Json
+          visit_id: string
+        }
+        Update: {
+          action?: string | null
+          alert_id?: string | null
+          alert_title?: string | null
+          clinician_id?: string
+          created_at?: string
+          doctor_plan?: string | null
+          engine_version?: string
+          event_category?: string
+          id?: string
+          index_alert_date?: string | null
+          medication_change?: Json | null
+          monitoring_plan?: string | null
+          mrn?: string
+          next_appointment_date?: string | null
+          notes?: string | null
+          occurred_at?: string
+          patient_id?: string
+          reason_code?: string | null
+          reason_text?: string | null
+          request_id?: string | null
+          research_window?: string | null
+          rule_version?: string
+          snapshot?: Json
+          visit_id?: string
+        }
+        Relationships: []
+      }
+      cdss_research_timelines: {
+        Row: {
+          created_at: string
+          created_by: string
+          id: string
+          index_alert_date: string
+          mrn: string
+          patient_id: string
+          post_alert_end: string
+          post_alert_start: string
+          pre_alert_end: string
+          pre_alert_start: string
+          updated_at: string
+          visit_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string
+          id?: string
+          index_alert_date: string
+          mrn: string
+          patient_id: string
+          post_alert_end: string
+          post_alert_start: string
+          pre_alert_end: string
+          pre_alert_start: string
+          updated_at?: string
+          visit_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          id?: string
+          index_alert_date?: string
+          mrn?: string
+          patient_id?: string
+          post_alert_end?: string
+          post_alert_start?: string
+          pre_alert_end?: string
+          pre_alert_start?: string
+          updated_at?: string
+          visit_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
