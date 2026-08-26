@@ -2,7 +2,7 @@
  * Runtime configuration for the CDSS frontend.
  * Kept intentionally minimal so it can be swapped for a config service later.
  */
-export const CDSS_ENGINE_VERSION = "1.2.0";
+export const CDSS_ENGINE_VERSION = "2.0.0";
 
 export const cdssConfig = {
   /** Base URL for the CDSS API. Empty = same-origin TanStack server route. */

@@ -1,6 +1,6 @@
 import type { Patient } from "../types";
 
-export function cha2ds2vasc(p: Patient) {
+export function cha2ds2va(p: Patient) {
   const c = p.comorbidities ?? {};
   const breakdown: Record<string, number> = {};
   breakdown["CHF"] = c.chf ? 1 : 0;
@@ -10,7 +10,9 @@ export function cha2ds2vasc(p: Patient) {
   breakdown["Diabetes"] = c.diabetes ? 1 : 0;
   breakdown["Stroke/TIA"] = c.stroke ? 2 : 0;
   breakdown["Vascular disease"] = c.vascular ? 1 : 0;
-  breakdown["Female"] = p.sex === "female" ? 1 : 0;
   const total = Object.values(breakdown).reduce((s, v) => s + v, 0);
   return { total, breakdown };
 }
+
+/** @deprecated Compatibility alias. New clinical logic uses CHA₂DS₂-VA. */
+export const cha2ds2vasc = cha2ds2va;
