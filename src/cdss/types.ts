@@ -2,14 +2,38 @@ export interface Medication {
   name: string;
   indication?: string;
   dose?: string;
+  frequency?: string;
+  start_date?: string;
+  stop_date?: string;
+  order_date?: string;
+  change_date?: string;
+}
+
+export interface DatedValue<T> {
+  value: T;
+  date: string;
+}
+
+export interface Encounter {
+  visit_id: string;
+  clinic_date: string;
+  clinician_id?: string;
+  encounter_type?: string;
+  appointment_date?: string;
+  patient_record_opened: boolean;
 }
 
 export interface Patient {
   patient_id: string;
+  mrn?: string;
   name: string;
   age: number;
+  dob?: string;
   sex: "male" | "female";
+  ethnicity?: string;
+  nationality?: string;
   clinic_location: string;
+  encounter?: Encounter;
   diagnoses: string[];
   ecg_results: string[];
   medications: Medication[];
@@ -17,12 +41,17 @@ export interface Patient {
     bp_latest?: string; // "150/95"
     bp_second?: string;
     weight?: number; // kg
+    bp_readings?: DatedValue<string>[];
+    weight_record?: DatedValue<number>;
   };
   labs: {
     creatinine?: number;
     creatinine_unit?: "umol/L" | "mg/dL";
     hba1c?: number;
     inr_history?: number[];
+    creatinine_record?: DatedValue<number> & { unit: "umol/L" | "mg/dL" };
+    hba1c_record?: DatedValue<number>;
+    inr_results?: DatedValue<number>[];
   };
   comorbidities: {
     chf?: boolean;
@@ -31,6 +60,19 @@ export interface Patient {
     stroke?: boolean;
     vascular?: boolean;
   };
+  clinician_plan?: {
+    doctor_plan?: string;
+    medication_plan?: string;
+    monitoring_plan?: string;
+    next_appointment_date?: string;
+  };
+  hospitalisations?: Array<{
+    admission_date: string;
+    discharge_date?: string;
+    diagnosis?: string;
+    discharge_summary?: string;
+    cause?: string;
+  }>;
 }
 
 export type AlertSeverity = "alert" | "reminder";
@@ -69,6 +111,15 @@ export interface CdssAlert {
   recommendation?: string;
   /** Structured values that drove the alert; used in audit snapshots. */
   supporting_values?: Record<string, string | number | boolean>;
+  /** Higher values take precedence for mutually exclusive findings. */
+  priority?: number;
+  rule_id?: string;
+  action?: {
+    kind: "medication" | "monitoring" | "review";
+    medication?: string;
+    current_dose?: string;
+    suggested_dose?: string;
+  };
 }
 
 export interface AfEvidence {
@@ -84,9 +135,25 @@ export interface CdssResult {
   afEvidence: AfEvidence[];
   afConfirmed: boolean | null; // null = awaiting clinician confirmation
   scores: {
+    cha2ds2va?: {
+      total: number;
+      breakdown: Record<string, number>;
+      source: "auto" | "hybrid" | "manual";
+      calculated_at: string;
+    };
+    /** Temporary compatibility alias for older consumers. */
     cha2ds2vasc?: { total: number; breakdown: Record<string, number> };
+    hasbled?: {
+      total: number;
+      breakdown: Record<string, number>;
+      source: "auto" | "hybrid" | "manual";
+      calculated_at: string;
+    };
     clcr?: number; // mL/min
     pinrr?: number; // %
+    pinrr_count?: number;
+    pinrr_date_start?: string;
+    pinrr_date_end?: string;
   };
   alerts: CdssAlert[];
   reminders: CdssAlert[];
@@ -101,10 +168,12 @@ export interface AuditEntry {
   alert_title: string;
   action: ClinicianAction;
   override_reason?: string;
+  override_reason_code?: string;
   override_notes?: string;
   defer_until?: string;
   med_change?: { name: string; new_dose: string };
   snapshot?: {
+    cha2ds2va?: number;
     cha2ds2vasc?: number;
     hasbled?: number;
     clcr?: number;
@@ -121,5 +190,10 @@ export interface AuditEntry {
   engine_version?: string;
   /** Encounter/visit identifier — defaults to timestamp when not supplied. */
   visit_id?: string;
+  mrn?: string;
+  clinician_id?: string;
+  rule_version?: string;
+  index_alert_date?: string;
+  research_window?: "pre-alert" | "index" | "post-alert" | "outside";
   timestamp: string;
 }
