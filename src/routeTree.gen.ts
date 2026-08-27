@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TimelineRouteImport } from './routes/timeline'
 import { Route as SummaryRouteImport } from './routes/summary'
 import { Route as PatientsRouteImport } from './routes/patients'
 import { Route as AuditRouteImport } from './routes/audit'
@@ -19,6 +20,11 @@ import { Route as AlertsAlertIdOverrideRouteImport } from './routes/alerts.$aler
 import { Route as AlertsAlertIdDeferRouteImport } from './routes/alerts.$alertId.defer'
 import { Route as AlertsAlertIdAcceptRouteImport } from './routes/alerts.$alertId.accept'
 
+const TimelineRoute = TimelineRouteImport.update({
+  id: '/timeline',
+  path: '/timeline',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SummaryRoute = SummaryRouteImport.update({
   id: '/summary',
   path: '/summary',
@@ -70,6 +76,7 @@ export interface FileRoutesByFullPath {
   '/audit': typeof AuditRoute
   '/patients': typeof PatientsRoute
   '/summary': typeof SummaryRoute
+  '/timeline': typeof TimelineRoute
   '/alerts/': typeof AlertsIndexRoute
   '/alerts/$alertId/accept': typeof AlertsAlertIdAcceptRoute
   '/alerts/$alertId/defer': typeof AlertsAlertIdDeferRoute
@@ -81,6 +88,7 @@ export interface FileRoutesByTo {
   '/audit': typeof AuditRoute
   '/patients': typeof PatientsRoute
   '/summary': typeof SummaryRoute
+  '/timeline': typeof TimelineRoute
   '/alerts': typeof AlertsIndexRoute
   '/alerts/$alertId/accept': typeof AlertsAlertIdAcceptRoute
   '/alerts/$alertId/defer': typeof AlertsAlertIdDeferRoute
@@ -93,6 +101,7 @@ export interface FileRoutesById {
   '/audit': typeof AuditRoute
   '/patients': typeof PatientsRoute
   '/summary': typeof SummaryRoute
+  '/timeline': typeof TimelineRoute
   '/alerts/': typeof AlertsIndexRoute
   '/alerts/$alertId/accept': typeof AlertsAlertIdAcceptRoute
   '/alerts/$alertId/defer': typeof AlertsAlertIdDeferRoute
@@ -106,6 +115,7 @@ export interface FileRouteTypes {
     | '/audit'
     | '/patients'
     | '/summary'
+    | '/timeline'
     | '/alerts/'
     | '/alerts/$alertId/accept'
     | '/alerts/$alertId/defer'
@@ -117,6 +127,7 @@ export interface FileRouteTypes {
     | '/audit'
     | '/patients'
     | '/summary'
+    | '/timeline'
     | '/alerts'
     | '/alerts/$alertId/accept'
     | '/alerts/$alertId/defer'
@@ -128,6 +139,7 @@ export interface FileRouteTypes {
     | '/audit'
     | '/patients'
     | '/summary'
+    | '/timeline'
     | '/alerts/'
     | '/alerts/$alertId/accept'
     | '/alerts/$alertId/defer'
@@ -140,6 +152,7 @@ export interface RootRouteChildren {
   AuditRoute: typeof AuditRoute
   PatientsRoute: typeof PatientsRoute
   SummaryRoute: typeof SummaryRoute
+  TimelineRoute: typeof TimelineRoute
   AlertsIndexRoute: typeof AlertsIndexRoute
   AlertsAlertIdAcceptRoute: typeof AlertsAlertIdAcceptRoute
   AlertsAlertIdDeferRoute: typeof AlertsAlertIdDeferRoute
@@ -149,6 +162,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/timeline': {
+      id: '/timeline'
+      path: '/timeline'
+      fullPath: '/timeline'
+      preLoaderRoute: typeof TimelineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/summary': {
       id: '/summary'
       path: '/summary'
@@ -220,6 +240,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuditRoute: AuditRoute,
   PatientsRoute: PatientsRoute,
   SummaryRoute: SummaryRoute,
+  TimelineRoute: TimelineRoute,
   AlertsIndexRoute: AlertsIndexRoute,
   AlertsAlertIdAcceptRoute: AlertsAlertIdAcceptRoute,
   AlertsAlertIdDeferRoute: AlertsAlertIdDeferRoute,

@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { z } from "zod";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   listPatients,
   getPatientWithCdss,
@@ -10,7 +10,8 @@ import { AppShell } from "@/components/cdss/AppShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, CheckCircle2, ArrowRight } from "lucide-react";
+import type { Medication } from "@/cdss/types";
 
 const searchSchema = z.object({ p: z.string().optional() });
 
@@ -28,142 +29,218 @@ export const Route = createFileRoute("/alerts/$alertId/accept")({
   component: AcceptFlow,
 });
 
-// Map alert id to suggested medication change
-function suggestionFor(alertId: string): { name: string; newDose: string; note: string } | null {
-  if (alertId === "apixaban-reduce")
-    return { name: "Apixaban", newDose: "2.5 mg BD", note: "Dose reduction (≥2 of 3 criteria met)." };
-  if (alertId === "rivaroxaban-reduce")
-    return { name: "Rivaroxaban", newDose: "15 mg OD", note: "ClCr 15–49 mL/min." };
-  if (alertId === "rivaroxaban-avoid")
-    return { name: "Rivaroxaban", newDose: "DISCONTINUE", note: "ClCr <15 mL/min." };
-  if (alertId === "dabigatran-reduce-renal" || alertId === "dabigatran-reduce-age")
-    return { name: "Dabigatran", newDose: "110 mg BD", note: "Renal/age criterion met." };
-  if (alertId === "dabigatran-avoid")
-    return { name: "Dabigatran", newDose: "DISCONTINUE", note: "ClCr <30 mL/min." };
-  if (alertId === "edoxaban-reduce")
-    return { name: "Edoxaban", newDose: "30 mg OD", note: "ClCr/weight criterion." };
-  return null;
+interface QueuedAction {
+  alertId: string;
+  action: string;
+  alertTitle: string;
 }
 
 function AcceptFlow() {
   const { patients, current, alert } = Route.useLoaderData();
   const { patient } = current;
   const navigate = useNavigate();
-  const suggestion = alert ? suggestionFor(alert.id) : null;
-  const currentMed = suggestion
-    ? patient.medications.find((m: import("@/cdss/types").Medication) => m.name === suggestion.name)
+
+  // Structured action recommendation from rule result
+  const actionKind = alert?.action?.kind;
+  const suggestedMedName = alert?.action?.medication;
+  const suggestedDose = alert?.action?.suggested_dose;
+
+  const currentMed = suggestedMedName
+    ? patient.medications.find(
+        (m: Medication) =>
+          m.name.toLowerCase().includes(suggestedMedName.toLowerCase()),
+      )
     : undefined;
-  const [dose, setDose] = useState(suggestion?.newDose ?? currentMed?.dose ?? "");
+
+  const [dose, setDose] = useState(suggestedDose ?? currentMed?.dose ?? "");
   const [saving, setSaving] = useState(false);
+
+  // Queue state
+  const [queueIndex, setQueueIndex] = useState<number>(1);
+  const [queueTotal, setQueueTotal] = useState<number>(1);
+
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem("cdss_action_queue");
+      const totalRaw = sessionStorage.getItem("cdss_queue_total");
+      if (raw && totalRaw) {
+        const queue: QueuedAction[] = JSON.parse(raw);
+        const total = Number(totalRaw);
+        setQueueTotal(total);
+        setQueueIndex(total - queue.length + 1);
+      }
+    } catch {}
+  }, []);
+
+  const proceedQueue = () => {
+    try {
+      const raw = sessionStorage.getItem("cdss_action_queue");
+      if (raw) {
+        const queue: QueuedAction[] = JSON.parse(raw);
+        const nextQueue = queue.filter((item) => item.alertId !== alert?.id);
+        sessionStorage.setItem("cdss_action_queue", JSON.stringify(nextQueue));
+
+        if (nextQueue.length > 0) {
+          const next = nextQueue[0];
+          (navigate as any)({
+            to: `/alerts/$alertId/${next.action}`,
+            params: { alertId: next.alertId },
+            search: { p: patient.patient_id },
+          });
+          return;
+        }
+      }
+    } catch {}
+    navigate({ to: "/summary", search: { p: patient.patient_id } });
+  };
 
   const save = async () => {
     if (!alert) return;
     setSaving(true);
+
+    const isMedChange = Boolean(suggestedMedName && dose);
+
     await logAction({
       data: {
         patient_id: patient.patient_id,
         alert_id: alert.id,
         alert_title: alert.title,
         action: "accept",
-        med_change: suggestion
-          ? { name: suggestion.name, new_dose: dose }
+        med_change: isMedChange
+          ? { name: suggestedMedName!, new_dose: dose }
           : undefined,
+        request_id: `REQ-${Date.now()}`,
+        visit_id: patient.encounter?.visit_id ?? "VIS-2026-001",
         snapshot: {
-          cha2ds2vasc: current.cdss.scores.cha2ds2vasc?.total,
+          cha2ds2va:
+            current.cdss.scores.cha2ds2va?.total ??
+            current.cdss.scores.cha2ds2vasc?.total,
+          hasbled: current.cdss.scores.hasbled?.total,
           clcr: current.cdss.scores.clcr,
           pinrr: current.cdss.scores.pinrr,
           clinicEligible: current.cdss.clinicEligible,
           afConfirmed: current.cdss.afConfirmed,
+          alert_evidence: alert.rationale,
+          recommendation: alert.recommendation,
           values_used: {
-            age: patient.age,
+            age: patient.age_at_encounter ?? patient.age,
             sex: patient.sex,
-            weight: patient.vitals?.weight ?? "—",
-            creatinine: patient.labs?.creatinine ?? "—",
+            weight: patient.vitals?.weight_record?.value ?? patient.vitals?.weight ?? "—",
+            creatinine: patient.labs?.creatinine_record?.value ?? patient.labs?.creatinine ?? "—",
           },
+          clinician_plan: patient.clinician_plan,
         },
       },
     });
-    navigate({ to: "/summary", search: { p: patient.patient_id } });
+
+    proceedQueue();
   };
+
+  const isStrokeAlert = alert?.id === "stroke-prevention";
 
   return (
     <AppShell selectedId={patient.patient_id} selectedName={patient.name}>
-      <div className="mx-auto max-w-2xl px-4 py-4">
-        <Link to="/alerts" search={{ p: patient.patient_id }}>
-          <Button variant="ghost" size="sm" className="mb-3">
-            <ArrowLeft className="mr-1 size-3" /> Back to Patient
-          </Button>
-        </Link>
+      <div className="mx-auto max-w-2xl px-4 py-4 space-y-3">
+        <div className="flex items-center justify-between">
+          <Link to="/alerts" search={{ p: patient.patient_id }}>
+            <Button variant="ghost" size="sm">
+              <ArrowLeft className="mr-1 size-3.5" /> Back to Alerts Panel
+            </Button>
+          </Link>
+          {queueTotal > 1 && (
+            <span className="rounded bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">
+              Reviewing Alert {queueIndex} of {queueTotal}
+            </span>
+          )}
+        </div>
 
-        <h1 className="text-lg font-bold">Medication Review / Order</h1>
-
-        {!alert ? (
-          <p className="mt-3 text-sm text-muted-foreground">Alert not found.</p>
-        ) : (
-          <div className="mt-4 space-y-4">
-            <div className="rounded border border-border bg-card p-3">
-              <p className="text-xs uppercase tracking-wider text-muted-foreground">
-                Alert
+        <div className="rounded-lg border border-border bg-card p-5 shadow-sm space-y-4">
+          <div className="flex items-center gap-2.5 border-b border-border pb-3">
+            <CheckCircle2 className="size-5 text-[var(--clinical-ok)]" />
+            <div>
+              <h1 className="text-base font-bold">Accept Clinical Recommendation</h1>
+              <p className="text-xs text-muted-foreground">
+                Patient: {patient.name} ({patient.patient_id}) · MRN: {patient.mrn ?? "—"}
               </p>
-              <p className="mt-1 text-sm font-semibold">{alert.title}</p>
-              <p className="mt-0.5 text-xs text-muted-foreground">{alert.detail}</p>
-            </div>
-
-            {suggestion ? (
-              <>
-                <div className="rounded border border-border bg-card p-3">
-                  <p className="text-xs uppercase tracking-wider text-muted-foreground">
-                    Current Order
-                  </p>
-                  <p className="mt-1 text-sm font-medium">
-                    {suggestion.name}{" "}
-                    <span className="text-muted-foreground">
-                      {currentMed?.dose ?? "(not on record)"}
-                    </span>
-                  </p>
-                </div>
-
-                <div className="rounded border border-border bg-[var(--clinical-warn-bg)]/50 p-3">
-                  <p className="text-xs font-bold uppercase tracking-wider text-[var(--clinical-warn)]">
-                    CDSS Recommendation (Advisory)
-                  </p>
-                  <p className="mt-1 text-sm font-semibold">
-                    {suggestion.name} → {suggestion.newDose}
-                  </p>
-                  <p className="text-xs text-muted-foreground">{suggestion.note}</p>
-                </div>
-
-                <div className="space-y-1">
-                  <Label htmlFor="med">Medication</Label>
-                  <Input id="med" value={suggestion.name} readOnly />
-                </div>
-                <div className="space-y-1">
-                  <Label htmlFor="dose">New dose</Label>
-                  <Input
-                    id="dose"
-                    value={dose}
-                    onChange={(e) => setDose(e.target.value)}
-                  />
-                </div>
-              </>
-            ) : (
-              <p className="rounded border border-dashed border-border p-3 text-sm text-muted-foreground">
-                No specific medication change suggested by the CDSS for this
-                alert. Accepting will simply log "Acted on" with no order
-                change.
-              </p>
-            )}
-
-            <div className="flex justify-end gap-2">
-              <Link to="/alerts" search={{ p: patient.patient_id }}>
-                <Button variant="ghost">Cancel</Button>
-              </Link>
-              <Button onClick={save} disabled={saving}>
-                Save Order
-              </Button>
             </div>
           </div>
-        )}
+
+          {!alert ? (
+            <p className="text-sm text-muted-foreground">Alert not found.</p>
+          ) : (
+            <div className="space-y-4 text-xs">
+              {/* Alert card */}
+              <div className="rounded-md border border-border bg-muted/40 p-3.5">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                  Triggered Alert
+                </span>
+                <p className="text-sm font-semibold text-foreground mt-0.5">{alert.title}</p>
+                <p className="mt-1 text-muted-foreground">{alert.detail}</p>
+              </div>
+
+              {/* Recommendation advisory */}
+              {alert.recommendation && (
+                <div className="rounded-md border border-border bg-primary/5 p-3.5">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-primary">
+                    Advisory Recommendation
+                  </span>
+                  <p className="text-xs font-medium text-foreground mt-1">
+                    {alert.recommendation}
+                  </p>
+                </div>
+              )}
+
+              {/* Specific Medication Change Fields (when drug dose change indicated) */}
+              {suggestedMedName && suggestedDose ? (
+                <div className="space-y-3 rounded-md border border-border bg-background p-3.5">
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold text-foreground">Current Order:</span>
+                    <span className="text-muted-foreground font-mono">
+                      {suggestedMedName} {currentMed?.dose ?? "(Not on file)"}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <Label htmlFor="med" className="text-[11px]">Medication</Label>
+                      <Input id="med" value={suggestedMedName} readOnly className="text-xs bg-muted/50" />
+                    </div>
+                    <div className="space-y-1">
+                      <Label htmlFor="dose" className="text-[11px] font-semibold text-primary">
+                        Recommended New Dose
+                      </Label>
+                      <Input
+                        id="dose"
+                        value={dose}
+                        onChange={(e) => setDose(e.target.value)}
+                        className="text-xs font-semibold font-mono"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ) : isStrokeAlert ? (
+                <div className="rounded-md border border-border bg-muted/30 p-3 text-muted-foreground leading-relaxed">
+                  Accepting this alert will document initiation of anticoagulation therapy in accordance with guideline recommendations.
+                </div>
+              ) : (
+                <div className="rounded-md border border-dashed border-border p-3 text-muted-foreground">
+                  Accepting will log that this advisory was reviewed and acted upon during consultation.
+                </div>
+              )}
+
+              <div className="flex items-center justify-end gap-2 border-t border-border pt-3">
+                <Link to="/alerts" search={{ p: patient.patient_id }}>
+                  <Button variant="ghost" size="sm">
+                    Cancel
+                  </Button>
+                </Link>
+                <Button onClick={save} disabled={saving} size="sm" className="gap-1.5 shadow-sm">
+                  {saving ? "Saving…" : "Save & Proceed"}
+                  <ArrowRight className="size-3.5" />
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </AppShell>
   );

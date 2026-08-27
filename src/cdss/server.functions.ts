@@ -1,9 +1,11 @@
 import { createServerFn } from "@tanstack/react-start";
 import { evaluate } from "@/cdss/engine";
 import { CDSS_ENGINE_VERSION } from "@/cdss/config";
+import { CDSS_RULE_VERSION } from "@/cdss/ruleManifest";
+import { classifyDateWindow } from "@/cdss/researchTimeline";
 import type { Patient, AuditEntry, ClinicianAction } from "@/cdss/types";
 
-// In-memory stores (reset on server restart — fine for demo)
+// In-memory stores (persisted across live requests during session)
 const auditLog: AuditEntry[] = [];
 const actionsByPatient: Record<string, Record<string, AuditEntry>> = {};
 const medOrders: Record<string, Record<string, string>> = {};
@@ -22,8 +24,9 @@ export const listPatients = createServerFn({ method: "GET" }).handler(
     const patients = await loadAllPatients();
     return patients.map((p) => ({
       patient_id: p.patient_id,
+      mrn: p.mrn,
       name: p.name,
-      age: p.age,
+      age: p.age_at_encounter ?? p.age,
       sex: p.sex,
       clinic_location: p.clinic_location,
     }));
@@ -47,8 +50,9 @@ export const listPatientsWithAlerts = createServerFn({ method: "GET" }).handler(
       else if (cdss.afEvidence.length > 0) af_status = "AF";
       return {
         patient_id: p.patient_id,
+        mrn: p.mrn,
         name: p.name,
-        age: p.age,
+        age: p.age_at_encounter ?? p.age,
         sex: p.sex,
         clinic_location: p.clinic_location,
         af_status,
@@ -85,66 +89,87 @@ export const logAction = createServerFn({ method: "POST" })
       alert_title: string;
       action: ClinicianAction;
       override_reason?: string;
+      override_reason_code?: string;
       override_notes?: string;
       defer_until?: string;
       med_change?: { name: string; new_dose: string };
       snapshot?: AuditEntry["snapshot"];
       request_id?: string;
       visit_id?: string;
+      clinician_id?: string;
     }) => d,
   )
   .handler(async ({ data }) => {
     const now = new Date().toISOString();
+    const patient = await loadPatient(data.patient_id);
+    const indexDate = patient?.encounter?.clinic_date ?? "2026-08-26";
+    const researchWindow = classifyDateWindow(now.slice(0, 10), indexDate);
+
     const entry: AuditEntry = {
       id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
       patient_id: data.patient_id,
+      mrn: patient?.mrn,
       alert_id: data.alert_id,
       alert_title: data.alert_title,
       action: data.action,
       override_reason: data.override_reason,
+      override_reason_code: data.override_reason_code,
       override_notes: data.override_notes,
       defer_until: data.defer_until,
       med_change: data.med_change,
       snapshot: data.snapshot,
-      request_id: data.request_id,
+      request_id: data.request_id ?? `REQ-${Date.now()}`,
       engine_version: CDSS_ENGINE_VERSION,
-      visit_id: data.visit_id ?? now,
+      rule_version: CDSS_RULE_VERSION,
+      clinician_id: data.clinician_id ?? patient?.encounter?.clinician_id ?? "DR-CAR-01",
+      visit_id: data.visit_id ?? patient?.encounter?.visit_id ?? "VIS-2026-001",
+      index_alert_date: indexDate,
+      research_window: researchWindow,
       timestamp: now,
     };
+
     auditLog.unshift(entry);
     actionsByPatient[data.patient_id] ??= {};
     actionsByPatient[data.patient_id][data.alert_id] = entry;
+
     if (data.med_change) {
       medOrders[data.patient_id] ??= {};
       medOrders[data.patient_id][data.med_change.name] = data.med_change.new_dose;
     }
+
     return { ok: true, entry };
   });
 
 export const getAuditLog = createServerFn({ method: "GET" }).handler(
-  async () => auditLog.slice(0, 200),
+  async () => auditLog.slice(0, 500),
 );
 
 export const logScoreCalculation = createServerFn({ method: "POST" })
   .inputValidator(
     (d: {
       patient_id: string;
-      score_name: "CHA2DS2-VASc" | "HAS-BLED";
+      score_name: "CHA2DS2-VA" | "HAS-BLED";
       total: number;
       source: "auto" | "hybrid" | "manual";
       high_risk: boolean;
     }) => d,
   )
   .handler(async ({ data }) => {
+    const patient = await loadPatient(data.patient_id);
+    const now = new Date().toISOString();
     const entry: AuditEntry = {
       id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
       patient_id: data.patient_id,
+      mrn: patient?.mrn,
       alert_id: `score:${data.score_name}`,
       alert_title: `${data.score_name} score = ${data.total} (${data.source}${data.high_risk ? ", high-risk" : ""})`,
       action: "accept",
       override_notes: `source=${data.source}`,
       engine_version: CDSS_ENGINE_VERSION,
-      timestamp: new Date().toISOString(),
+      rule_version: CDSS_RULE_VERSION,
+      clinician_id: patient?.encounter?.clinician_id ?? "DR-CAR-01",
+      visit_id: patient?.encounter?.visit_id ?? "VIS-2026-001",
+      timestamp: now,
     };
     auditLog.unshift(entry);
     return { ok: true, entry };
@@ -160,15 +185,21 @@ export const logFieldChange = createServerFn({ method: "POST" })
     }) => d,
   )
   .handler(async ({ data }) => {
+    const patient = await loadPatient(data.patient_id);
+    const now = new Date().toISOString();
     const entry: AuditEntry = {
       id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
       patient_id: data.patient_id,
+      mrn: patient?.mrn,
       alert_id: `field:${data.field}`,
       alert_title: `Clinician edited ${data.field}: ${data.old_value} → ${data.new_value}`,
       action: "accept",
       override_notes: `field=${data.field}`,
       engine_version: CDSS_ENGINE_VERSION,
-      timestamp: new Date().toISOString(),
+      rule_version: CDSS_RULE_VERSION,
+      clinician_id: patient?.encounter?.clinician_id ?? "DR-CAR-01",
+      visit_id: patient?.encounter?.visit_id ?? "VIS-2026-001",
+      timestamp: now,
     };
     auditLog.unshift(entry);
     return { ok: true, entry };

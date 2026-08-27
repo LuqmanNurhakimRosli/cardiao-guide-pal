@@ -103,15 +103,13 @@ function PatientDashboard() {
     );
 
     // log final scores
-    if (draftCdss.scores.cha2ds2vasc) {
-      const s = draftCdss.scores.cha2ds2vasc;
-      const highRisk =
-        (patient.sex === "male" && s.total >= 2) ||
-        (patient.sex === "female" && s.total >= 3);
+    if (draftCdss.scores.cha2ds2va ?? draftCdss.scores.cha2ds2vasc) {
+      const s = (draftCdss.scores.cha2ds2va ?? draftCdss.scores.cha2ds2vasc)!;
+      const highRisk = s.total >= 2;
       logScore({
         data: {
           patient_id: patient.patient_id,
-          score_name: "CHA2DS2-VASc",
+          score_name: "CHA2DS2-VA",
           total: s.total,
           source: changedKeys.length ? "hybrid" : "auto",
           high_risk: highRisk,

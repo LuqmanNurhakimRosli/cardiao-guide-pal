@@ -1,23 +1,47 @@
 [
   {
     "patient_id": "P001",
-    "name": "Aminah binti Ibrahim",
+    "mrn": "MRN-100234",
+    "name": "Siti Rahmah binti Abdullah",
+    "dob": "1948-04-12",
     "age": 78,
     "sex": "female",
+    "ethnicity": "Malay",
+    "nationality": "Malaysian",
     "clinic_location": "Cardiology Clinic",
+    "encounter": {
+      "visit_id": "VIS-2026-001",
+      "clinic_date": "2026-08-26",
+      "clinician_id": "DR-CAR-01",
+      "encounter_type": "Outpatient Clinic",
+      "appointment_date": "2026-08-26",
+      "patient_record_opened": true
+    },
     "diagnoses": ["I48.0", "E11.9", "I10"],
     "ecg_results": ["AF"],
     "medications": [
-      { "name": "Apixaban", "indication": "AF", "dose": "5 mg BD" },
-      { "name": "Metformin", "indication": "Diabetes", "dose": "1 g BD" },
-      { "name": "Amlodipine", "indication": "HTN", "dose": "10 mg OD" }
+      { "name": "Apixaban", "indication": "AF", "dose": "5 mg BD", "start_date": "2025-11-10" },
+      { "name": "Metformin", "indication": "Diabetes", "dose": "1 g BD", "start_date": "2024-02-15" },
+      { "name": "Amlodipine", "indication": "HTN", "dose": "10 mg OD", "start_date": "2023-05-20" }
     ],
-    "vitals": { "bp_latest": "150/95", "bp_second": "148/92", "weight": 55 },
+    "vitals": {
+      "bp_latest": "150/95",
+      "bp_second": "148/92",
+      "weight": 55,
+      "bp_readings": [
+        { "value": "150/95", "date": "2026-08-26" },
+        { "value": "148/92", "date": "2026-08-26" }
+      ],
+      "weight_record": { "value": 55, "date": "2026-08-26" }
+    },
     "labs": {
       "creatinine": 140,
       "creatinine_unit": "umol/L",
       "hba1c": 8.2,
-      "inr_history": []
+      "inr_history": [],
+      "creatinine_record": { "value": 140, "unit": "umol/L", "date": "2026-08-20" },
+      "hba1c_record": { "value": 8.2, "date": "2026-08-20" },
+      "inr_results": []
     },
     "comorbidities": {
       "chf": false,
@@ -25,26 +49,62 @@
       "diabetes": true,
       "stroke": false,
       "vascular": true
+    },
+    "clinician_plan": {
+      "doctor_plan": "Review renal function and adjust DOAC dosing.",
+      "medication_plan": "Reduce Apixaban to 2.5 mg BD.",
+      "monitoring_plan": "Repeat serum creatinine in 3 months.",
+      "next_appointment_date": "2026-11-26"
     }
   },
   {
     "patient_id": "P002",
-    "name": "Tan Wei Ming",
+    "mrn": "MRN-100235",
+    "name": "Tan Chee Keong",
+    "dob": "1944-01-15",
     "age": 82,
     "sex": "male",
+    "ethnicity": "Chinese",
+    "nationality": "Malaysian",
     "clinic_location": "Cardiology Clinic",
+    "encounter": {
+      "visit_id": "VIS-2026-002",
+      "clinic_date": "2026-08-26",
+      "clinician_id": "DR-CAR-01",
+      "encounter_type": "Outpatient Clinic",
+      "appointment_date": "2026-08-26",
+      "patient_record_opened": true
+    },
     "diagnoses": ["I48.1", "I50.9"],
     "ecg_results": ["AF"],
     "medications": [
-      { "name": "Warfarin", "indication": "AF", "dose": "3 mg OD" },
-      { "name": "Bisoprolol", "indication": "AF rate control", "dose": "5 mg OD" }
+      { "name": "Warfarin", "indication": "AF", "dose": "3 mg OD", "start_date": "2024-06-01" },
+      { "name": "Bisoprolol", "indication": "AF rate control", "dose": "5 mg OD", "start_date": "2024-06-01" }
     ],
-    "vitals": { "bp_latest": "138/82", "bp_second": "135/80", "weight": 70 },
+    "vitals": {
+      "bp_latest": "138/82",
+      "bp_second": "135/80",
+      "weight": 70,
+      "bp_readings": [
+        { "value": "138/82", "date": "2026-08-26" },
+        { "value": "135/80", "date": "2026-08-26" }
+      ],
+      "weight_record": { "value": 70, "date": "2026-08-26" }
+    },
     "labs": {
       "creatinine": 110,
       "creatinine_unit": "umol/L",
       "hba1c": 6.4,
-      "inr_history": [1.4, 3.6, 2.1, 1.7, 3.8]
+      "inr_history": [1.4, 3.6, 2.1, 1.7, 3.8],
+      "creatinine_record": { "value": 110, "unit": "umol/L", "date": "2026-08-15" },
+      "hba1c_record": { "value": 6.4, "date": "2026-08-15" },
+      "inr_results": [
+        { "value": 1.4, "date": "2025-10-12" },
+        { "value": 3.6, "date": "2025-12-05" },
+        { "value": 2.1, "date": "2026-02-18" },
+        { "value": 1.7, "date": "2026-05-10" },
+        { "value": 3.8, "date": "2026-08-20" }
+      ]
     },
     "comorbidities": {
       "chf": true,
@@ -56,17 +116,44 @@
   },
   {
     "patient_id": "P003",
-    "name": "Devi a/p Ramasamy",
+    "mrn": "MRN-100236",
+    "name": "Kavitha a/p Subramaniam",
+    "dob": "1958-06-20",
     "age": 68,
     "sex": "female",
+    "ethnicity": "Indian",
+    "nationality": "Malaysian",
     "clinic_location": "Cardiology Clinic",
+    "encounter": {
+      "visit_id": "VIS-2026-003",
+      "clinic_date": "2026-08-26",
+      "clinician_id": "DR-CAR-02",
+      "encounter_type": "Outpatient Clinic",
+      "appointment_date": "2026-08-26",
+      "patient_record_opened": true
+    },
     "diagnoses": ["I48.2"],
     "ecg_results": ["AF"],
     "medications": [
-      { "name": "Dabigatran", "indication": "AF", "dose": "150 mg BD" }
+      { "name": "Dabigatran", "indication": "AF", "dose": "150 mg BD", "start_date": "2025-04-10" }
     ],
-    "vitals": { "bp_latest": "128/78", "bp_second": "130/80", "weight": 62 },
-    "labs": { "creatinine": 180, "creatinine_unit": "umol/L", "hba1c": 5.9 },
+    "vitals": {
+      "bp_latest": "128/78",
+      "bp_second": "130/80",
+      "weight": 62,
+      "bp_readings": [
+        { "value": "128/78", "date": "2026-08-26" },
+        { "value": "130/80", "date": "2026-08-26" }
+      ],
+      "weight_record": { "value": 62, "date": "2026-08-26" }
+    },
+    "labs": {
+      "creatinine": 180,
+      "creatinine_unit": "umol/L",
+      "hba1c": 5.9,
+      "creatinine_record": { "value": 180, "unit": "umol/L", "date": "2026-08-18" },
+      "hba1c_record": { "value": 5.9, "date": "2026-08-18" }
+    },
     "comorbidities": {
       "chf": false,
       "hypertension": true,
@@ -77,17 +164,42 @@
   },
   {
     "patient_id": "P004",
-    "name": "Lim Chee Keong",
+    "mrn": "MRN-100237",
+    "name": "Lim Ah Lek",
+    "dob": "1955-03-10",
     "age": 71,
     "sex": "male",
+    "ethnicity": "Chinese",
+    "nationality": "Malaysian",
     "clinic_location": "Cardiology Clinic",
+    "encounter": {
+      "visit_id": "VIS-2026-004",
+      "clinic_date": "2026-08-26",
+      "clinician_id": "DR-CAR-01",
+      "encounter_type": "Outpatient Clinic",
+      "appointment_date": "2026-08-26",
+      "patient_record_opened": true
+    },
     "diagnoses": ["I25.10"],
     "ecg_results": ["Sinus rhythm"],
     "medications": [
-      { "name": "Aspirin", "indication": "IHD", "dose": "100 mg OD" }
+      { "name": "Aspirin", "indication": "IHD", "dose": "100 mg OD", "start_date": "2023-01-01" }
     ],
-    "vitals": { "bp_latest": "142/88", "bp_second": "144/90", "weight": 80 },
-    "labs": { "creatinine": 95, "creatinine_unit": "umol/L" },
+    "vitals": {
+      "bp_latest": "142/88",
+      "bp_second": "144/90",
+      "weight": 80,
+      "bp_readings": [
+        { "value": "142/88", "date": "2026-08-26" },
+        { "value": "144/90", "date": "2026-08-26" }
+      ],
+      "weight_record": { "value": 80, "date": "2026-08-26" }
+    },
+    "labs": {
+      "creatinine": 95,
+      "creatinine_unit": "umol/L",
+      "creatinine_record": { "value": 95, "unit": "umol/L", "date": "2026-07-15" }
+    },
     "comorbidities": {
       "chf": false,
       "hypertension": true,
@@ -98,20 +210,43 @@
   },
   {
     "patient_id": "P005",
-    "name": "Siti Noraini",
+    "mrn": "MRN-100238",
+    "name": "Zainab binti Hassan",
+    "dob": "1950-09-05",
     "age": 76,
     "sex": "female",
+    "ethnicity": "Malay",
+    "nationality": "Malaysian",
     "clinic_location": "Cardiology Clinic",
+    "encounter": {
+      "visit_id": "VIS-2026-005",
+      "clinic_date": "2026-08-26",
+      "clinician_id": "DR-CAR-02",
+      "encounter_type": "Outpatient Clinic",
+      "appointment_date": "2026-08-26",
+      "patient_record_opened": true
+    },
     "diagnoses": ["I48.0"],
     "ecg_results": ["AF"],
     "medications": [
-      { "name": "Rivaroxaban", "indication": "AF", "dose": "20 mg OD" }
+      { "name": "Rivaroxaban", "indication": "AF", "dose": "20 mg OD", "start_date": "2025-01-20" }
     ],
-    "vitals": { "bp_latest": "152/94", "bp_second": "150/96", "weight": 58 },
+    "vitals": {
+      "bp_latest": "152/94",
+      "bp_second": "150/96",
+      "weight": 58,
+      "bp_readings": [
+        { "value": "152/94", "date": "2026-08-26" },
+        { "value": "150/96", "date": "2026-08-26" }
+      ],
+      "weight_record": { "value": 58, "date": "2026-08-26" }
+    },
     "labs": {
       "creatinine": 165,
       "creatinine_unit": "umol/L",
-      "hba1c": 7.4
+      "hba1c": 7.4,
+      "creatinine_record": { "value": 165, "unit": "umol/L", "date": "2026-08-22" },
+      "hba1c_record": { "value": 7.4, "date": "2026-08-22" }
     },
     "comorbidities": {
       "chf": true,
@@ -123,47 +258,126 @@
   },
   {
     "patient_id": "P006",
-    "name": "Zainab binti Osman",
+    "mrn": "MRN-100239",
+    "name": "Noraini binti Ahmad",
+    "dob": "1956-11-22",
     "age": 70,
     "sex": "female",
+    "ethnicity": "Malay",
+    "nationality": "Malaysian",
     "clinic_location": "PCM Clinic",
+    "encounter": {
+      "visit_id": "VIS-2026-006",
+      "clinic_date": "2026-08-26",
+      "clinician_id": "DR-PCM-01",
+      "encounter_type": "Primary Care",
+      "appointment_date": "2026-08-26",
+      "patient_record_opened": true
+    },
     "diagnoses": ["I48.0"],
     "ecg_results": ["AF"],
-    "medications": [{ "name": "Warfarin", "indication": "AF" }],
-    "vitals": { "bp_latest": "130/80", "bp_second": "128/78", "weight": 65 },
-    "labs": { "creatinine": 90, "creatinine_unit": "umol/L", "inr_history": [2.4] },
+    "medications": [{ "name": "Warfarin", "indication": "AF", "dose": "2 mg OD", "start_date": "2025-07-01" }],
+    "vitals": {
+      "bp_latest": "130/80",
+      "bp_second": "128/78",
+      "weight": 65,
+      "bp_readings": [
+        { "value": "130/80", "date": "2026-08-26" },
+        { "value": "128/78", "date": "2026-08-26" }
+      ],
+      "weight_record": { "value": 65, "date": "2026-08-26" }
+    },
+    "labs": {
+      "creatinine": 90,
+      "creatinine_unit": "umol/L",
+      "inr_history": [2.4],
+      "creatinine_record": { "value": 90, "unit": "umol/L", "date": "2026-08-10" },
+      "inr_results": [{ "value": 2.4, "date": "2026-08-10" }]
+    },
     "comorbidities": { "chf": false, "hypertension": true, "diabetes": false, "stroke": false, "vascular": false }
   },
   {
     "patient_id": "P007",
-    "name": "Rajesh Kumar (incomplete EMR)",
+    "mrn": "MRN-100240",
+    "name": "Muthu a/l Govindasamy",
+    "dob": "1954-08-30",
     "age": 72,
     "sex": "male",
+    "ethnicity": "Indian",
+    "nationality": "Malaysian",
     "clinic_location": "Cardiology Clinic",
+    "encounter": {
+      "visit_id": "VIS-2026-007",
+      "clinic_date": "2026-08-26",
+      "clinician_id": "DR-CAR-03",
+      "encounter_type": "Outpatient Clinic",
+      "appointment_date": "2026-08-26",
+      "patient_record_opened": true
+    },
     "diagnoses": ["I48.0"],
     "ecg_results": ["AF"],
-    "medications": [{ "name": "Apixaban", "indication": "AF", "dose": "5 mg BD" }],
-    "vitals": { "bp_latest": "138/85", "weight": 72 },
-    "labs": { "creatinine": 105, "creatinine_unit": "umol/L" },
+    "medications": [{ "name": "Apixaban", "indication": "AF", "dose": "5 mg BD", "start_date": "2025-02-15" }],
+    "vitals": {
+      "bp_latest": "138/85",
+      "weight": 72,
+      "bp_readings": [{ "value": "138/85", "date": "2026-08-26" }],
+      "weight_record": { "value": 72, "date": "2026-08-26" }
+    },
+    "labs": {
+      "creatinine": 105,
+      "creatinine_unit": "umol/L",
+      "creatinine_record": { "value": 105, "unit": "umol/L", "date": "2026-07-20" }
+    },
     "comorbidities": { "hypertension": true, "stroke": false }
   },
   {
     "patient_id": "P008",
-    "name": "Chong Mei Ling (Family Medicine)",
+    "mrn": "MRN-100241",
+    "name": "Wong Siew Ling",
+    "dob": "1952-02-14",
     "age": 74,
     "sex": "female",
+    "ethnicity": "Chinese",
+    "nationality": "Malaysian",
     "clinic_location": "Family Medicine Clinic",
+    "encounter": {
+      "visit_id": "VIS-2026-008",
+      "clinic_date": "2026-08-26",
+      "clinician_id": "DR-FM-01",
+      "encounter_type": "Family Medicine",
+      "appointment_date": "2026-08-26",
+      "patient_record_opened": true
+    },
     "diagnoses": ["BC81.0", "Atrial fibrillation, paroxysmal"],
     "ecg_results": ["Atrial fibrillation, controlled"],
     "medications": [
-      { "name": "Warfarin", "indication": "AF", "dose": "3 mg OD" }
+      { "name": "Warfarin", "indication": "AF", "dose": "3 mg OD", "start_date": "2024-09-01" }
     ],
-    "vitals": { "bp_latest": "146/92", "bp_second": "148/94", "weight": 68 },
+    "vitals": {
+      "bp_latest": "146/92",
+      "bp_second": "148/94",
+      "weight": 68,
+      "bp_readings": [
+        { "value": "146/92", "date": "2026-08-26" },
+        { "value": "148/94", "date": "2026-08-26" }
+      ],
+      "weight_record": { "value": 68, "date": "2026-08-26" }
+    },
     "labs": {
       "creatinine": 115,
       "creatinine_unit": "umol/L",
       "hba1c": 6.8,
-      "inr_history": [1.6, 3.4, 1.8, 3.7, 1.9, 2.1]
+      "inr_history": [1.6, 3.4, 1.8, 3.7, 1.9, 2.1],
+      "creatinine_record": { "value": 115, "unit": "umol/L", "date": "2026-08-12" },
+      "hba1c_record": { "value": 6.8, "date": "2026-08-12" },
+      "inr_results": [
+        { "value": 1.6, "date": "2025-09-10" },
+        { "value": 3.4, "date": "2025-11-15" },
+        { "value": 1.8, "date": "2026-01-20" },
+        { "value": 3.7, "date": "2026-03-25" },
+        { "value": 1.9, "date": "2026-06-10" },
+        { "value": 2.1, "date": "2026-08-22" }
+      ]
     },
     "comorbidities": {
       "chf": false,
@@ -175,15 +389,180 @@
   },
   {
     "patient_id": "P009",
-    "name": "Ahmad bin Yusof (no AF)",
+    "mrn": "MRN-100242",
+    "name": "Ahmad Zulkifli bin Ismail",
+    "dob": "1960-05-18",
     "age": 66,
     "sex": "male",
+    "ethnicity": "Malay",
+    "nationality": "Malaysian",
     "clinic_location": "Cardiology Clinic",
+    "encounter": {
+      "visit_id": "VIS-2026-009",
+      "clinic_date": "2026-08-26",
+      "clinician_id": "DR-CAR-01",
+      "encounter_type": "Outpatient Clinic",
+      "appointment_date": "2026-08-26",
+      "patient_record_opened": true
+    },
     "diagnoses": ["I10", "E11.9"],
     "ecg_results": ["Sinus rhythm"],
-    "medications": [{ "name": "Metformin", "indication": "Diabetes", "dose": "1 g BD" }],
-    "vitals": { "bp_latest": "132/82", "bp_second": "128/80", "weight": 78 },
-    "labs": { "creatinine": 88, "creatinine_unit": "umol/L", "hba1c": 6.5 },
+    "medications": [{ "name": "Metformin", "indication": "Diabetes", "dose": "1 g BD", "start_date": "2023-04-10" }],
+    "vitals": {
+      "bp_latest": "132/82",
+      "bp_second": "128/80",
+      "weight": 78,
+      "bp_readings": [
+        { "value": "132/82", "date": "2026-08-26" },
+        { "value": "128/80", "date": "2026-08-26" }
+      ],
+      "weight_record": { "value": 78, "date": "2026-08-26" }
+    },
+    "labs": {
+      "creatinine": 88,
+      "creatinine_unit": "umol/L",
+      "hba1c": 6.5,
+      "creatinine_record": { "value": 88, "unit": "umol/L", "date": "2026-08-01" },
+      "hba1c_record": { "value": 6.5, "date": "2026-08-01" }
+    },
     "comorbidities": { "chf": false, "hypertension": true, "diabetes": true, "stroke": false, "vascular": false }
+  },
+  {
+    "patient_id": "P010",
+    "mrn": "MRN-100243",
+    "name": "Lee Mei Lan",
+    "dob": "1945-07-10",
+    "age": 81,
+    "sex": "female",
+    "ethnicity": "Chinese",
+    "nationality": "Malaysian",
+    "clinic_location": "Cardiology Clinic",
+    "encounter": {
+      "visit_id": "VIS-2026-010",
+      "clinic_date": "2026-08-26",
+      "clinician_id": "DR-CAR-02",
+      "encounter_type": "Outpatient Clinic",
+      "appointment_date": "2026-08-26",
+      "patient_record_opened": true
+    },
+    "diagnoses": ["I48.0", "I10"],
+    "ecg_results": ["AF"],
+    "medications": [
+      { "name": "Dabigatran", "indication": "AF", "dose": "150 mg BD", "start_date": "2025-01-10" }
+    ],
+    "vitals": {
+      "bp_latest": "134/82",
+      "bp_second": "130/80",
+      "weight": 64,
+      "bp_readings": [
+        { "value": "134/82", "date": "2026-08-26" },
+        { "value": "130/80", "date": "2026-08-26" }
+      ],
+      "weight_record": { "value": 64, "date": "2026-08-26" }
+    },
+    "labs": {
+      "creatinine": 85,
+      "creatinine_unit": "umol/L",
+      "creatinine_record": { "value": 85, "unit": "umol/L", "date": "2026-08-15" }
+    },
+    "comorbidities": {
+      "chf": false,
+      "hypertension": true,
+      "diabetes": false,
+      "stroke": false,
+      "vascular": false
+    }
+  },
+  {
+    "patient_id": "P011",
+    "mrn": "MRN-100244",
+    "name": "Mohd Fauzi bin Osman",
+    "dob": "1949-03-25",
+    "age": 77,
+    "sex": "male",
+    "ethnicity": "Malay",
+    "nationality": "Malaysian",
+    "clinic_location": "Cardiology Clinic",
+    "encounter": {
+      "visit_id": "VIS-2026-011",
+      "clinic_date": "2026-08-26",
+      "clinician_id": "DR-CAR-01",
+      "encounter_type": "Outpatient Clinic",
+      "appointment_date": "2026-08-26",
+      "patient_record_opened": true
+    },
+    "diagnoses": ["I48.0"],
+    "ecg_results": ["AF"],
+    "medications": [
+      { "name": "Dabigatran", "indication": "AF", "dose": "150 mg BD", "start_date": "2025-05-15" }
+    ],
+    "vitals": {
+      "bp_latest": "128/78",
+      "bp_second": "126/76",
+      "weight": 70,
+      "bp_readings": [
+        { "value": "128/78", "date": "2026-08-26" },
+        { "value": "126/76", "date": "2026-08-26" }
+      ],
+      "weight_record": { "value": 70, "date": "2026-08-26" }
+    },
+    "labs": {
+      "creatinine": 92,
+      "creatinine_unit": "umol/L",
+      "creatinine_record": { "value": 92, "unit": "umol/L", "date": "2026-08-10" }
+    },
+    "comorbidities": {
+      "chf": false,
+      "hypertension": false,
+      "diabetes": false,
+      "stroke": false,
+      "vascular": false
+    }
+  },
+  {
+    "patient_id": "P012",
+    "mrn": "MRN-100245",
+    "name": "Chong Wei Lun",
+    "dob": "1961-10-04",
+    "age": 64,
+    "sex": "male",
+    "ethnicity": "Chinese",
+    "nationality": "Malaysian",
+    "clinic_location": "Cardiology Clinic",
+    "encounter": {
+      "visit_id": "VIS-2026-012",
+      "clinic_date": "2026-08-26",
+      "clinician_id": "DR-CAR-03",
+      "encounter_type": "Outpatient Clinic",
+      "appointment_date": "2026-08-26",
+      "patient_record_opened": true
+    },
+    "diagnoses": ["I48.0"],
+    "ecg_results": ["AF"],
+    "medications": [
+      { "name": "Edoxaban", "indication": "AF", "dose": "60 mg OD", "start_date": "2025-06-20" }
+    ],
+    "vitals": {
+      "bp_latest": "136/84",
+      "bp_second": "134/82",
+      "weight": 58,
+      "bp_readings": [
+        { "value": "136/84", "date": "2026-08-26" },
+        { "value": "134/82", "date": "2026-08-26" }
+      ],
+      "weight_record": { "value": 58, "date": "2026-08-26" }
+    },
+    "labs": {
+      "creatinine": 100,
+      "creatinine_unit": "umol/L",
+      "creatinine_record": { "value": 100, "unit": "umol/L", "date": "2026-08-14" }
+    },
+    "comorbidities": {
+      "chf": false,
+      "hypertension": true,
+      "diabetes": false,
+      "stroke": false,
+      "vascular": false
+    }
   }
 ]

@@ -3,10 +3,11 @@ import type { Patient } from "@/cdss/types";
 import type { ClinicianInputs } from "@/cdss/usePatientState";
 import { Input } from "@/components/ui/input";
 import { CheckCircle2, PencilLine, AlertTriangle, Info } from "lucide-react";
+import { CLINICAL_RULES } from "@/cdss/ruleManifest";
 
 type Sex = "male" | "female";
 
-export interface Cha2VascState {
+export interface Cha2VaState {
   total: number;
   source: "auto" | "hybrid" | "manual";
   complete: boolean;
@@ -20,12 +21,6 @@ interface Props {
   setField: <K extends keyof ClinicianInputs>(k: K, v: ClinicianInputs[K]) => void;
 }
 
-/**
- * Resolve a field's effective value + source.
- * - If clinician edited it → "manual"
- * - Else if EMR has it → "emr"
- * - Else → undefined (missing)
- */
 function resolve<T>(
   emrVal: T | undefined,
   draftVal: T | undefined,
@@ -47,10 +42,10 @@ export function Cha2ds2VascHybrid({ patient, draft, setField }: Props) {
   const dm = resolve<boolean>(c.diabetes, draft.diabetes);
   const stroke = resolve<boolean>(c.stroke, draft.stroke);
   const vasc = resolve<boolean>(c.vascular, draft.vascular);
-  const age = resolve<number>(patient.age, draft.age);
+  const age = resolve<number>(patient.age_at_encounter ?? patient.age, draft.age);
   const sex = resolve<Sex>(patient.sex, draft.sex);
 
-  const fields = [chf, htn, dm, stroke, vasc, age, sex];
+  const fields = [chf, htn, dm, stroke, vasc, age];
   const complete = fields.every((f) => f.value !== undefined);
   const anyManual = fields.some((f) => f.source === "manual");
   const allManual = fields.every((f) => f.source === "manual");
@@ -65,15 +60,14 @@ export function Cha2ds2VascHybrid({ patient, draft, setField }: Props) {
       Diabetes: dm.value ? 1 : 0,
       "Stroke/TIA": stroke.value ? 2 : 0,
       "Vascular disease": vasc.value ? 1 : 0,
-      Female: sex.value === "female" ? 1 : 0,
     };
     return {
       breakdown,
       total: Object.values(breakdown).reduce((s, v) => s + v, 0),
     };
-  }, [chf.value, htn.value, age.value, dm.value, stroke.value, vasc.value, sex.value]);
+  }, [chf.value, htn.value, age.value, dm.value, stroke.value, vasc.value]);
 
-  const source: Cha2VascState["source"] = !complete
+  const source: Cha2VaState["source"] = !complete
     ? "hybrid"
     : anyManual
       ? allManual
@@ -81,16 +75,13 @@ export function Cha2ds2VascHybrid({ patient, draft, setField }: Props) {
         : "hybrid"
       : "auto";
 
-  const threshold = sex.value === "female" ? "≥3" : "≥2";
-  const highRisk =
-    complete &&
-    ((sex.value === "male" && totals.total >= 2) ||
-      (sex.value === "female" && totals.total >= 3));
+  const threshold = "≥2";
+  const highRisk = complete && totals.total >= CLINICAL_RULES.cha2ds2va.alertThreshold;
 
   return (
     <div className="rounded-md border border-border bg-card p-3">
       <div className="mb-2 flex items-center justify-between">
-        <h3 className="text-sm font-semibold">CHA₂DS₂-VASc (hybrid · live)</h3>
+        <h3 className="text-sm font-semibold">CHA₂DS₂-VA (hybrid · live)</h3>
         <span
           className={`rounded px-2 py-0.5 text-xs font-bold ${
             highRisk
@@ -152,11 +143,6 @@ export function Cha2ds2VascHybrid({ patient, draft, setField }: Props) {
           source={vasc.source}
           onChange={(v) => setField("vascular", v)}
         />
-        <SexField
-          value={sex.value}
-          source={sex.source}
-          onChange={(v) => setField("sex", v)}
-        />
       </div>
 
       <div className="mt-2 grid grid-cols-2 gap-1 text-[11px] sm:grid-cols-4">
@@ -175,15 +161,13 @@ export function Cha2ds2VascHybrid({ patient, draft, setField }: Props) {
 
       {highRisk && (
         <p className="mt-2 text-xs font-medium text-[var(--clinical-alert)]">
-          Score {totals.total} ({threshold} threshold) — anticoagulation
-          indicated for stroke prevention.
+          Score {totals.total} ({threshold} threshold) — oral anticoagulation indicated for stroke prevention.
         </p>
       )}
 
       <p className="mt-2 flex items-start gap-1 text-[10px] italic text-muted-foreground">
         <Info className="mt-0.5 size-3 shrink-0" />
-        This calculation supports clinical decision-making and does not replace
-        clinician judgement.
+        Sex category (Sc) removed in CHA₂DS₂-VA per 2026.08.26 amendment. Single threshold ≥2 applies to all patients.
       </p>
     </div>
   );
@@ -193,7 +177,7 @@ function SourceLabel({
   source,
   complete,
 }: {
-  source: Cha2VascState["source"];
+  source: Cha2VaState["source"];
   complete: boolean;
 }) {
   if (!complete) {
@@ -299,29 +283,6 @@ function NumField({
         }}
         className="h-6 w-16 px-1 py-0 text-xs"
       />
-    </FieldChrome>
-  );
-}
-
-function SexField({
-  value,
-  source,
-  onChange,
-}: {
-  value: Sex | undefined;
-  source: "emr" | "manual" | "missing";
-  onChange: (v: Sex) => void;
-}) {
-  return (
-    <FieldChrome label="Sex" source={source}>
-      <div className="flex gap-1">
-        <Pill active={value === "male"} onClick={() => onChange("male")}>
-          Male
-        </Pill>
-        <Pill active={value === "female"} onClick={() => onChange("female")}>
-          Female
-        </Pill>
-      </div>
     </FieldChrome>
   );
 }

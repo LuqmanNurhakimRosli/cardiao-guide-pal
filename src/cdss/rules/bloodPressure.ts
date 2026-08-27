@@ -14,43 +14,90 @@ export function evaluateBP(p: Patient): {
 } {
   const alerts: CdssAlert[] = [];
   const reminders: CdssAlert[] = [];
-  const bp1 = parseBP(p.vitals?.bp_latest);
-  const bp2 = parseBP(p.vitals?.bp_second);
-  if (!bp1 || !bp2) {
+
+  // Extract dated readings or fallback to bp_latest / bp_second
+  const readings = p.vitals?.bp_readings && p.vitals.bp_readings.length > 0
+    ? p.vitals.bp_readings
+    : [
+        p.vitals?.bp_latest ? { value: p.vitals.bp_latest, date: p.encounter?.clinic_date ?? "" } : undefined,
+        p.vitals?.bp_second ? { value: p.vitals.bp_second, date: p.encounter?.clinic_date ?? "" } : undefined,
+      ].filter(Boolean) as import("../types").DatedValue<string>[];
+
+  if (readings.length === 0) {
     reminders.push(
       buildAlert({
-        id: "bp-missing",
+        id: "bp-missing-all",
         severity: "reminder",
         category: "data",
         group: "Missing Data",
-        title: "Insufficient BP data for review",
-        detail: "Two BP readings are required to assess control.",
-        rationale: ["Need bp_latest and bp_second."],
-      }),
-    );
-  } else if (bp1.sys > 140 && bp1.dia > 90 && bp2.sys > 140 && bp2.dia > 90) {
-    alerts.push(
-      buildAlert({
-        id: "bp-uncontrolled",
-        severity: "alert",
-        category: "bp",
-        group: "BP",
-        title: "Blood pressure uncontrolled — review therapy",
-        detail: `Both readings >140/90 (${p.vitals.bp_latest}, ${p.vitals.bp_second}).`,
-        rationale: [
-          `Latest: ${p.vitals.bp_latest}`,
-          `Previous: ${p.vitals.bp_second}`,
-          "Threshold: >140/90 on both consecutive readings.",
-        ],
-        guideline: "MOH Malaysia CPG Hypertension 5th Ed.",
-        recommendation:
-          "Review antihypertensive regimen; consider intensifying therapy.",
-        supporting_values: {
-          bp_latest: p.vitals.bp_latest ?? "",
-          bp_second: p.vitals.bp_second ?? "",
+        title: "No blood pressure reading recorded",
+        detail: "Blood pressure is required to assess control and bleeding risk.",
+        rationale: ["No dated BP readings found."],
+        action: {
+          kind: "monitoring",
+          prompt_order: "Measure Blood Pressure (2 readings required)",
         },
       }),
     );
+    return { alerts, reminders };
   }
+
+  if (readings.length === 1) {
+    reminders.push(
+      buildAlert({
+        id: "bp-missing-second",
+        severity: "reminder",
+        category: "data",
+        group: "Missing Data",
+        title: "Only 1 BP reading recorded — obtain second reading",
+        detail: `First reading: ${readings[0].value} (${readings[0].date || "today"}). Two readings required for clinical evaluation.`,
+        rationale: ["Clinical guidelines require 2 seated readings at least 1-2 minutes apart."],
+        action: {
+          kind: "monitoring",
+          prompt_order: "Obtain second Blood Pressure reading",
+        },
+      }),
+    );
+    return { alerts, reminders };
+  }
+
+  // Exactly two most recent readings
+  const r1 = readings[0];
+  const r2 = readings[1];
+  const bp1 = parseBP(r1.value);
+  const bp2 = parseBP(r2.value);
+
+  if (bp1 && bp2) {
+    // Both readings uncontrolled (>140 or >90)
+    const bp1Uncontrolled = bp1.sys > 140 || bp1.dia > 90;
+    const bp2Uncontrolled = bp2.sys > 140 || bp2.dia > 90;
+
+    if (bp1Uncontrolled && bp2Uncontrolled) {
+      alerts.push(
+        buildAlert({
+          id: "bp-uncontrolled",
+          severity: "alert",
+          category: "bp",
+          group: "BP",
+          title: "Blood pressure uncontrolled — review therapy",
+          detail: `Both readings >140/90 mmHg: Reading 1: ${r1.value} (${r1.date || "recent"}), Reading 2: ${r2.value} (${r2.date || "recent"}).`,
+          rationale: [
+            `Reading 1: ${r1.value} (${r1.date || "dated"})`,
+            `Reading 2: ${r2.value} (${r2.date || "dated"})`,
+            "Target: ≤140/90 mmHg in patients with AF.",
+          ],
+          guideline: "MOH Malaysia CPG Hypertension 5th Ed.",
+          recommendation: "Review antihypertensive regimen and adherence; adjust therapy to achieve BP target.",
+          supporting_values: {
+            bp_reading_1: r1.value,
+            bp_date_1: r1.date,
+            bp_reading_2: r2.value,
+            bp_date_2: r2.date,
+          },
+        }),
+      );
+    }
+  }
+
   return { alerts, reminders };
 }

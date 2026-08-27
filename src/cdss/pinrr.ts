@@ -1,7 +1,7 @@
 /**
  * PINRR — Percentage of INR readings in Therapeutic Range (2.0–3.0).
- * Simple linear proportion (not Rosendaal). Used to flag suboptimal
- * warfarin control when <55%.
+ * Calculates proportion of INR readings within therapeutic range in the
+ * 12 months prior to the index encounter date.
  */
 import type { DatedValue } from "./types";
 import { CLINICAL_RULES } from "./ruleManifest";
@@ -15,26 +15,31 @@ export interface PinrrResult {
 
 export function calculatePinrr(
   results: DatedValue<number>[] | undefined,
-  indexDate: string,
+  indexDate: string = "2026-08-26",
 ): PinrrResult {
-  if (!results) return { count: 0 };
+  if (!results || results.length === 0) return { count: 0 };
+
   const end = new Date(`${indexDate}T23:59:59Z`);
   const start = new Date(end);
-  start.setUTCMonth(start.getUTCMonth() - CLINICAL_RULES.pinrr.lookbackMonths);
+  start.setUTCFullYear(start.getUTCFullYear() - 1); // 12 months prior
+
   const eligible = results
     .filter((result) => {
       const date = new Date(`${result.date}T00:00:00Z`);
-      return date >= start && date <= end;
+      return !isNaN(date.getTime()) && date >= start && date <= end;
     })
     .sort((a, b) => a.date.localeCompare(b.date));
+
   if (eligible.length < CLINICAL_RULES.pinrr.minimumReadings) {
     return { count: eligible.length };
   }
+
   const inRange = eligible.filter(
     ({ value }) =>
       value >= CLINICAL_RULES.pinrr.lowerTherapeutic &&
       value <= CLINICAL_RULES.pinrr.upperTherapeutic,
   ).length;
+
   return {
     percentage: Math.round((inRange / eligible.length) * 100),
     count: eligible.length,
@@ -43,7 +48,7 @@ export function calculatePinrr(
   };
 }
 
-/** @deprecated Legacy undated helper retained only for compatibility. */
+/** Legacy undated helper */
 export function pinrr(inrHistory: number[] | undefined): number | undefined {
   if (!inrHistory || inrHistory.length < 2) return undefined;
   const inRange = inrHistory.filter((v) => v >= 2 && v <= 3).length;

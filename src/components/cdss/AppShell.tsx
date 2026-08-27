@@ -1,11 +1,12 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { Heart, LayoutDashboard, Bell, FileText, Users, ClipboardList } from "lucide-react";
+import { Heart, LayoutDashboard, Bell, FileText, Users, ClipboardList, Calendar } from "lucide-react";
 import type { ReactNode } from "react";
 
 const NAV = [
   { to: "/patients", label: "Patients", icon: Users, requiresPatient: false },
   { to: "/", label: "Patient Dashboard", icon: LayoutDashboard, requiresPatient: true },
   { to: "/alerts", label: "Alerts / Review", icon: Bell, requiresPatient: true },
+  { to: "/timeline", label: "Research Timeline", icon: Calendar, requiresPatient: true },
   { to: "/summary", label: "Action Summary", icon: ClipboardList, requiresPatient: true },
   { to: "/audit", label: "Audit Log", icon: FileText, requiresPatient: false },
 ] as const;
@@ -29,7 +30,7 @@ export function AppShell({
             <Heart className="size-5 text-[var(--clinical-alert)]" />
             <div>
               <p className="text-sm font-bold leading-tight">My HEART:AFCArE</p>
-              <p className="text-[10px] text-muted-foreground">CDSS · AF</p>
+              <p className="text-[10px] text-muted-foreground">CDSS · AF (2026.08.26)</p>
             </div>
           </div>
           <nav className="flex-1 p-2">
@@ -71,8 +72,7 @@ export function AppShell({
             })}
           </nav>
           <div className="border-t border-border p-3 text-[10px] leading-snug text-muted-foreground">
-            This system <span className="font-semibold">supports</span> but does
-            not replace clinical judgement.
+            This decision support system <span className="font-semibold">assists</span> clinical workflow and does not replace medical judgement.
           </div>
         </aside>
 

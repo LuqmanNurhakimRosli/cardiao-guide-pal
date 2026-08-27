@@ -11,6 +11,9 @@ export interface BuildAlertInput {
   guideline?: string;
   recommendation?: string;
   supporting_values?: Record<string, string | number | boolean>;
+  priority?: number;
+  rule_id?: string;
+  action?: CdssAlert["action"];
 }
 
 export function buildAlert(a: BuildAlertInput): CdssAlert {
@@ -25,6 +28,9 @@ export function buildAlert(a: BuildAlertInput): CdssAlert {
     guideline: a.guideline,
     recommendation: a.recommendation,
     supporting_values: a.supporting_values,
+    priority: a.priority,
+    rule_id: a.rule_id,
+    action: a.action,
   };
 }
 

@@ -29,6 +29,7 @@ export interface Patient {
   name: string;
   age: number;
   dob?: string;
+  age_at_encounter?: number;
   sex: "male" | "female";
   ethnicity?: string;
   nationality?: string;
@@ -119,6 +120,7 @@ export interface CdssAlert {
     medication?: string;
     current_dose?: string;
     suggested_dose?: string;
+    prompt_order?: string;
   };
 }
 
@@ -183,6 +185,7 @@ export interface AuditEntry {
     values_used?: Record<string, string | number | boolean>;
     alert_evidence?: string[];
     recommendation?: string;
+    clinician_plan?: Patient["clinician_plan"];
   };
   /** Request ID that produced the alert being actioned. */
   request_id?: string;
@@ -196,4 +199,26 @@ export interface AuditEntry {
   index_alert_date?: string;
   research_window?: "pre-alert" | "index" | "post-alert" | "outside";
   timestamp: string;
+}
+
+export type ResearchWindowType = "pre-alert" | "index" | "post-alert" | "outside";
+
+export interface TimelineEvent {
+  id: string;
+  date: string;
+  window: ResearchWindowType;
+  category: "vitals" | "labs" | "medications" | "admissions" | "cdss_action" | "plan";
+  title: string;
+  detail: string;
+  values?: Record<string, string | number | boolean>;
+}
+
+export interface ResearchTimelineSummary {
+  patient_id: string;
+  mrn?: string;
+  index_alert_date: string;
+  pre_alert_window: { start: string; end: string; events_count: number; completeness: "Complete" | "Partial" | "Missing" };
+  index_encounter_window: { date: string; events_count: number; completeness: "Complete" | "Partial" | "Missing" };
+  post_alert_window: { start: string; end: string; events_count: number; completeness: "Complete" | "Partial" | "Missing" };
+  events: TimelineEvent[];
 }
