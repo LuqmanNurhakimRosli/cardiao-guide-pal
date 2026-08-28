@@ -14,6 +14,7 @@ interface Props {
   patient: Patient;
   draft: ClinicianInputs;
   setField: <K extends keyof ClinicianInputs>(k: K, v: ClinicianInputs[K]) => void;
+  onOpenModal?: () => void;
 }
 
 /** Compute EMR-derived defaults for HAS-BLED items (with origin info). */
@@ -52,7 +53,7 @@ function emrDerive(p: Patient) {
   return { out, fromEmr };
 }
 
-export function HasBledCalculator({ patient, draft, setField }: Props) {
+export function HasBledCalculator({ patient, draft, setField, onOpenModal }: Props) {
   const { out: emr, fromEmr } = useMemo(() => emrDerive(patient), [patient]);
 
   // Map of HAS-BLED key -> resolved value & source
@@ -118,7 +119,19 @@ export function HasBledCalculator({ patient, draft, setField }: Props) {
   return (
     <div className="rounded-md border border-border bg-card p-3">
       <div className="mb-2 flex items-center justify-between">
-        <h3 className="text-sm font-semibold">HAS-BLED (hybrid · live)</h3>
+        <div className="flex items-center gap-2">
+          <h3 className="text-sm font-semibold">HAS-BLED (hybrid · live)</h3>
+          {onOpenModal && (
+            <button
+              type="button"
+              onClick={onOpenModal}
+              className="rounded bg-muted/80 hover:bg-muted px-1.5 py-0.5 text-[10px] font-medium text-foreground/80 transition-colors border border-border"
+              title="View Evidence Popup"
+            >
+              🔍 View Evidence
+            </button>
+          )}
+        </div>
         <span
           className={`rounded px-2 py-0.5 text-xs font-bold ${
             score.highRisk

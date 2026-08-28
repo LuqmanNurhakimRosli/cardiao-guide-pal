@@ -29,6 +29,7 @@ export const listPatients = createServerFn({ method: "GET" }).handler(
       age: p.age_at_encounter ?? p.age,
       sex: p.sex,
       clinic_location: p.clinic_location,
+      cohort: (p as any).cohort ?? (p.patient_id.startsWith("REAL-") ? "hospital" : "benchmark"),
     }));
   },
 );
@@ -48,6 +49,23 @@ export const listPatientsWithAlerts = createServerFn({ method: "GET" }).handler(
       let af_status = "No AF";
       if (!cdss.clinicEligible) af_status = "CDSS N/A";
       else if (cdss.afEvidence.length > 0) af_status = "AF";
+
+      const chaScore = cdss.scores.cha2ds2va?.total ?? 0;
+      const hasBledScore = cdss.scores.hasbled?.total ?? cdss.scores.has_bled?.total ?? 0;
+      const isValvular = (p.diagnoses || []).some((d) =>
+        ["I05.0", "I05.2", "I08.0", "Z95.2"].includes(d),
+      );
+      const activeDrug =
+        p.medications.find((m) =>
+          ["Warfarin", "Apixaban", "Dabigatran", "Rivaroxaban", "Edoxaban"].some((d) =>
+            m.name.toLowerCase().includes(d.toLowerCase()),
+          ),
+        )?.name ?? "None";
+
+      const hasDoseAlert = cdss.alerts.some((a) =>
+        ["renal-dose", "age-dose", "weight-dose", "contraindication"].includes(a.category),
+      );
+
       return {
         patient_id: p.patient_id,
         mrn: p.mrn,
@@ -55,9 +73,17 @@ export const listPatientsWithAlerts = createServerFn({ method: "GET" }).handler(
         age: p.age_at_encounter ?? p.age,
         sex: p.sex,
         clinic_location: p.clinic_location,
+        cohort: (p as any).cohort ?? (p.patient_id.startsWith("REAL-") ? "hospital" : "benchmark"),
         af_status,
+        cha2ds2va_score: chaScore,
+        has_bled_score: hasBledScore,
+        is_valvular: isValvular,
+        active_drug: activeDrug,
+        has_dose_alert: hasDoseAlert,
         alerts_count: cdss.alerts.length,
         reminders_count: cdss.reminders.length,
+        visit_date: p.encounter?.clinic_date ?? "2024-04-15",
+        visit_id: p.encounter?.visit_id,
         executed: cdss.executed,
         clinic_eligible: cdss.clinicEligible,
       };

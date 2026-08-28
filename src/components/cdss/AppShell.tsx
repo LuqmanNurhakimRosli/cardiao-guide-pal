@@ -1,9 +1,10 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { Heart, LayoutDashboard, Bell, FileText, Users, ClipboardList, Calendar } from "lucide-react";
+import { Heart, LayoutDashboard, Bell, FileText, Users, ClipboardList, Calendar, BarChart3 } from "lucide-react";
 import type { ReactNode } from "react";
 
 const NAV = [
   { to: "/patients", label: "Patients", icon: Users, requiresPatient: false },
+  { to: "/analytics", label: "Cohort Analytics", icon: BarChart3, requiresPatient: false },
   { to: "/", label: "Patient Dashboard", icon: LayoutDashboard, requiresPatient: true },
   { to: "/alerts", label: "Alerts / Review", icon: Bell, requiresPatient: true },
   { to: "/timeline", label: "Research Timeline", icon: Calendar, requiresPatient: true },

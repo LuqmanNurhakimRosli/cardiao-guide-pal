@@ -109,6 +109,8 @@ export const clinicianInputsSchema = z
     hb_elderly: z.boolean().optional(),
     hb_drugs: z.boolean().optional(),
     afConfirmed: z.union([z.boolean(), z.null()]).optional(),
+    chaConfirmed: z.union([z.boolean(), z.null()]).optional(),
+    hasBledConfirmed: z.union([z.boolean(), z.null()]).optional(),
     _lastSavedAt: z.string().optional(),
   })
   .strict();

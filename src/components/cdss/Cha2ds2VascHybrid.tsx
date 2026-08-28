@@ -19,6 +19,7 @@ interface Props {
   patient: Patient; // raw EMR patient
   draft: ClinicianInputs;
   setField: <K extends keyof ClinicianInputs>(k: K, v: ClinicianInputs[K]) => void;
+  onOpenModal?: () => void;
 }
 
 function resolve<T>(
@@ -34,7 +35,7 @@ function resolve<T>(
   return { value: undefined, source: "missing" };
 }
 
-export function Cha2ds2VascHybrid({ patient, draft, setField }: Props) {
+export function Cha2ds2VascHybrid({ patient, draft, setField, onOpenModal }: Props) {
   const c = patient.comorbidities ?? {};
 
   const chf = resolve<boolean>(c.chf, draft.chf);
@@ -81,7 +82,19 @@ export function Cha2ds2VascHybrid({ patient, draft, setField }: Props) {
   return (
     <div className="rounded-md border border-border bg-card p-3">
       <div className="mb-2 flex items-center justify-between">
-        <h3 className="text-sm font-semibold">CHA₂DS₂-VA (hybrid · live)</h3>
+        <div className="flex items-center gap-2">
+          <h3 className="text-sm font-semibold">CHA₂DS₂-VA (hybrid · live)</h3>
+          {onOpenModal && (
+            <button
+              type="button"
+              onClick={onOpenModal}
+              className="rounded bg-muted/80 hover:bg-muted px-1.5 py-0.5 text-[10px] font-medium text-foreground/80 transition-colors border border-border"
+              title="View Evidence Popup"
+            >
+              🔍 View Evidence
+            </button>
+          )}
+        </div>
         <span
           className={`rounded px-2 py-0.5 text-xs font-bold ${
             highRisk

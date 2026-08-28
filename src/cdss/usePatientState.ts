@@ -32,6 +32,10 @@ export interface ClinicianInputs {
 
   // AF confirmation nudge (Stage 2): null = awaiting, true = confirmed, false = rejected
   afConfirmed?: boolean | null;
+  // CHA2DS2-VA confirmation nudge: null = awaiting, true = confirmed
+  chaConfirmed?: boolean | null;
+  // HAS-BLED confirmation nudge: null = awaiting, true = confirmed
+  hasBledConfirmed?: boolean | null;
 
   // metadata
   _lastSavedAt?: string;

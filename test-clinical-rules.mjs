@@ -108,6 +108,12 @@ assert(rivaSevereRenal.alerts.length === 1 && rivaSevereRenal.alerts[0].id === "
 const apixSevereRenal = evaluateAnticoagulants({ age: 82, vitals: { weight: 50 }, labs: { creatinine: 150 }, medications: [{ name: "Apixaban", dose: "5 mg BD" }] }, { clcr: 12 });
 assert(apixSevereRenal.alerts.length === 1 && apixSevereRenal.alerts[0].id === "apixaban-avoid", "Apixaban CrCl 12 -> Only 'Avoid' alert emitted; 2-of-3 reduction suppressed");
 
+// 8b. Apixaban Medico-Legal Advisory Phrasing
+console.log("\n8b. Apixaban Medico-Legal Advisory Phrasing:");
+const apix2of3 = evaluateAnticoagulants({ age: 78, vitals: { weight: 55 }, labs: { creatinine: 140 }, medications: [{ name: "Apixaban", dose: "5 mg BD" }] }, { clcr: 25.4 });
+assert(apix2of3.alerts.some(a => a.id === "apixaban-reduce" && a.title.startsWith("Consider Apixaban dose reduction")), "Apixaban 2-of-3 criteria title uses advisory 'Consider' phrasing");
+assert(apix2of3.alerts.some(a => a.id === "apixaban-reduce" && a.recommendation?.includes("subject to clinical review")), "Apixaban recommendation includes 'subject to clinical review'");
+
 // 9. Research Timeline Classification
 console.log("\n9. Research Timeline Windows (-12m, Index Date, +3m):");
 assert(classifyDateWindow("2026-02-15", "2026-08-26") === "pre-alert", "Date 6 months before index -> pre-alert");

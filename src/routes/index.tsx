@@ -13,6 +13,10 @@ import { HasBledCalculator } from "@/components/cdss/HasBledCalculator";
 import { Cha2ds2VascHybrid } from "@/components/cdss/Cha2ds2VascHybrid";
 import { AfEvidenceCard } from "@/components/cdss/AfEvidenceCard";
 import { AfConfirmationModal } from "@/components/cdss/AfConfirmationModal";
+import {
+  Cha2ds2VaConfirmationModal,
+  HasBledConfirmationModal,
+} from "@/components/cdss/ScoreEvidenceModal";
 import { MissingDataCard } from "@/components/cdss/MissingDataCard";
 import { ClinicGateBanner } from "@/components/cdss/ClinicGateBanner";
 import {
@@ -75,6 +79,7 @@ function PatientDashboard() {
   const logField = useServerFn(logFieldChange);
   const logScore = useServerFn(logScoreCalculation);
   const [saveFlash, setSaveFlash] = useState(false);
+  const [manualScoreModal, setManualScoreModal] = useState<"cha" | "hasbled" | null>(null);
 
   const handleSave = async () => {
     // diff before saving
@@ -225,6 +230,47 @@ function PatientDashboard() {
             onReject={() => setField("afConfirmed", false)}
           />
 
+          <Cha2ds2VaConfirmationModal
+            open={
+              manualScoreModal === "cha" ||
+              (livecdss.clinicEligible &&
+                (draft.afConfirmed ?? livecdss.afConfirmed) === true &&
+                (draft.chaConfirmed ?? null) === null)
+            }
+            patient={patient}
+            draft={draft}
+            score={livecdss.scores.cha2ds2va?.total ?? livecdss.scores.cha2ds2vasc?.total ?? 0}
+            onConfirm={() => {
+              setField("chaConfirmed", true);
+              setManualScoreModal(null);
+            }}
+            onEdit={() => {
+              setField("chaConfirmed", true);
+              setManualScoreModal(null);
+            }}
+          />
+
+          <HasBledConfirmationModal
+            open={
+              manualScoreModal === "hasbled" ||
+              (livecdss.clinicEligible &&
+                (draft.afConfirmed ?? livecdss.afConfirmed) === true &&
+                (draft.chaConfirmed ?? null) === true &&
+                (draft.hasBledConfirmed ?? null) === null)
+            }
+            patient={patient}
+            draft={draft}
+            score={livecdss.scores.hasbled?.total ?? 0}
+            onConfirm={() => {
+              setField("hasBledConfirmed", true);
+              setManualScoreModal(null);
+            }}
+            onEdit={() => {
+              setField("hasBledConfirmed", true);
+              setManualScoreModal(null);
+            }}
+          />
+
 
           <Section icon={<Activity className="size-4" />} title="Vitals">
             <div className="grid grid-cols-3 gap-2">
@@ -299,12 +345,14 @@ function PatientDashboard() {
                 patient={patient}
                 draft={draft}
                 setField={setField}
+                onOpenModal={() => setManualScoreModal("cha")}
               />
 
               <HasBledCalculator
                 patient={patient}
                 draft={draft}
                 setField={setField}
+                onOpenModal={() => setManualScoreModal("hasbled")}
               />
 
               <MissingDataCard reminders={livecdss.reminders} />
