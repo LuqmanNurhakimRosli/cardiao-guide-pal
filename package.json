@@ -11,7 +11,8 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "reset:default": "node scripts/reset-to-default.mjs",
-    "load:hospital": "node scripts/load-hospital-dataset.mjs"
+    "load:hospital": "node scripts/load-hospital-dataset.mjs",
+    "deploy": "vite build && wrangler deploy --config .output/server/wrangler.json"
   },
   "dependencies": {
     "@cloudflare/vite-plugin": "^1.25.5",
