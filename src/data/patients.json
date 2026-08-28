@@ -2,7 +2,7 @@
   {
     "patient_id": "P001",
     "mrn": "MRN-100234",
-    "name": "Siti Rahmah binti Abdullah",
+    "name": "Patient 1 - Siti",
     "dob": "1948-04-12",
     "age": 78,
     "sex": "female",
@@ -60,7 +60,7 @@
   {
     "patient_id": "P002",
     "mrn": "MRN-100235",
-    "name": "Tan Chee Keong",
+    "name": "Patient 2 - Abu",
     "dob": "1944-01-15",
     "age": 82,
     "sex": "male",
@@ -117,7 +117,7 @@
   {
     "patient_id": "P003",
     "mrn": "MRN-100236",
-    "name": "Kavitha a/p Subramaniam",
+    "name": "Patient 3 - Devi",
     "dob": "1958-06-20",
     "age": 68,
     "sex": "female",
@@ -165,7 +165,7 @@
   {
     "patient_id": "P004",
     "mrn": "MRN-100237",
-    "name": "Lim Ah Lek",
+    "name": "Patient 4 - Chong",
     "dob": "1955-03-10",
     "age": 71,
     "sex": "male",
@@ -211,7 +211,7 @@
   {
     "patient_id": "P005",
     "mrn": "MRN-100238",
-    "name": "Zainab binti Hassan",
+    "name": "Patient 5 - Aisyah",
     "dob": "1950-09-05",
     "age": 76,
     "sex": "female",
@@ -259,7 +259,7 @@
   {
     "patient_id": "P006",
     "mrn": "MRN-100239",
-    "name": "Noraini binti Ahmad",
+    "name": "Patient 6 - Fatimah",
     "dob": "1956-11-22",
     "age": 70,
     "sex": "female",
@@ -299,7 +299,7 @@
   {
     "patient_id": "P007",
     "mrn": "MRN-100240",
-    "name": "Muthu a/l Govindasamy",
+    "name": "Patient 7 - Muthu",
     "dob": "1954-08-30",
     "age": 72,
     "sex": "male",
@@ -333,7 +333,7 @@
   {
     "patient_id": "P008",
     "mrn": "MRN-100241",
-    "name": "Wong Siew Ling",
+    "name": "Patient 8 - Mei",
     "dob": "1952-02-14",
     "age": 74,
     "sex": "female",
@@ -390,7 +390,7 @@
   {
     "patient_id": "P009",
     "mrn": "MRN-100242",
-    "name": "Ahmad Zulkifli bin Ismail",
+    "name": "Patient 9 - Ali",
     "dob": "1960-05-18",
     "age": 66,
     "sex": "male",
@@ -430,7 +430,7 @@
   {
     "patient_id": "P010",
     "mrn": "MRN-100243",
-    "name": "Lee Mei Lan",
+    "name": "Patient 10 - Wong",
     "dob": "1945-07-10",
     "age": 81,
     "sex": "female",
@@ -476,7 +476,7 @@
   {
     "patient_id": "P011",
     "mrn": "MRN-100244",
-    "name": "Mohd Fauzi bin Osman",
+    "name": "Patient 11 - Hassan",
     "dob": "1949-03-25",
     "age": 77,
     "sex": "male",
@@ -522,7 +522,7 @@
   {
     "patient_id": "P012",
     "mrn": "MRN-100245",
-    "name": "Chong Wei Lun",
+    "name": "Patient 12 - Lee",
     "dob": "1961-10-04",
     "age": 64,
     "sex": "male",
