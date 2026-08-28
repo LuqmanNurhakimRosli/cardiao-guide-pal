@@ -17,6 +17,11 @@ import {
   Heart,
   Pill,
   ClipboardList,
+  Calendar,
+  CheckCircle2,
+  Clock,
+  ShieldAlert,
+  ArrowLeft,
 } from "lucide-react";
 import {
   Collapsible,
@@ -108,81 +113,84 @@ function AlertsReview() {
   const hasbledScore = cdss.scores.hasbled?.total ?? "—";
   const clcrScore = cdss.scores.clcr ? `${cdss.scores.clcr} mL/min` : "—";
   const pinrrScore = cdss.scores.pinrr != null ? `${cdss.scores.pinrr}%` : "—";
+  const selectedCount = Object.values(picks).filter(Boolean).length;
 
   return (
     <AppShell selectedId={patient.patient_id} selectedName={patient.name}>
-      <div className="mx-auto max-w-5xl px-4 py-4 space-y-4">
-        {/* Header & Encounter Summary */}
-        <div className="rounded-lg border border-border bg-card p-4 shadow-sm">
-          <div className="flex flex-wrap items-start justify-between gap-4 border-b border-border pb-3">
+      <div className="mx-auto max-w-5xl px-3 sm:px-5 py-4 space-y-4">
+        {/* Header & Encounter Summary Card */}
+        <div className="rounded-xl border border-border bg-card p-4 sm:p-5 shadow-2xs">
+          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 border-b border-border pb-4">
             <div>
               <div className="flex items-center gap-2">
-                <span className="rounded bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">
-                  {patient.encounter?.encounter_type ?? "Outpatient Clinic"}
+                <span className="rounded-md bg-primary/10 px-2 py-0.5 text-xs font-bold text-primary">
+                  {patient.encounter?.encounter_type ?? "Cardiology Outpatient Clinic"}
                 </span>
                 <span className="text-xs text-muted-foreground font-mono">
-                  Visit: {patient.encounter?.visit_id ?? "VIS-2026-001"}
+                  Visit ID: {patient.encounter?.visit_id ?? "VIS-2026-001"}
                 </span>
               </div>
-              <h1 className="mt-1 text-xl font-bold tracking-tight">Combined Clinical Alert Panel</h1>
-              <p className="text-xs text-muted-foreground">
-                Patient: <span className="font-semibold text-foreground">{patient.name}</span> ({patient.patient_id}) · MRN: {patient.mrn ?? "—"} · Age: {patient.age_at_encounter ?? patient.age} · Sex: {patient.sex} · Clinician: {patient.encounter?.clinician_id ?? "DR-CAR-01"}
+              <h1 className="mt-1 text-lg sm:text-xl font-bold tracking-tight text-foreground">
+                Combined Clinical Alert & Decision Review
+              </h1>
+              <p className="mt-0.5 text-xs text-muted-foreground">
+                Patient: <span className="font-semibold text-foreground">{patient.name}</span> (<span className="font-mono">{patient.patient_id}</span>) · MRN: <span className="font-mono">{patient.mrn ?? "—"}</span> · Age: {patient.age_at_encounter ?? patient.age} · Sex: {patient.sex}
               </p>
             </div>
-            <div className="text-right">
-              <span className="text-xs text-muted-foreground">Encounter Date:</span>
-              <p className="text-sm font-semibold font-mono text-foreground">
+            <div className="text-left sm:text-right rounded-lg bg-muted/40 p-2 sm:p-0 sm:bg-transparent border sm:border-0 border-border">
+              <span className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground">Encounter Date:</span>
+              <p className="text-sm font-bold font-mono text-foreground">
                 {patient.encounter?.clinic_date ?? "2026-08-26"}
               </p>
             </div>
           </div>
 
-          {/* Clinical Scores & Vitals Summary Grid */}
-          <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4 md:grid-cols-6 text-xs">
-            <div className="rounded bg-muted/50 p-2 border border-border/50">
+          {/* Vitals & Clinical Scores Summary Grid */}
+          <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6 text-xs">
+            <div className="rounded-lg bg-muted/30 p-2.5 border border-border/60">
               <span className="text-muted-foreground text-[10px] uppercase font-bold">CHA₂DS₂-VA</span>
-              <p className="text-base font-bold text-primary">{chadsScore} <span className="text-[10px] font-normal text-muted-foreground">(≥2)</span></p>
+              <p className="text-base font-bold text-primary font-mono">{chadsScore} <span className="text-[10px] font-normal text-muted-foreground">(≥2)</span></p>
             </div>
-            <div className="rounded bg-muted/50 p-2 border border-border/50">
+            <div className="rounded-lg bg-muted/30 p-2.5 border border-border/60">
               <span className="text-muted-foreground text-[10px] uppercase font-bold">HAS-BLED</span>
-              <p className={`text-base font-bold ${Number(hasbledScore) >= 3 ? "text-amber-500" : "text-foreground"}`}>
+              <p className={`text-base font-bold font-mono ${Number(hasbledScore) >= 3 ? "text-rose-600" : "text-foreground"}`}>
                 {hasbledScore} <span className="text-[10px] font-normal text-muted-foreground">(≥3 high)</span>
               </p>
             </div>
-            <div className="rounded bg-muted/50 p-2 border border-border/50">
+            <div className="rounded-lg bg-muted/30 p-2.5 border border-border/60">
               <span className="text-muted-foreground text-[10px] uppercase font-bold">CrCl (Cockcroft)</span>
-              <p className="text-base font-bold text-foreground">{clcrScore}</p>
+              <p className="text-base font-bold font-mono text-foreground">{clcrScore}</p>
             </div>
-            <div className="rounded bg-muted/50 p-2 border border-border/50">
+            <div className="rounded-lg bg-muted/30 p-2.5 border border-border/60">
               <span className="text-muted-foreground text-[10px] uppercase font-bold">Blood Pressure</span>
-              <p className="text-xs font-semibold text-foreground mt-1">
+              <p className="text-xs font-semibold text-foreground font-mono mt-1">
                 {patient.vitals.bp_latest ?? "—"} <span className="text-muted-foreground font-normal">/ {patient.vitals.bp_second ?? "—"}</span>
               </p>
             </div>
-            <div className="rounded bg-muted/50 p-2 border border-border/50">
+            <div className="rounded-lg bg-muted/30 p-2.5 border border-border/60">
               <span className="text-muted-foreground text-[10px] uppercase font-bold">HbA1c</span>
-              <p className="text-base font-bold text-foreground">
+              <p className="text-base font-bold font-mono text-foreground">
                 {patient.labs.hba1c_record?.value ?? patient.labs.hba1c ? `${patient.labs.hba1c_record?.value ?? patient.labs.hba1c}%` : "—"}
               </p>
             </div>
-            <div className="rounded bg-muted/50 p-2 border border-border/50">
-              <span className="text-muted-foreground text-[10px] uppercase font-bold">PINRR (12m)</span>
-              <p className="text-base font-bold text-foreground">{pinrrScore}</p>
+            <div className="rounded-lg bg-muted/30 p-2.5 border border-border/60">
+              <span className="text-muted-foreground text-[10px] uppercase font-bold">Warfarin PINRR</span>
+              <p className="text-base font-bold font-mono text-foreground">{pinrrScore}</p>
             </div>
           </div>
 
           {/* Current Anticoagulant Status */}
-          <div className="mt-3 flex flex-wrap items-center justify-between rounded bg-muted/30 p-2 border border-border text-xs">
+          <div className="mt-3 flex flex-wrap items-center justify-between gap-2 rounded-lg bg-muted/40 p-2.5 border border-border text-xs">
             <div className="flex items-center gap-2">
-              <Pill className="size-3.5 text-primary" />
-              <span className="font-semibold">Current Medications:</span>
-              <span className="text-muted-foreground">
+              <Pill className="size-4 text-primary shrink-0" />
+              <span className="font-semibold text-foreground">Active Medication Orders:</span>
+              <span className="text-muted-foreground font-medium">
                 {patient.medications.map((m) => `${m.name} ${m.dose ?? ""}`).join(", ") || "No medications recorded"}
               </span>
             </div>
             {patient.clinician_plan?.next_appointment_date && (
-              <span className="text-xs text-muted-foreground">
-                Next Appointment: <strong className="text-foreground">{patient.clinician_plan.next_appointment_date}</strong>
+              <span className="text-xs text-muted-foreground font-medium">
+                Next Appointment: <strong className="text-foreground font-mono">{patient.clinician_plan.next_appointment_date}</strong>
               </span>
             )}
           </div>
@@ -190,46 +198,43 @@ function AlertsReview() {
 
         {/* Actionable Clinical Alerts */}
         <div className="space-y-3">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
             <div className="flex items-center gap-2">
-              <AlertTriangle className="size-4 text-[var(--clinical-alert)]" />
+              <ShieldAlert className="size-4 text-rose-600" />
               <h2 className="text-sm font-bold uppercase tracking-wider text-foreground">
                 Actionable Clinical Alerts ({actionableAlerts.length})
               </h2>
             </div>
             <span className="text-xs text-muted-foreground">
-              Select one action per alert. Actions will be processed sequentially on save.
+              Select one action per alert. Actions will be processed sequentially.
             </span>
           </div>
 
           {actionableAlerts.length === 0 ? (
-            <div className="rounded-md border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
-              ✓ No high-priority clinical alerts for this patient.
+            <div className="rounded-xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground bg-card">
+              <CheckCircle2 className="mx-auto mb-2 size-6 text-emerald-500" />
+              <p className="font-semibold text-foreground">No active critical alerts for this encounter.</p>
+              <p className="text-xs text-muted-foreground mt-0.5">Clinical management meets standard guidelines.</p>
             </div>
           ) : (
             <ul className="space-y-3">
               {actionableAlerts.map((al) => {
-                const isAlert = al.severity === "alert";
-                const palette = isAlert
-                  ? "border-l-[var(--clinical-alert)] bg-[var(--clinical-alert-bg)]"
-                  : "border-l-[var(--clinical-warn)] bg-[var(--clinical-warn-bg)]";
-                const iconColor = isAlert
-                  ? "text-[var(--clinical-alert)]"
-                  : "text-[var(--clinical-warn)]";
                 const pick = picks[al.id];
 
                 return (
                   <li
                     key={al.id}
-                    className={`rounded-md border border-l-4 border-border p-3.5 ${palette}`}
+                    className="rounded-xl border border-l-4 border-rose-500/30 border-l-rose-500 bg-card p-4 shadow-2xs space-y-3"
                   >
                     <div className="flex items-start gap-3">
-                      <AlertTriangle className={`mt-0.5 size-4 shrink-0 ${iconColor}`} />
+                      <div className="flex size-7 items-center justify-center rounded-lg bg-rose-500/10 text-rose-600 shrink-0 mt-0.5">
+                        <AlertTriangle className="size-4" />
+                      </div>
                       <div className="min-w-0 flex-1">
-                        <div className="flex items-center justify-between gap-2">
-                          <p className="text-sm font-semibold text-foreground">{al.title}</p>
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <h3 className="text-sm font-bold text-foreground">{al.title}</h3>
                           {al.group && (
-                            <span className="rounded bg-background/80 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                            <span className="rounded-md bg-muted px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                               {al.group}
                             </span>
                           )}
@@ -239,62 +244,95 @@ function AlertsReview() {
                         </p>
 
                         {al.recommendation && (
-                          <p className="mt-1.5 text-xs font-medium text-foreground bg-background/50 rounded px-2 py-1 border border-border/40">
-                            💡 Recommendation: {al.recommendation}
-                          </p>
+                          <div className="mt-2 rounded-lg bg-primary/5 p-2.5 text-xs font-semibold text-foreground border border-primary/10">
+                            💡 <strong>Guideline Recommendation:</strong> {al.recommendation}
+                          </div>
                         )}
 
                         {al.rationale.length > 0 && (
                           <Collapsible className="mt-2">
-                            <CollapsibleTrigger className="inline-flex items-center gap-1 text-[11px] font-medium text-foreground/70 hover:text-foreground">
-                              <ChevronDown className="size-3" /> Clinical Rationale ({al.rationale.length})
+                            <CollapsibleTrigger className="inline-flex items-center gap-1 text-[11px] font-semibold text-primary hover:underline">
+                              <ChevronDown className="size-3" /> Clinical Evidence & Rationale ({al.rationale.length})
                             </CollapsibleTrigger>
-                            <CollapsibleContent className="mt-1 rounded bg-background/70 p-2 text-xs">
-                              <ul className="list-disc space-y-0.5 pl-4 text-muted-foreground">
+                            <CollapsibleContent className="mt-1.5 rounded-lg bg-muted/40 p-2.5 text-xs border border-border/60">
+                              <ul className="list-disc space-y-1 pl-4 text-muted-foreground">
                                 {al.rationale.map((r, i) => (
                                   <li key={i}>{r}</li>
                                 ))}
                               </ul>
                               {al.guideline && (
-                                <p className="mt-1.5 text-[10px] text-muted-foreground/80 italic">
+                                <p className="mt-2 text-[10px] text-muted-foreground font-mono">
                                   Guideline: {al.guideline}
                                 </p>
                               )}
                             </CollapsibleContent>
                           </Collapsible>
                         )}
+                      </div>
+                    </div>
 
-                        {/* Action Selection Radio Controls */}
-                        <fieldset className="mt-3 flex flex-wrap items-center gap-3 border-t border-border/50 pt-2.5 text-xs">
-                          <span className="text-xs font-semibold text-muted-foreground">Action:</span>
-                          {(["accept", "override", "defer"] as ClinicianAction[]).map(
-                            (a) => (
-                              <label
-                                key={a}
-                                className={`inline-flex cursor-pointer items-center gap-1.5 rounded px-2.5 py-1 transition-colors ${
-                                  pick === a
-                                    ? "bg-foreground text-background font-semibold shadow-xs"
-                                    : "bg-background hover:bg-muted border border-border text-foreground"
-                                }`}
-                              >
-                                <input
-                                  type="radio"
-                                  name={al.id}
-                                  checked={pick === a}
-                                  onChange={() => setPick(al.id, a)}
-                                  className="accent-current"
-                                />
-                                <span className="capitalize">
-                                  {a === "accept"
-                                    ? "Accept / Act Now"
-                                    : a === "defer"
-                                    ? "Defer / Review Later"
-                                    : "Override Alert"}
-                                </span>
-                              </label>
-                            ),
-                          )}
-                        </fieldset>
+                    {/* 3-State Action Selection Radio Cards */}
+                    <div className="border-t border-border/60 pt-3">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <span className="text-xs font-bold text-foreground">Select Decision Action:</span>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 w-full sm:w-auto">
+                          {/* Accept */}
+                          <label
+                            className={`flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold cursor-pointer border transition ${
+                              pick === "accept"
+                                ? "border-emerald-600 bg-emerald-600 text-white shadow-xs"
+                                : "border-border bg-background hover:bg-muted text-foreground"
+                            }`}
+                          >
+                            <input
+                              type="radio"
+                              name={al.id}
+                              checked={pick === "accept"}
+                              onChange={() => setPick(al.id, "accept")}
+                              className="sr-only"
+                            />
+                            <CheckCircle2 className="size-3.5" />
+                            <span>Accept / Act Now</span>
+                          </label>
+
+                          {/* Override */}
+                          <label
+                            className={`flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold cursor-pointer border transition ${
+                              pick === "override"
+                                ? "border-rose-600 bg-rose-600 text-white shadow-xs"
+                                : "border-border bg-background hover:bg-muted text-foreground"
+                            }`}
+                          >
+                            <input
+                              type="radio"
+                              name={al.id}
+                              checked={pick === "override"}
+                              onChange={() => setPick(al.id, "override")}
+                              className="sr-only"
+                            />
+                            <AlertTriangle className="size-3.5" />
+                            <span>Override Alert</span>
+                          </label>
+
+                          {/* Defer */}
+                          <label
+                            className={`flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold cursor-pointer border transition ${
+                              pick === "defer"
+                                ? "border-amber-600 bg-amber-600 text-white shadow-xs"
+                                : "border-border bg-background hover:bg-muted text-foreground"
+                            }`}
+                          >
+                            <input
+                              type="radio"
+                              name={al.id}
+                              checked={pick === "defer"}
+                              onChange={() => setPick(al.id, "defer")}
+                              className="sr-only"
+                            />
+                            <Clock className="size-3.5" />
+                            <span>Defer / Review Later</span>
+                          </label>
+                        </div>
                       </div>
                     </div>
                   </li>
@@ -304,25 +342,25 @@ function AlertsReview() {
           )}
         </div>
 
-        {/* Missing Data Reminders & Order Prompts */}
+        {/* Missing Data Reminders */}
         {missingDataReminders.length > 0 && (
-          <div className="space-y-2.5 pt-2">
+          <div className="space-y-3 pt-2">
             <div className="flex items-center gap-2">
-              <Info className="size-4 text-[var(--clinical-warn)]" />
+              <Info className="size-4 text-amber-600" />
               <h2 className="text-sm font-bold uppercase tracking-wider text-foreground">
-                Clinical Data Reminders & Order Prompts ({missingDataReminders.length})
+                Clinical Reminders & Suggested Orders ({missingDataReminders.length})
               </h2>
             </div>
-            <div className="grid gap-2 sm:grid-cols-2">
+            <div className="grid gap-2.5 sm:grid-cols-2">
               {missingDataReminders.map((rem) => (
                 <div
                   key={rem.id}
-                  className="rounded-md border border-l-4 border-border border-l-[var(--clinical-warn)] bg-[var(--clinical-warn-bg)] p-3 text-xs"
+                  className="rounded-xl border border-l-4 border-amber-500/30 border-l-amber-500 bg-card p-3.5 text-xs shadow-2xs space-y-1.5"
                 >
-                  <p className="font-semibold text-foreground">{rem.title}</p>
-                  <p className="mt-0.5 text-muted-foreground">{rem.detail}</p>
+                  <p className="font-bold text-foreground">{rem.title}</p>
+                  <p className="text-muted-foreground">{rem.detail}</p>
                   {rem.action?.prompt_order && (
-                    <div className="mt-2 rounded bg-background/80 px-2 py-1 font-mono text-[11px] font-medium text-foreground border border-border/50">
+                    <div className="rounded-lg bg-amber-500/10 p-2 font-mono text-[11px] font-semibold text-amber-900 dark:text-amber-200 border border-amber-500/20">
                       📋 Order Prompt: {rem.action.prompt_order}
                     </div>
                   )}
@@ -332,15 +370,19 @@ function AlertsReview() {
           </div>
         )}
 
-        {/* Bottom Actions Bar */}
-        <div className="flex items-center justify-between border-t border-border pt-4">
+        {/* Bottom Actions Execution Bar */}
+        <div className="sticky bottom-3 z-20 flex items-center justify-between rounded-xl border border-border bg-card/95 p-3.5 shadow-lg backdrop-blur-md">
           <Link to="/" search={{ p: patient.patient_id }}>
-            <Button variant="ghost" size="sm">
-              ← Back to Patient Dashboard
+            <Button variant="outline" size="sm" className="text-xs h-8">
+              <ArrowLeft className="mr-1.5 size-3.5" /> Back to Dashboard
             </Button>
           </Link>
-          <Button onClick={handleSave} size="sm" className="gap-1.5 shadow-sm">
-            Save & Process Actions ({Object.values(picks).filter(Boolean).length}) <ArrowRight className="size-3.5" />
+          <Button
+            onClick={handleSave}
+            size="sm"
+            className="text-xs h-8 bg-primary text-primary-foreground font-semibold shadow-xs"
+          >
+            Process Chosen Decisions ({selectedCount}) <ArrowRight className="ml-1.5 size-3.5" />
           </Button>
         </div>
       </div>

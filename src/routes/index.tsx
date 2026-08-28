@@ -32,6 +32,11 @@ import {
   Save,
   RotateCcw,
   CheckCircle2,
+  Calendar,
+  Building2,
+  Stethoscope,
+  ShieldAlert,
+  ArrowRightLeft,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -82,7 +87,6 @@ function PatientDashboard() {
   const [manualScoreModal, setManualScoreModal] = useState<"cha" | "hasbled" | null>(null);
 
   const handleSave = async () => {
-    // diff before saving
     const before = inputs;
     const after = draft;
     const changedKeys: (keyof ClinicianInputs)[] = [];
@@ -93,7 +97,6 @@ function PatientDashboard() {
 
     saveAndRecalculate();
 
-    // log each field change
     await Promise.all(
       changedKeys.map((k) =>
         logField({
@@ -107,7 +110,6 @@ function PatientDashboard() {
       ),
     );
 
-    // log final scores
     if (draftCdss.scores.cha2ds2va ?? draftCdss.scores.cha2ds2vasc) {
       const s = (draftCdss.scores.cha2ds2va ?? draftCdss.scores.cha2ds2vasc)!;
       const highRisk = s.total >= 2;
@@ -126,7 +128,6 @@ function PatientDashboard() {
     setTimeout(() => setSaveFlash(false), 2000);
   };
 
-  // safety: incomplete CHA inputs?
   const incompleteCha = useMemo(() => {
     const c = patient.comorbidities ?? {};
     const checks: (boolean | undefined)[] = [
@@ -139,402 +140,414 @@ function PatientDashboard() {
     return checks.some((v) => v === undefined || v === null);
   }, [draft, patient.comorbidities]);
 
-  // Use draft CDSS for live preview in panel
   const livecdss = draftCdss;
+  const isReal = patient.cohort === "hospital" || patient.patient_id.startsWith("REAL-");
 
   return (
     <AppShell selectedId={patient.patient_id} selectedName={patient.name}>
-      <div className="mx-auto max-w-[1600px] grid grid-cols-1 gap-4 px-4 py-4 lg:grid-cols-[260px_1fr_360px]">
-        {/* LEFT */}
-        <aside className="space-y-3">
-          <Section icon={<User className="size-4" />} title="Patient">
-            <Row k="ID" v={patient.patient_id} />
-            <Row k="Name" v={patient.name} />
-            <Row k="Age" v={`${patient.age} y`} />
-            <Row k="Sex" v={patient.sex} />
-            <Row k="Clinic" v={patient.clinic_location} />
-          </Section>
-          <Section icon={<Heart className="size-4" />} title="Comorbidities (EMR)">
-            {Object.entries(patient.comorbidities).map(([k, v]) => (
-              <Row
-                key={k}
-                k={k}
-                v={
-                  <span className={v ? "font-medium" : "text-muted-foreground"}>
-                    {v === undefined ? "—" : v ? "Yes" : "No"}
+      <div className="mx-auto max-w-7xl px-3 sm:px-5 py-4 space-y-4">
+        {/* Top Hero Patient Demographics Banner */}
+        <div className="rounded-xl border border-border bg-card p-4 shadow-2xs">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex items-start sm:items-center gap-3.5">
+              <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 text-primary border border-primary/20 shadow-xs font-bold text-lg">
+                {patient.name.charAt(0)}
+              </div>
+              <div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <h1 className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
+                    {patient.name}
+                  </h1>
+                  <span className="font-mono text-xs font-bold rounded-md bg-primary/10 px-2 py-0.5 text-primary border border-primary/20">
+                    {patient.patient_id}
                   </span>
-                }
-              />
-            ))}
-          </Section>
-          <Section icon={<FileText className="size-4" />} title="Diagnoses">
-            <ul className="space-y-1">
-              {patient.diagnoses.map((d: string) => (
-                <li key={d} className="rounded bg-muted px-2 py-1 font-mono text-xs">
-                  {d}
-                </li>
-              ))}
-            </ul>
-            <p className="mt-2 text-xs text-muted-foreground">
-              ECG: {patient.ecg_results.join(", ")}
-            </p>
-          </Section>
-
-          {inputs._lastSavedAt && (
-            <div className="rounded-md border border-[var(--clinical-ok)]/40 bg-[var(--clinical-ok-bg)]/40 px-3 py-2 text-[11px]">
-              <p className="font-medium text-[var(--clinical-ok)]">
-                Session saved
-              </p>
-              <p className="text-muted-foreground">
-                {new Date(inputs._lastSavedAt).toLocaleString()}
-              </p>
-              <p className="mt-1 text-muted-foreground">
-                Restored automatically on refresh.
-              </p>
-            </div>
-          )}
-        </aside>
-
-        {/* CENTER */}
-        <section className="space-y-3">
-          {!livecdss.clinicEligible ? (
-            <ClinicGateBanner
-              clinic={patient.clinic_location}
-              reason={livecdss.reason}
-            />
-          ) : (
-            <div className="rounded-md border border-dashed border-[var(--clinical-ok)] bg-[var(--clinical-ok-bg)]/40 px-3 py-2 text-xs">
-              <span className="font-semibold text-[var(--clinical-ok)]">
-                CDSS engine running live
-              </span>
-              {" — "}
-              scores and alerts re-evaluate on every input change.
-            </div>
-          )}
-
-          {livecdss.clinicEligible && livecdss.afEvidence.length > 0 && (
-            <AfEvidenceCard
-              evidence={livecdss.afEvidence}
-              confirmed={draft.afConfirmed ?? livecdss.afConfirmed}
-            />
-          )}
-
-          <AfConfirmationModal
-            open={
-              livecdss.clinicEligible &&
-              livecdss.afEvidence.length > 0 &&
-              (draft.afConfirmed ?? null) === null
-            }
-            evidence={livecdss.afEvidence}
-            onConfirm={() => setField("afConfirmed", true)}
-            onReject={() => setField("afConfirmed", false)}
-          />
-
-          <Cha2ds2VaConfirmationModal
-            open={
-              manualScoreModal === "cha" ||
-              (livecdss.clinicEligible &&
-                (draft.afConfirmed ?? livecdss.afConfirmed) === true &&
-                (draft.chaConfirmed ?? null) === null)
-            }
-            patient={patient}
-            draft={draft}
-            score={livecdss.scores.cha2ds2va?.total ?? livecdss.scores.cha2ds2vasc?.total ?? 0}
-            onConfirm={() => {
-              setField("chaConfirmed", true);
-              setManualScoreModal(null);
-            }}
-            onEdit={() => {
-              setField("chaConfirmed", true);
-              setManualScoreModal(null);
-            }}
-          />
-
-          <HasBledConfirmationModal
-            open={
-              manualScoreModal === "hasbled" ||
-              (livecdss.clinicEligible &&
-                (draft.afConfirmed ?? livecdss.afConfirmed) === true &&
-                (draft.chaConfirmed ?? null) === true &&
-                (draft.hasBledConfirmed ?? null) === null)
-            }
-            patient={patient}
-            draft={draft}
-            score={livecdss.scores.hasbled?.total ?? 0}
-            onConfirm={() => {
-              setField("hasBledConfirmed", true);
-              setManualScoreModal(null);
-            }}
-            onEdit={() => {
-              setField("hasBledConfirmed", true);
-              setManualScoreModal(null);
-            }}
-          />
-
-
-          <Section icon={<Activity className="size-4" />} title="Vitals">
-            <div className="grid grid-cols-3 gap-2">
-              <Stat label="BP latest" value={patient.vitals.bp_latest ?? "—"} />
-              <Stat label="BP previous" value={patient.vitals.bp_second ?? "—"} />
-              <Stat
-                label="Weight"
-                value={patient.vitals.weight ? `${patient.vitals.weight} kg` : "—"}
-              />
-            </div>
-          </Section>
-
-          <Section icon={<FlaskConical className="size-4" />} title="Labs">
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
-              <Stat
-                label="Creatinine"
-                value={
-                  patient.labs.creatinine
-                    ? `${patient.labs.creatinine} ${patient.labs.creatinine_unit}`
-                    : "—"
-                }
-              />
-              <Stat
-                label="HbA1c"
-                value={patient.labs.hba1c ? `${patient.labs.hba1c}%` : "—"}
-              />
-              <Stat
-                label="ClCr (CG)"
-                value={livecdss.scores.clcr ? `${livecdss.scores.clcr} mL/min` : "insufficient"}
-              />
-              <Stat
-                label="CHA₂DS₂-VASc"
-                value={livecdss.scores.cha2ds2vasc?.total ?? "—"}
-              />
-              <Stat
-                label="PINRR"
-                value={
-                  livecdss.scores.pinrr != null
-                    ? `${livecdss.scores.pinrr}%`
-                    : "—"
-                }
-              />
-            </div>
-          </Section>
-
-          <Section icon={<Pill className="size-4" />} title="Medications">
-            <ul className="space-y-1.5">
-              {patient.medications.map((m: import("@/cdss/types").Medication) => (
-                <li
-                  key={m.name}
-                  className="flex items-start justify-between rounded border border-border bg-card px-2 py-1.5 text-xs"
-                >
-                  <div>
-                    <span className="font-medium">{m.name}</span>
-                    {m.dose && (
-                      <span className="ml-2 text-muted-foreground">{m.dose}</span>
-                    )}
-                  </div>
-                  {m.indication && (
-                    <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] uppercase tracking-wide text-muted-foreground">
-                      {m.indication}
+                  <span className={`rounded-md px-2 py-0.5 text-[10px] font-bold ${
+                    isReal ? "bg-emerald-500/10 text-emerald-700 border border-emerald-500/20" : "bg-blue-500/10 text-blue-700 border border-blue-500/20"
+                  }`}>
+                    {isReal ? "HASA UiTM" : "Benchmark Case"}
+                  </span>
+                  {patient.is_valvular && (
+                    <span className="rounded-md bg-blue-500/10 px-2 py-0.5 text-[10px] font-bold text-blue-600 border border-blue-500/20">
+                      🫀 Valvular AF
                     </span>
                   )}
-                </li>
-              ))}
-            </ul>
-          </Section>
-
-          {livecdss.clinicEligible && (draft.afConfirmed ?? livecdss.afConfirmed) === true && (
-            <>
-              <Cha2ds2VascHybrid
-                patient={patient}
-                draft={draft}
-                setField={setField}
-                onOpenModal={() => setManualScoreModal("cha")}
-              />
-
-              <HasBledCalculator
-                patient={patient}
-                draft={draft}
-                setField={setField}
-                onOpenModal={() => setManualScoreModal("hasbled")}
-              />
-
-              <MissingDataCard reminders={livecdss.reminders} />
-            </>
-          )}
-
-
-          {/* Save & Recalculate */}
-          <div className="sticky bottom-2 z-10 rounded-md border border-border bg-card/95 p-3 shadow-md backdrop-blur">
-            <div className="flex items-center justify-between gap-2">
-              <div className="min-w-0">
-                <p className="text-sm font-semibold">
-                  {dirty
-                    ? "🟡 Unsaved clinician input"
-                    : saveFlash
-                      ? "✅ Saved & CDSS recalculated"
-                      : "All changes saved"}
-                </p>
-                <p className="text-[11px] text-muted-foreground">
-                  Saving recalculates all scores, re-runs the alert engine, and
-                  writes to the audit log. Inputs persist on refresh.
-                </p>
-              </div>
-              <div className="flex shrink-0 gap-2">
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={reset}
-                  disabled={!dirty}
-                >
-                  <RotateCcw className="mr-1 size-3" /> Reset
-                </Button>
-                <Button size="sm" onClick={handleSave} disabled={!dirty}>
-                  <Save className="mr-1 size-3" /> Save & Recalculate
-                </Button>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* RIGHT panel */}
-        <aside className="lg:sticky lg:top-4 lg:self-start">
-          <div className="rounded-md border border-border bg-card">
-            <div className="border-b border-border px-3 py-2">
-              <h2 className="text-sm font-bold">Combined Clinical Alert Panel</h2>
-              <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
-                {loading ? "⏳ Calling CDSS API…" : `Live · API source: ${source}`}
-              </p>
-              <p className="mt-1 text-xs text-muted-foreground">
-                {livecdss.executed
-                  ? livecdss.hasAF
-                    ? `${livecdss.alerts.length} alert(s) · ${livecdss.reminders.length} reminder(s)`
-                    : "AF not detected"
-                  : "CDSS not executed"}
-              </p>
-              {error && (
-                <p className="mt-1 rounded border border-[var(--clinical-alert)] bg-[var(--clinical-alert-bg)] px-2 py-1 text-[10px] font-medium text-[var(--clinical-alert)]">
-                  ⚠ CDSS engine unavailable — showing last known result. ({error})
-                </p>
-              )}
-              {dirty && (
-                <p className="mt-1 text-[10px] font-medium text-[var(--clinical-warn)]">
-                  Showing draft — save to commit to audit trail.
-                </p>
-              )}
-            </div>
-            <div className="space-y-2 p-3">
-              {incompleteCha && (
-                <div className="flex items-start gap-1.5 rounded border border-[var(--clinical-warn)] bg-[var(--clinical-warn-bg)] px-2 py-1.5 text-xs">
-                  <AlertTriangle className="mt-0.5 size-3.5 shrink-0 text-[var(--clinical-warn)]" />
-                  <span>
-                    <strong>Incomplete clinical data</strong> may affect
-                    recommendation accuracy. Confirm CHA₂DS₂-VASc inputs before
-                    final decision.
+                </div>
+                <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                  <span><strong>MRN:</strong> <span className="font-mono">{patient.mrn ?? "—"}</span></span>
+                  <span><strong>Age:</strong> {patient.age_at_encounter ?? patient.age} yrs</span>
+                  <span><strong>Sex:</strong> {patient.sex}</span>
+                  <span className="flex items-center gap-1">
+                    <Building2 className="size-3 text-muted-foreground" />
+                    {patient.clinic_location}
+                  </span>
+                  <span className="flex items-center gap-1 font-mono">
+                    <Calendar className="size-3 text-muted-foreground" />
+                    {patient.encounter?.clinic_date ?? "2026-08-26"}
                   </span>
                 </div>
-              )}
+              </div>
+            </div>
 
-              {!livecdss.executed && (
-                <EmptyNote>{livecdss.reason ?? "Cardiology Clinic only."}</EmptyNote>
-              )}
-              {livecdss.executed && !livecdss.hasAF && (
-                <EmptyNote>{livecdss.reason}</EmptyNote>
-              )}
-
-              {livecdss.alerts.length > 0 && (
-                <div>
-                  <p className="mb-1.5 text-[10px] font-bold uppercase tracking-wider text-[var(--clinical-alert)]">
-                    🔴 Alerts ({livecdss.alerts.length})
-                  </p>
-                  <ul className="space-y-1.5">
-                    {livecdss.alerts.map((al) => (
-                      <li
-                        key={al.id}
-                        className="rounded border border-l-4 border-border border-l-[var(--clinical-alert)] bg-[var(--clinical-alert-bg)] px-2 py-1.5"
-                      >
-                        <div className="flex items-start gap-1.5">
-                          <AlertTriangle className="mt-0.5 size-3.5 shrink-0 text-[var(--clinical-alert)]" />
-                          <div className="min-w-0">
-                            <p className="text-xs font-medium leading-snug">
-                              {al.title}
-                            </p>
-                            <p className="mt-0.5 text-[10px] text-muted-foreground">
-                              {al.detail}
-                            </p>
-                          </div>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {livecdss.reminders.length > 0 && (
-                <div>
-                  <p className="mb-1.5 mt-2 text-[10px] font-bold uppercase tracking-wider text-[var(--clinical-warn)]">
-                    🟡 Reminders ({livecdss.reminders.length})
-                  </p>
-                  <ul className="space-y-1.5">
-                    {livecdss.reminders.map((al) => (
-                      <li
-                        key={al.id}
-                        className="rounded border border-l-4 border-border border-l-[var(--clinical-warn)] bg-[var(--clinical-warn-bg)] px-2 py-1.5"
-                      >
-                        <div className="flex items-start gap-1.5">
-                          <Info className="mt-0.5 size-3.5 shrink-0 text-[var(--clinical-warn)]" />
-                          <p className="text-xs font-medium leading-snug">
-                            {al.title}
-                          </p>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {livecdss.executed &&
-                livecdss.hasAF &&
-                livecdss.alerts.length === 0 &&
-                livecdss.reminders.length === 0 && (
-                  <EmptyNote>
-                    <CheckCircle2 className="mx-auto mb-1 size-4 text-[var(--clinical-ok)]" />
-                    No alerts triggered with current inputs.
-                  </EmptyNote>
-                )}
-
-              {(cdss.alerts.length > 0 || cdss.reminders.length > 0) && (
-                <Link
-                  to="/alerts"
-                  search={{ p: patient.patient_id }}
-                  className="mt-2 block"
-                >
-                  <Button
-                    className="w-full"
-                    size="sm"
-                    disabled={dirty || incompleteCha}
-                    title={
-                      dirty
-                        ? "Save changes first"
-                        : incompleteCha
-                          ? "Complete clinical data first"
-                          : ""
-                    }
-                  >
-                    Review alerts <ArrowRight className="ml-1 size-3" />
-                  </Button>
-                </Link>
-              )}
-              {dirty && (
-                <p className="text-center text-[10px] text-muted-foreground">
-                  Save before proceeding to Clinician Review.
-                </p>
-              )}
+            <div className="flex items-center gap-2 self-end sm:self-auto">
+              <Link
+                to="/patients"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-3 py-1.5 text-xs font-medium text-muted-foreground shadow-2xs hover:bg-muted hover:text-foreground transition"
+              >
+                <ArrowRightLeft className="size-3.5" /> Change Patient
+              </Link>
             </div>
           </div>
-        </aside>
+        </div>
+
+        {/* Clinical Grid Layout (Responsive 3-Column on Desktop, Stacked on Mobile/Tablet) */}
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-[280px_1fr_340px]">
+          {/* LEFT: Clinical Background & Diagnoses */}
+          <aside className="space-y-3">
+            <Section icon={<Stethoscope className="size-4 text-primary" />} title="Comorbidities (EMR)">
+              <div className="divide-y divide-border/60">
+                {Object.entries(patient.comorbidities).map(([k, v]) => (
+                  <Row
+                    key={k}
+                    k={k}
+                    v={
+                      <span className={`font-semibold ${v ? "text-foreground" : "text-muted-foreground/60"}`}>
+                        {v === undefined ? "—" : v ? "Yes" : "No"}
+                      </span>
+                    }
+                  />
+                ))}
+              </div>
+            </Section>
+
+            <Section icon={<FileText className="size-4 text-purple-600" />} title="Diagnoses & ECG">
+              <ul className="space-y-1.5">
+                {patient.diagnoses.map((d: string) => (
+                  <li key={d} className="rounded-lg bg-muted/60 px-2.5 py-1 font-mono text-[11px] text-foreground">
+                    {d}
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-2.5 rounded-lg border border-border/80 bg-background/50 p-2 text-[11px] text-muted-foreground">
+                <span className="font-semibold text-foreground">ECG Rhythm:</span> {patient.ecg_results.join(", ") || "Atrial Fibrillation"}
+              </div>
+            </Section>
+
+            {inputs._lastSavedAt && (
+              <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-3 text-xs">
+                <p className="font-bold text-emerald-600 flex items-center gap-1.5">
+                  <CheckCircle2 className="size-3.5" /> Session state persisted
+                </p>
+                <p className="mt-0.5 text-[10px] text-muted-foreground font-mono">
+                  Last saved: {new Date(inputs._lastSavedAt).toLocaleTimeString()}
+                </p>
+              </div>
+            )}
+          </aside>
+
+          {/* CENTER: CDSS Calculation Engine & Interactive Scorers */}
+          <section className="space-y-3">
+            {!livecdss.clinicEligible ? (
+              <ClinicGateBanner
+                clinic={patient.clinic_location}
+                reason={livecdss.reason}
+              />
+            ) : (
+              <div className="flex items-center justify-between rounded-xl border border-emerald-500/20 bg-emerald-500/5 px-3.5 py-2.5 text-xs">
+                <div className="flex items-center gap-2">
+                  <span className="size-2 rounded-full bg-emerald-500 animate-pulse-dot" />
+                  <span className="font-semibold text-emerald-700 dark:text-emerald-300">
+                    CDSS Decision Engine Online
+                  </span>
+                </div>
+                <span className="text-[11px] text-muted-foreground font-mono">v2026.08.26</span>
+              </div>
+            )}
+
+            {livecdss.clinicEligible && livecdss.afEvidence.length > 0 && (
+              <AfEvidenceCard
+                evidence={livecdss.afEvidence}
+                confirmed={draft.afConfirmed ?? livecdss.afConfirmed}
+              />
+            )}
+
+            <AfConfirmationModal
+              open={
+                livecdss.clinicEligible &&
+                livecdss.afEvidence.length > 0 &&
+                (draft.afConfirmed ?? null) === null
+              }
+              evidence={livecdss.afEvidence}
+              onConfirm={() => setField("afConfirmed", true)}
+              onReject={() => setField("afConfirmed", false)}
+            />
+
+            <Cha2ds2VaConfirmationModal
+              open={
+                manualScoreModal === "cha" ||
+                (livecdss.clinicEligible &&
+                  (draft.afConfirmed ?? livecdss.afConfirmed) === true &&
+                  (draft.chaConfirmed ?? null) === null)
+              }
+              patient={patient}
+              draft={draft}
+              score={livecdss.scores.cha2ds2va?.total ?? livecdss.scores.cha2ds2vasc?.total ?? 0}
+              onConfirm={() => {
+                setField("chaConfirmed", true);
+                setManualScoreModal(null);
+              }}
+              onEdit={() => {
+                setField("chaConfirmed", true);
+                setManualScoreModal(null);
+              }}
+            />
+
+            <HasBledConfirmationModal
+              open={
+                manualScoreModal === "hasbled" ||
+                (livecdss.clinicEligible &&
+                  (draft.afConfirmed ?? livecdss.afConfirmed) === true &&
+                  (draft.chaConfirmed ?? null) === true &&
+                  (draft.hasBledConfirmed ?? null) === null)
+              }
+              patient={patient}
+              draft={draft}
+              score={livecdss.scores.hasbled?.total ?? 0}
+              onConfirm={() => {
+                setField("hasBledConfirmed", true);
+                setManualScoreModal(null);
+              }}
+              onEdit={() => {
+                setField("hasBledConfirmed", true);
+                setManualScoreModal(null);
+              }}
+            />
+
+            {/* Vitals Grid */}
+            <Section icon={<Activity className="size-4 text-blue-600" />} title="Vitals & Encounters">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                <Stat label="BP Latest" value={patient.vitals.bp_latest ?? "—"} />
+                <Stat label="BP Prior" value={patient.vitals.bp_second ?? "—"} />
+                <Stat
+                  label="Weight"
+                  value={patient.vitals.weight ? `${patient.vitals.weight} kg` : "—"}
+                />
+              </div>
+            </Section>
+
+            {/* Labs Grid */}
+            <Section icon={<FlaskConical className="size-4 text-purple-600" />} title="Laboratory Metrics & Clearance">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                <Stat
+                  label="Creatinine"
+                  value={
+                    patient.labs.creatinine
+                      ? `${patient.labs.creatinine} ${patient.labs.creatinine_unit}`
+                      : "—"
+                  }
+                />
+                <Stat
+                  label="HbA1c"
+                  value={patient.labs.hba1c ? `${patient.labs.hba1c}%` : "—"}
+                  flag={(patient.labs.hba1c ?? 0) > 7.0}
+                />
+                <Stat
+                  label="CrCl (Cockcroft)"
+                  value={livecdss.scores.clcr ? `${livecdss.scores.clcr} mL/min` : "insufficient"}
+                  flag={(livecdss.scores.clcr ?? 100) < 50}
+                />
+                <Stat
+                  label="Warfarin PINRR"
+                  value={
+                    livecdss.scores.pinrr != null
+                      ? `${livecdss.scores.pinrr}%`
+                      : "—"
+                  }
+                  flag={(livecdss.scores.pinrr ?? 100) < 56}
+                />
+              </div>
+            </Section>
+
+            {/* Medications Summary */}
+            <Section icon={<Pill className="size-4 text-emerald-600" />} title="Current Medication Orders">
+              <ul className="space-y-2">
+                {patient.medications.map((m: import("@/cdss/types").Medication) => (
+                  <li
+                    key={m.name}
+                    className="flex items-center justify-between rounded-xl border border-border bg-card px-3 py-2 text-xs shadow-2xs"
+                  >
+                    <div>
+                      <span className="font-bold text-foreground">{m.name}</span>
+                      {m.dose && (
+                        <span className="ml-2 font-mono text-primary font-semibold">{m.dose}</span>
+                      )}
+                    </div>
+                    {m.indication && (
+                      <span className="rounded-md bg-muted px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                        {m.indication}
+                      </span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </Section>
+
+            {livecdss.clinicEligible && (draft.afConfirmed ?? livecdss.afConfirmed) === true && (
+              <>
+                <Cha2ds2VascHybrid
+                  patient={patient}
+                  draft={draft}
+                  setField={setField}
+                  onOpenModal={() => setManualScoreModal("cha")}
+                />
+
+                <HasBledCalculator
+                  patient={patient}
+                  draft={draft}
+                  setField={setField}
+                  onOpenModal={() => setManualScoreModal("hasbled")}
+                />
+
+                <MissingDataCard reminders={livecdss.reminders} />
+              </>
+            )}
+
+            {/* Sticky Floating Save & Recalculate Bar */}
+            <div className="sticky bottom-3 z-20 rounded-xl border border-border bg-card/95 p-3.5 shadow-lg backdrop-blur-md">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    {dirty ? (
+                      <span className="flex size-2.5 rounded-full bg-amber-500 animate-pulse" />
+                    ) : (
+                      <span className="flex size-2.5 rounded-full bg-emerald-500" />
+                    )}
+                    <p className="text-xs font-bold text-foreground">
+                      {dirty
+                        ? "Unsaved Clinician Input Changes"
+                        : saveFlash
+                          ? "✓ Saved & CDSS Recalculated!"
+                          : "All Clinician Inputs Synchronized"}
+                    </p>
+                  </div>
+                  <p className="text-[11px] text-muted-foreground mt-0.5">
+                    Recalculates guideline rules and writes snapshot to the audit log.
+                  </p>
+                </div>
+                <div className="flex shrink-0 items-center gap-2 w-full sm:w-auto justify-end">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={reset}
+                    disabled={!dirty}
+                    className="text-xs h-8"
+                  >
+                    <RotateCcw className="mr-1.5 size-3" /> Reset
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={handleSave}
+                    disabled={!dirty}
+                    className="text-xs h-8 bg-primary text-primary-foreground font-semibold shadow-xs"
+                  >
+                    <Save className="mr-1.5 size-3" /> Save & Recalculate
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* RIGHT: Combined Clinical Alert Panel */}
+          <aside className="lg:sticky lg:top-4 lg:self-start space-y-3">
+            <div className="rounded-xl border border-border bg-card shadow-2xs overflow-hidden">
+              <div className="border-b border-border bg-muted/40 px-4 py-3">
+                <h2 className="text-sm font-bold text-foreground">Combined Alert Panel</h2>
+                <div className="flex items-center justify-between mt-1 text-[11px] text-muted-foreground font-mono">
+                  <span>{loading ? "⏳ Evaluating…" : `Source: ${source}`}</span>
+                  <span className="font-semibold text-foreground">
+                    {livecdss.alerts.length} Alert{livecdss.alerts.length !== 1 ? "s" : ""}
+                  </span>
+                </div>
+              </div>
+
+              <div className="p-3.5 space-y-3">
+                {incompleteCha && (
+                  <div className="flex items-start gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 p-2.5 text-xs text-amber-900 dark:text-amber-200">
+                    <AlertTriangle className="size-4 shrink-0 text-amber-600 mt-0.5" />
+                    <p className="leading-snug">
+                      <strong>Incomplete inputs:</strong> Confirm missing clinical fields before clinical action.
+                    </p>
+                  </div>
+                )}
+
+                {livecdss.alerts.length > 0 && (
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-rose-600 mb-2">
+                      Critical Alerts ({livecdss.alerts.length})
+                    </p>
+                    <ul className="space-y-2">
+                      {livecdss.alerts.map((al) => (
+                        <li
+                          key={al.id}
+                          className="rounded-lg border border-l-4 border-rose-500/30 border-l-rose-500 bg-rose-500/5 p-2.5 text-xs"
+                        >
+                          <p className="font-bold text-foreground leading-snug">{al.title}</p>
+                          <p className="mt-1 text-[11px] text-muted-foreground leading-relaxed">{al.detail}</p>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {livecdss.reminders.length > 0 && (
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-amber-600 mb-2">
+                      Data Reminders ({livecdss.reminders.length})
+                    </p>
+                    <ul className="space-y-2">
+                      {livecdss.reminders.map((al) => (
+                        <li
+                          key={al.id}
+                          className="rounded-lg border border-l-4 border-amber-500/30 border-l-amber-500 bg-amber-500/5 p-2.5 text-xs"
+                        >
+                          <p className="font-semibold text-foreground leading-snug">{al.title}</p>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {livecdss.alerts.length === 0 && livecdss.reminders.length === 0 && (
+                  <div className="rounded-lg border border-dashed border-border p-6 text-center text-xs text-muted-foreground">
+                    <CheckCircle2 className="mx-auto mb-2 size-6 text-emerald-500" />
+                    <p className="font-semibold text-foreground">No Active Alerts</p>
+                    <p className="text-[11px] mt-0.5">Current therapy meets guidelines.</p>
+                  </div>
+                )}
+
+                {(livecdss.alerts.length > 0 || livecdss.reminders.length > 0) && (
+                  <Link
+                    to="/alerts"
+                    search={{ p: patient.patient_id }}
+                    className="block pt-1"
+                  >
+                    <Button
+                      className="w-full text-xs font-semibold shadow-xs"
+                      size="sm"
+                      disabled={dirty || incompleteCha}
+                    >
+                      Open Action Review <ArrowRight className="ml-1.5 size-3.5" />
+                    </Button>
+                  </Link>
+                )}
+              </div>
+            </div>
+          </aside>
+        </div>
       </div>
     </AppShell>
   );
 }
 
-// presentational helpers
 function Section({
   icon,
   title,
@@ -545,37 +558,36 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-md border border-border bg-card p-3">
-      <h3 className="mb-2 flex items-center gap-1.5 text-sm font-semibold">
-        <span className="text-muted-foreground">{icon}</span>
+    <div className="rounded-xl border border-border bg-card p-3.5 shadow-2xs">
+      <h3 className="mb-2.5 flex items-center gap-2 text-xs font-bold text-foreground uppercase tracking-wider">
+        {icon}
         {title}
       </h3>
       {children}
     </div>
   );
 }
+
 function Row({ k, v }: { k: string; v: React.ReactNode }) {
   return (
-    <div className="flex justify-between border-b border-border/60 py-1 text-xs last:border-0">
+    <div className="flex items-center justify-between py-1.5 text-xs first:pt-0 last:pb-0">
       <span className="capitalize text-muted-foreground">{k}</span>
       <span>{v}</span>
     </div>
   );
 }
-function Stat({ label, value }: { label: string; value: React.ReactNode }) {
+
+function Stat({ label, value, flag }: { label: string; value: React.ReactNode; flag?: boolean }) {
   return (
-    <div className="rounded border border-border bg-background px-2 py-1.5">
-      <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
+    <div className={`rounded-lg border p-2.5 shadow-2xs ${
+      flag ? "border-amber-500/40 bg-amber-500/5" : "border-border bg-background/60"
+    }`}>
+      <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
         {label}
       </div>
-      <div className="text-sm font-semibold">{value}</div>
-    </div>
-  );
-}
-function EmptyNote({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="rounded border border-dashed border-border p-3 text-center text-xs text-muted-foreground">
-      {children}
+      <div className={`mt-0.5 text-sm font-bold font-mono ${flag ? "text-amber-700 dark:text-amber-300" : "text-foreground"}`}>
+        {value}
+      </div>
     </div>
   );
 }

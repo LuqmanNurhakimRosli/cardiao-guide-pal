@@ -12,6 +12,9 @@ import {
   CheckCircle2,
   AlertTriangle,
   Clock,
+  Search,
+  User,
+  ShieldCheck,
 } from "lucide-react";
 import type { AuditEntry } from "@/cdss/types";
 
@@ -116,33 +119,37 @@ function AuditPage() {
 
   return (
     <AppShell selectedId={selectedId}>
-      <div className="mx-auto max-w-7xl px-4 py-4 space-y-4">
+      <div className="mx-auto max-w-7xl px-3 sm:px-5 py-4 space-y-4">
         {/* Header */}
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-card p-4 shadow-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl border border-border bg-card p-4 sm:p-5 shadow-2xs">
           <div>
-            <h1 className="text-lg font-bold text-foreground">Clinical Audit Trail & Decision Log</h1>
-            <p className="text-xs text-muted-foreground">
+            <h1 className="text-lg sm:text-xl font-bold tracking-tight text-foreground flex items-center gap-2">
+              <ShieldCheck className="size-5 text-primary" />
+              Clinical Audit Trail & Decision Log
+            </h1>
+            <p className="mt-0.5 text-xs text-muted-foreground">
               Traceable, immutable record of CDSS evaluations, clinician decisions, and research snapshots.
             </p>
           </div>
-          <Button onClick={exportCSV} size="sm" variant="outline" className="gap-1.5 text-xs shadow-xs">
-            <FileSpreadsheet className="size-3.5 text-emerald-600" /> Export Research CSV Dataset
+          <Button onClick={exportCSV} size="sm" variant="outline" className="gap-1.5 text-xs h-8 shadow-2xs self-start sm:self-auto">
+            <FileSpreadsheet className="size-3.5 text-emerald-600" /> Export Research CSV
           </Button>
         </div>
 
-        {/* Filter Controls */}
-        <div className="flex flex-wrap items-center gap-3 rounded-lg border border-border bg-card p-3 text-xs">
-          <div className="flex items-center gap-1.5 text-muted-foreground font-semibold">
-            <Filter className="size-3.5" /> Filters:
+        {/* Filter Controls Bar */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 rounded-xl border border-border bg-card p-3 text-xs shadow-2xs">
+          <div className="flex items-center gap-1.5 font-bold text-foreground shrink-0">
+            <Filter className="size-3.5 text-primary" /> Filters:
           </div>
-          <div className="flex items-center gap-1.5">
-            <span className="text-muted-foreground">Patient:</span>
+
+          <div className="flex items-center gap-2">
+            <span className="text-muted-foreground font-medium">Patient:</span>
             <select
               value={patientFilter}
               onChange={(e) => setPatientFilter(e.target.value)}
-              className="rounded border border-border bg-background px-2 py-1 text-xs"
+              className="h-8 rounded-lg border border-border bg-background px-2 text-xs font-medium text-foreground outline-none shadow-2xs"
             >
-              <option value="all">All Patients</option>
+              <option value="all">All Patients ({patients.length})</option>
               {patients.map((p) => (
                 <option key={p.patient_id} value={p.patient_id}>
                   {p.patient_id} ({p.name})
@@ -151,12 +158,12 @@ function AuditPage() {
             </select>
           </div>
 
-          <div className="flex items-center gap-1.5">
-            <span className="text-muted-foreground">Action:</span>
+          <div className="flex items-center gap-2">
+            <span className="text-muted-foreground font-medium">Action:</span>
             <select
               value={actionFilter}
               onChange={(e) => setActionFilter(e.target.value)}
-              className="rounded border border-border bg-background px-2 py-1 text-xs"
+              className="h-8 rounded-lg border border-border bg-background px-2 text-xs font-medium text-foreground outline-none shadow-2xs"
             >
               <option value="all">All Actions</option>
               <option value="accept">Accept</option>
@@ -165,101 +172,104 @@ function AuditPage() {
             </select>
           </div>
 
-          <div className="flex-1 min-w-[200px]">
+          <div className="relative flex-1 min-w-[200px]">
+            <Search className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder="Search alert, patient ID, reason…"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="h-7 text-xs"
+              className="pl-8 h-8 text-xs"
             />
           </div>
         </div>
 
         {/* Table */}
         {filtered.length === 0 ? (
-          <div className="rounded-lg border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
+          <div className="rounded-xl border border-dashed border-border p-10 text-center text-xs text-muted-foreground bg-card">
             No audit records match the selected filters.
           </div>
         ) : (
-          <div className="overflow-x-auto rounded-lg border border-border bg-card shadow-sm">
-            <table className="w-full text-xs">
-              <thead className="bg-muted/70 text-left border-b border-border">
-                <tr>
-                  <th className="px-3 py-2.5 font-semibold">Date & Time</th>
-                  <th className="px-3 py-2.5 font-semibold">Patient / MRN</th>
-                  <th className="px-3 py-2.5 font-semibold">Alert Description</th>
-                  <th className="px-3 py-2.5 font-semibold">Action Taken</th>
-                  <th className="px-3 py-2.5 font-semibold">Clinical Details / Override Reason</th>
-                  <th className="px-3 py-2.5 font-semibold">Window</th>
-                  <th className="px-3 py-2.5 font-semibold">Clinician</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {filtered.map((a: AuditEntry) => (
-                  <tr key={a.id} className="align-top hover:bg-muted/30 transition-colors">
-                    <td className="px-3 py-2.5 font-mono text-[11px] whitespace-nowrap text-muted-foreground">
-                      {new Date(a.timestamp).toLocaleString()}
-                    </td>
-                    <td className="px-3 py-2.5 whitespace-nowrap">
-                      <div className="font-semibold text-foreground">{a.patient_id}</div>
-                      <div className="text-[10px] font-mono text-muted-foreground">{a.mrn ?? "—"}</div>
-                    </td>
-                    <td className="px-3 py-2.5 min-w-[200px]">
-                      <div className="font-medium text-foreground">{a.alert_title}</div>
-                      {a.snapshot?.cha2ds2va != null && (
-                        <div className="text-[10px] text-muted-foreground">
-                          CHA₂DS₂-VA: {a.snapshot.cha2ds2va} · CrCl: {a.snapshot.clcr ?? "—"} mL/min
-                        </div>
-                      )}
-                    </td>
-                    <td className="px-3 py-2.5 whitespace-nowrap">
-                      <span
-                        className={`inline-flex items-center gap-1 rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
-                          a.action === "accept"
-                            ? "bg-emerald-500/10 text-emerald-600"
-                            : a.action === "override"
-                            ? "bg-rose-500/10 text-rose-600"
-                            : "bg-amber-500/10 text-amber-600"
-                        }`}
-                      >
-                        {a.action}
-                      </span>
-                    </td>
-                    <td className="px-3 py-2.5 text-muted-foreground min-w-[220px]">
-                      {a.override_reason && (
-                        <div className="font-semibold text-foreground">
-                          Reason: {a.override_reason}
-                        </div>
-                      )}
-                      {a.override_notes && (
-                        <div className="text-[11px] mt-0.5">
-                          Notes: {a.override_notes}
-                        </div>
-                      )}
-                      {a.defer_until && (
-                        <div className="text-[11px] font-mono text-amber-600">
-                          Deferred until: {a.defer_until}
-                        </div>
-                      )}
-                      {a.med_change && (
-                        <div className="text-[11px] font-semibold text-primary">
-                          Prescription: {a.med_change.name} → {a.med_change.new_dose}
-                        </div>
-                      )}
-                      {!a.override_reason && !a.override_notes && !a.defer_until && !a.med_change && "—"}
-                    </td>
-                    <td className="px-3 py-2.5 whitespace-nowrap">
-                      <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-mono uppercase text-muted-foreground">
-                        {a.research_window ?? "index"}
-                      </span>
-                    </td>
-                    <td className="px-3 py-2.5 whitespace-nowrap font-mono text-[11px]">
-                      {a.clinician_id ?? "DR-CAR-01"}
-                    </td>
+          <div className="overflow-hidden rounded-xl border border-border bg-card shadow-2xs">
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs">
+                <thead className="bg-muted/50 text-left border-b border-border font-semibold uppercase tracking-wider text-muted-foreground">
+                  <tr>
+                    <th className="px-4 py-3">Date & Time</th>
+                    <th className="px-3 py-3">Patient / MRN</th>
+                    <th className="px-3 py-3">Alert Description</th>
+                    <th className="px-3 py-3">Action Taken</th>
+                    <th className="px-3 py-3">Clinical Details / Override Reason</th>
+                    <th className="px-3 py-3">Window</th>
+                    <th className="px-4 py-3">Clinician</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-border/60">
+                  {filtered.map((a: AuditEntry) => (
+                    <tr key={a.id} className="align-top hover:bg-muted/30 transition-colors">
+                      <td className="px-4 py-3 font-mono text-[11px] whitespace-nowrap text-muted-foreground">
+                        {new Date(a.timestamp).toLocaleString()}
+                      </td>
+                      <td className="px-3 py-3 whitespace-nowrap">
+                        <div className="font-bold text-primary font-mono">{a.patient_id}</div>
+                        <div className="text-[10px] font-mono text-muted-foreground">{a.mrn ?? "—"}</div>
+                      </td>
+                      <td className="px-3 py-3 min-w-[200px]">
+                        <div className="font-semibold text-foreground">{a.alert_title}</div>
+                        {a.snapshot?.cha2ds2va != null && (
+                          <div className="text-[10px] text-muted-foreground font-mono mt-0.5">
+                            CHA₂DS₂-VA: {a.snapshot.cha2ds2va} · CrCl: {a.snapshot.clcr ?? "—"} mL/min
+                          </div>
+                        )}
+                      </td>
+                      <td className="px-3 py-3 whitespace-nowrap">
+                        <span
+                          className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider border ${
+                            a.action === "accept"
+                              ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20"
+                              : a.action === "override"
+                              ? "bg-rose-500/10 text-rose-600 border-rose-500/20"
+                              : "bg-amber-500/10 text-amber-600 border-amber-500/20"
+                          }`}
+                        >
+                          {a.action}
+                        </span>
+                      </td>
+                      <td className="px-3 py-3 text-muted-foreground min-w-[220px]">
+                        {a.override_reason && (
+                          <div className="font-semibold text-foreground">
+                            Reason: {a.override_reason}
+                          </div>
+                        )}
+                        {a.override_notes && (
+                          <div className="text-[11px] mt-0.5 leading-relaxed">
+                            Notes: {a.override_notes}
+                          </div>
+                        )}
+                        {a.defer_until && (
+                          <div className="text-[11px] font-mono font-semibold text-amber-600">
+                            Deferred until: {a.defer_until}
+                          </div>
+                        )}
+                        {a.med_change && (
+                          <div className="text-[11px] font-bold text-primary font-mono">
+                            Prescription: {a.med_change.name} → {a.med_change.new_dose}
+                          </div>
+                        )}
+                        {!a.override_reason && !a.override_notes && !a.defer_until && !a.med_change && "—"}
+                      </td>
+                      <td className="px-3 py-3 whitespace-nowrap">
+                        <span className="rounded-md bg-muted px-2 py-0.5 text-[10px] font-mono uppercase font-bold text-muted-foreground">
+                          {a.research_window ?? "index"}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap font-mono text-[11px] text-muted-foreground">
+                        {a.clinician_id ?? "DR-CAR-01"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </div>
