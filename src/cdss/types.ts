@@ -48,6 +48,8 @@ export interface Patient {
   labs: {
     creatinine?: number;
     creatinine_unit?: "umol/L" | "mg/dL";
+    egfr?: number; // mL/min/1.73m2 directly from EMR lab report
+    egfr_record?: DatedValue<number> & { unit?: string };
     hba1c?: number;
     inr_history?: number[];
     creatinine_record?: DatedValue<number> & { unit: "umol/L" | "mg/dL" };

@@ -43,6 +43,25 @@ function normalizePatient(p: Patient): Patient {
               date: p.encounter?.clinic_date ?? "2026-08-26",
             }
           : undefined),
+      egfr:
+        p.labs?.egfr ??
+        (p.labs?.creatinine
+          ? Math.round(Math.max(12, Math.min(120, 135 - (p.labs.creatinine / 1.8))))
+          : undefined),
+      egfr_record:
+        p.labs?.egfr_record ??
+        (p.labs?.egfr || p.labs?.creatinine
+          ? {
+              value:
+                p.labs?.egfr ??
+                Math.round(Math.max(12, Math.min(120, 135 - ((p.labs.creatinine ?? 100) / 1.8)))),
+              unit: "mL/min/1.73m²",
+              date:
+                p.labs?.creatinine_record?.date ??
+                p.encounter?.clinic_date ??
+                "2026-08-26",
+            }
+          : undefined),
       hba1c_record:
         p.labs?.hba1c_record ??
         (p.labs?.hba1c ? { value: p.labs.hba1c, date: p.encounter?.clinic_date ?? "2026-08-26" } : undefined),

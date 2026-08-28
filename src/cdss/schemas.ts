@@ -61,6 +61,14 @@ export const patientSchema = z.object({
   labs: z.object({
     creatinine: z.number().positive().max(2000).optional(),
     creatinine_unit: z.enum(["umol/L", "mg/dL"]).optional(),
+    egfr: z.number().positive().max(200).optional(),
+    egfr_record: z
+      .object({
+        value: z.number(),
+        unit: z.string().optional(),
+        date: z.string(),
+      })
+      .optional(),
     hba1c: z.number().positive().max(30).optional(),
     inr_history: z.array(z.number().positive().max(20)).max(200).optional(),
     creatinine_record: z

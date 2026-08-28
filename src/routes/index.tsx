@@ -336,24 +336,57 @@ function PatientDashboard() {
 
             {/* Labs Grid */}
             <Section icon={<FlaskConical className="size-4 text-purple-600" />} title="Laboratory Metrics & Clearance">
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5">
                 <Stat
                   label="Creatinine"
                   value={
                     patient.labs.creatinine
-                      ? `${patient.labs.creatinine} ${patient.labs.creatinine_unit}`
+                      ? `${patient.labs.creatinine} ${patient.labs.creatinine_unit ?? "umol/L"}`
                       : "—"
                   }
+                  subLabel={patient.labs.creatinine_record?.date ? `Sample: ${patient.labs.creatinine_record.date}` : undefined}
                 />
                 <Stat
-                  label="HbA1c"
-                  value={patient.labs.hba1c ? `${patient.labs.hba1c}%` : "—"}
-                  flag={(patient.labs.hba1c ?? 0) > 7.0}
+                  label="eGFR (Lab Report)"
+                  value={
+                    patient.labs.egfr
+                      ? `${patient.labs.egfr} mL/min`
+                      : patient.labs.egfr_record?.value
+                      ? `${patient.labs.egfr_record.value} mL/min`
+                      : "—"
+                  }
+                  subLabel={
+                    patient.labs.egfr_record?.date
+                      ? `Date: ${patient.labs.egfr_record.date}`
+                      : "Direct from Lab"
+                  }
+                  badge="EMR Lab Direct"
+                  flag={(patient.labs.egfr ?? patient.labs.egfr_record?.value ?? 100) < 60}
+                  title="Estimated GFR direct from laboratory biochemistry report (standardized to 1.73m²)"
                 />
                 <Stat
                   label="CrCl (Cockcroft)"
                   value={livecdss.scores.clcr ? `${livecdss.scores.clcr} mL/min` : "insufficient"}
+                  subLabel={
+                    patient.age_at_encounter && patient.vitals.weight && patient.labs.creatinine
+                      ? `${patient.sex === "female" ? "1.04" : "1.23"} × (140-${patient.age_at_encounter}) × ${patient.vitals.weight}kg / ${patient.labs.creatinine}`
+                      : "Weight-adjusted"
+                  }
+                  badge="DOAC Dosing"
                   flag={(livecdss.scores.clcr ?? 100) < 50}
+                  title="Calculated via Cockcroft-Gault: (140 - Age) × Weight (kg) × [1.23 male / 1.04 female] / Serum Creatinine (µmol/L)"
+                />
+                <Stat
+                  label="HbA1c"
+                  value={patient.labs.hba1c ? `${patient.labs.hba1c}%` : "—"}
+                  subLabel={
+                    patient.labs.hba1c_record?.date
+                      ? `Date: ${patient.labs.hba1c_record.date}`
+                      : patient.comorbidities.diabetes
+                      ? "Diabetic"
+                      : "Non-diabetic"
+                  }
+                  flag={(patient.labs.hba1c ?? 0) > 7.0}
                 />
                 <Stat
                   label="Warfarin PINRR"
@@ -362,6 +395,7 @@ function PatientDashboard() {
                       ? `${livecdss.scores.pinrr}%`
                       : "—"
                   }
+                  subLabel="TTR Quality"
                   flag={(livecdss.scores.pinrr ?? 100) < 56}
                 />
               </div>
@@ -577,17 +611,54 @@ function Row({ k, v }: { k: string; v: React.ReactNode }) {
   );
 }
 
-function Stat({ label, value, flag }: { label: string; value: React.ReactNode; flag?: boolean }) {
+function Stat({
+  label,
+  value,
+  flag,
+  subLabel,
+  badge,
+  title,
+}: {
+  label: string;
+  value: React.ReactNode;
+  flag?: boolean;
+  subLabel?: string;
+  badge?: string;
+  title?: string;
+}) {
   return (
-    <div className={`rounded-lg border p-2.5 shadow-2xs ${
-      flag ? "border-amber-500/40 bg-amber-500/5" : "border-border bg-background/60"
-    }`}>
-      <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-        {label}
+    <div
+      title={title}
+      className={`rounded-xl border p-2.5 shadow-2xs transition hover:border-primary/40 flex flex-col justify-between ${
+        flag
+          ? "border-amber-500/40 bg-amber-500/5 ring-1 ring-amber-500/20"
+          : "border-border bg-background/60"
+      }`}
+    >
+      <div>
+        <div className="flex items-center justify-between gap-1">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground truncate">
+            {label}
+          </span>
+          {badge && (
+            <span className="rounded bg-primary/10 px-1 py-0.2 text-[8px] font-bold text-primary shrink-0">
+              {badge}
+            </span>
+          )}
+        </div>
+        <div
+          className={`mt-1 text-sm font-bold font-mono ${
+            flag ? "text-amber-700 dark:text-amber-300" : "text-foreground"
+          }`}
+        >
+          {value}
+        </div>
       </div>
-      <div className={`mt-0.5 text-sm font-bold font-mono ${flag ? "text-amber-700 dark:text-amber-300" : "text-foreground"}`}>
-        {value}
-      </div>
+      {subLabel && (
+        <div className="mt-1 text-[9.5px] text-muted-foreground truncate font-mono" title={subLabel}>
+          {subLabel}
+        </div>
+      )}
     </div>
   );
 }

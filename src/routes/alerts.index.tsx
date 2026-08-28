@@ -146,7 +146,7 @@ function AlertsReview() {
           </div>
 
           {/* Vitals & Clinical Scores Summary Grid */}
-          <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6 text-xs">
+          <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-7 text-xs">
             <div className="rounded-lg bg-muted/30 p-2.5 border border-border/60">
               <span className="text-muted-foreground text-[10px] uppercase font-bold">CHA₂DS₂-VA</span>
               <p className="text-base font-bold text-primary font-mono">{chadsScore} <span className="text-[10px] font-normal text-muted-foreground">(≥2)</span></p>
@@ -155,6 +155,13 @@ function AlertsReview() {
               <span className="text-muted-foreground text-[10px] uppercase font-bold">HAS-BLED</span>
               <p className={`text-base font-bold font-mono ${Number(hasbledScore) >= 3 ? "text-rose-600" : "text-foreground"}`}>
                 {hasbledScore} <span className="text-[10px] font-normal text-muted-foreground">(≥3 high)</span>
+              </p>
+            </div>
+            <div className="rounded-lg bg-muted/30 p-2.5 border border-border/60">
+              <span className="text-muted-foreground text-[10px] uppercase font-bold">eGFR (Lab)</span>
+              <p className="text-base font-bold font-mono text-foreground">
+                {patient.labs.egfr ?? patient.labs.egfr_record?.value ? `${patient.labs.egfr ?? patient.labs.egfr_record?.value}` : "—"}
+                <span className="text-[9px] font-normal text-muted-foreground ml-1">mL/min</span>
               </p>
             </div>
             <div className="rounded-lg bg-muted/30 p-2.5 border border-border/60">

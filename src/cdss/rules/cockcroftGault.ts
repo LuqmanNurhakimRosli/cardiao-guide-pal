@@ -4,6 +4,7 @@ export function creatinineClearance(p: Patient): {
   clcr?: number;
   missing: string[];
   sourceDates?: { creatinine_date?: string; weight_date?: string };
+  formula_working?: string;
 } {
   const missing: string[] = [];
   const age = p.age_at_encounter ?? p.age;
@@ -21,10 +22,19 @@ export function creatinineClearance(p: Patient): {
 
   if (missing.length) return { missing };
 
-  // Convert umol/L to mg/dL: divide by 88.4
-  const scrMgDl = scrUnit === "mg/dL" ? scr! : scr! / 88.4;
-  let clcr = ((140 - age!) * weight!) / (72 * scrMgDl);
-  if (p.sex === "female") clcr *= 0.85;
+  // Convert to umol/L if in mg/dL
+  const scrUmol = scrUnit === "mg/dL" ? scr! * 88.4 : scr!;
+
+  // Formula as per CPG Malaysia & ESC Guidelines:
+  // Male:   CrCl = ((140 - age) * weight * 1.23) / serum_creatinine (umol/L)
+  // Female: CrCl = ((140 - age) * weight * 1.04) / serum_creatinine (umol/L)
+  const isFemale = p.sex?.toLowerCase() === "female";
+  const multiplier = isFemale ? 1.04 : 1.23;
+  const clcr = ((140 - age!) * weight! * multiplier) / scrUmol;
+
+  const formulaWorking = isFemale
+    ? `(140 - ${age}) × ${weight} kg × 1.04 / ${scrUmol} µmol/L = ${clcr.toFixed(1)} mL/min`
+    : `(140 - ${age}) × ${weight} kg × 1.23 / ${scrUmol} µmol/L = ${clcr.toFixed(1)} mL/min`;
 
   return {
     clcr: Math.round(clcr * 10) / 10,
@@ -33,5 +43,6 @@ export function creatinineClearance(p: Patient): {
       creatinine_date: scrDate,
       weight_date: weightDate,
     },
+    formula_working: formulaWorking,
   };
 }
