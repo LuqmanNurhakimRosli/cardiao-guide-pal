@@ -52,6 +52,9 @@ function DeferFlow() {
   const [queueTotal, setQueueTotal] = useState<number>(1);
 
   useEffect(() => {
+    setSaving(false);
+    setUntil(defaultNextWeek);
+    setNotes("");
     try {
       const raw = sessionStorage.getItem("cdss_action_queue");
       const totalRaw = sessionStorage.getItem("cdss_queue_total");
@@ -62,7 +65,7 @@ function DeferFlow() {
         setQueueIndex(total - queue.length + 1);
       }
     } catch {}
-  }, []);
+  }, [alert?.id, defaultNextWeek]);
 
   const proceedQueue = () => {
     try {
@@ -90,33 +93,45 @@ function DeferFlow() {
     if (!alert || !until) return;
     setSaving(true);
 
-    await logAction({
-      data: {
-        patient_id: patient.patient_id,
-        alert_id: alert.id,
-        alert_title: alert.title,
-        action: "defer",
-        defer_until: until,
-        override_notes: notes || undefined,
-        request_id: `REQ-${Date.now()}`,
-        visit_id: patient.encounter?.visit_id ?? "VIS-2026-001",
-        snapshot: {
-          cha2ds2va:
-            current.cdss.scores.cha2ds2va?.total ??
-            current.cdss.scores.cha2ds2vasc?.total,
-          hasbled: current.cdss.scores.hasbled?.total,
-          clcr: current.cdss.scores.clcr,
-          pinrr: current.cdss.scores.pinrr,
-          clinicEligible: current.cdss.clinicEligible,
-          afConfirmed: current.cdss.afConfirmed,
-          alert_evidence: alert.rationale,
-          recommendation: alert.recommendation,
-          clinician_plan: patient.clinician_plan,
+    try {
+      await logAction({
+        data: {
+          patient_id: patient.patient_id,
+          alert_id: alert.id,
+          alert_title: alert.title,
+          action: "defer",
+          defer_until: until,
+          override_notes: notes || undefined,
+          request_id: `REQ-${Date.now()}`,
+          visit_id: patient.encounter?.visit_id ?? "VIS-2026-001",
+          snapshot: {
+            cha2ds2va:
+              current.cdss.scores.cha2ds2va?.total ??
+              current.cdss.scores.cha2ds2vasc?.total,
+            hasbled: current.cdss.scores.hasbled?.total,
+            clcr: current.cdss.scores.clcr,
+            pinrr: current.cdss.scores.pinrr,
+            clinicEligible: current.cdss.clinicEligible,
+            afConfirmed: current.cdss.afConfirmed,
+            alert_evidence: alert.rationale,
+            recommendation: alert.recommendation,
+            values_used: {
+              age: patient.age_at_encounter ?? patient.age,
+              sex: patient.sex,
+              weight: patient.vitals?.weight_record?.value ?? patient.vitals?.weight ?? "—",
+              creatinine: patient.labs?.creatinine_record?.value ?? patient.labs?.creatinine ?? "—",
+            },
+            clinician_plan: patient.clinician_plan,
+          },
         },
-      },
-    });
+      });
 
-    proceedQueue();
+      proceedQueue();
+    } catch (err) {
+      console.error("Failed to log alert defer action:", err);
+      setSaving(false);
+      proceedQueue();
+    }
   };
 
   return (

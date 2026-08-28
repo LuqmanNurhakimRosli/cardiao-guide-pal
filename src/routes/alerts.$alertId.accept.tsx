@@ -60,6 +60,8 @@ function AcceptFlow() {
   const [queueTotal, setQueueTotal] = useState<number>(1);
 
   useEffect(() => {
+    setSaving(false);
+    setDose(suggestedDose ?? currentMed?.dose ?? "");
     try {
       const raw = sessionStorage.getItem("cdss_action_queue");
       const totalRaw = sessionStorage.getItem("cdss_queue_total");
@@ -70,7 +72,7 @@ function AcceptFlow() {
         setQueueIndex(total - queue.length + 1);
       }
     } catch {}
-  }, []);
+  }, [alert?.id, suggestedDose, currentMed?.dose]);
 
   const proceedQueue = () => {
     try {
@@ -98,42 +100,48 @@ function AcceptFlow() {
     if (!alert) return;
     setSaving(true);
 
-    const isMedChange = Boolean(suggestedMedName && dose);
+    try {
+      const isMedChange = Boolean(suggestedMedName && dose);
 
-    await logAction({
-      data: {
-        patient_id: patient.patient_id,
-        alert_id: alert.id,
-        alert_title: alert.title,
-        action: "accept",
-        med_change: isMedChange
-          ? { name: suggestedMedName!, new_dose: dose }
-          : undefined,
-        request_id: `REQ-${Date.now()}`,
-        visit_id: patient.encounter?.visit_id ?? "VIS-2026-001",
-        snapshot: {
-          cha2ds2va:
-            current.cdss.scores.cha2ds2va?.total ??
-            current.cdss.scores.cha2ds2vasc?.total,
-          hasbled: current.cdss.scores.hasbled?.total,
-          clcr: current.cdss.scores.clcr,
-          pinrr: current.cdss.scores.pinrr,
-          clinicEligible: current.cdss.clinicEligible,
-          afConfirmed: current.cdss.afConfirmed,
-          alert_evidence: alert.rationale,
-          recommendation: alert.recommendation,
-          values_used: {
-            age: patient.age_at_encounter ?? patient.age,
-            sex: patient.sex,
-            weight: patient.vitals?.weight_record?.value ?? patient.vitals?.weight ?? "—",
-            creatinine: patient.labs?.creatinine_record?.value ?? patient.labs?.creatinine ?? "—",
+      await logAction({
+        data: {
+          patient_id: patient.patient_id,
+          alert_id: alert.id,
+          alert_title: alert.title,
+          action: "accept",
+          med_change: isMedChange
+            ? { name: suggestedMedName!, new_dose: dose }
+            : undefined,
+          request_id: `REQ-${Date.now()}`,
+          visit_id: patient.encounter?.visit_id ?? "VIS-2026-001",
+          snapshot: {
+            cha2ds2va:
+              current.cdss.scores.cha2ds2va?.total ??
+              current.cdss.scores.cha2ds2vasc?.total,
+            hasbled: current.cdss.scores.hasbled?.total,
+            clcr: current.cdss.scores.clcr,
+            pinrr: current.cdss.scores.pinrr,
+            clinicEligible: current.cdss.clinicEligible,
+            afConfirmed: current.cdss.afConfirmed,
+            alert_evidence: alert.rationale,
+            recommendation: alert.recommendation,
+            values_used: {
+              age: patient.age_at_encounter ?? patient.age,
+              sex: patient.sex,
+              weight: patient.vitals?.weight_record?.value ?? patient.vitals?.weight ?? "—",
+              creatinine: patient.labs?.creatinine_record?.value ?? patient.labs?.creatinine ?? "—",
+            },
+            clinician_plan: patient.clinician_plan,
           },
-          clinician_plan: patient.clinician_plan,
         },
-      },
-    });
+      });
 
-    proceedQueue();
+      proceedQueue();
+    } catch (err) {
+      console.error("Failed to log alert accept action:", err);
+      setSaving(false);
+      proceedQueue();
+    }
   };
 
   const isStrokeAlert = alert?.id === "stroke-prevention";

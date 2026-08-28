@@ -1,0 +1,22 @@
+{
+  "totalPatients": 505,
+  "patientsEvaluated": 505,
+  "totalAlertsGenerated": 1182,
+  "totalRemindersGenerated": 7,
+  "alertBreakdownByCategory": {
+    "stroke-risk": 469,
+    "bp": 149,
+    "glycaemic": 157,
+    "drug-dose": 256,
+    "bleeding-risk": 148,
+    "anticoagulant": 1,
+    "pinrr": 2
+  },
+  "acceptedAlertsTested": 1182,
+  "overriddenAlertsTested": 1182,
+  "deferredAlertsTested": 1182,
+  "mixedQueueScenariosTested": 1068,
+  "edgeCasesTested": 5,
+  "errorsDetected": [],
+  "performanceMs": 160
+}
