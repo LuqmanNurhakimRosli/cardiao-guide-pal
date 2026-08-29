@@ -163,6 +163,26 @@ export interface CdssResult {
   reminders: CdssAlert[];
 }
 
+export type CdssEvaluationResult = CdssResult;
+
+export interface PatientSummary {
+  patient_id: string;
+  mrn?: string;
+  name: string;
+  age: number;
+  sex: "male" | "female";
+  clinic_location: string;
+  cohort?: string;
+  af_status?: string;
+  cha2ds2va_score?: number;
+  has_bled_score?: number;
+  is_valvular?: boolean;
+  active_drug?: string;
+  has_dose_alert?: boolean;
+  alerts_count?: number;
+  reminders_count?: number;
+}
+
 export type ClinicianAction = "accept" | "override" | "defer";
 
 export interface AuditEntry {
@@ -219,8 +239,22 @@ export interface ResearchTimelineSummary {
   patient_id: string;
   mrn?: string;
   index_alert_date: string;
-  pre_alert_window: { start: string; end: string; events_count: number; completeness: "Complete" | "Partial" | "Missing" };
-  index_encounter_window: { date: string; events_count: number; completeness: "Complete" | "Partial" | "Missing" };
-  post_alert_window: { start: string; end: string; events_count: number; completeness: "Complete" | "Partial" | "Missing" };
+  pre_alert_window: {
+    start: string;
+    end: string;
+    events_count: number;
+    completeness: "Complete" | "Partial" | "Missing";
+  };
+  index_encounter_window: {
+    date: string;
+    events_count: number;
+    completeness: "Complete" | "Partial" | "Missing";
+  };
+  post_alert_window: {
+    start: string;
+    end: string;
+    events_count: number;
+    completeness: "Complete" | "Partial" | "Missing";
+  };
   events: TimelineEvent[];
 }

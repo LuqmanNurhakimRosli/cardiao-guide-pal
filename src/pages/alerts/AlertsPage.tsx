@@ -23,7 +23,12 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/shared/components/ui/collapsible";
-import type { Patient, CdssEvaluationResult, ClinicianAction, CdssAlert } from "@/shared/cdss/types";
+import type {
+  Patient,
+  CdssEvaluationResult,
+  ClinicianAction,
+  CdssAlert,
+} from "@/shared/cdss/types";
 
 export interface QueuedAction {
   alertId: string;
@@ -53,8 +58,7 @@ export function AlertsPage({ current }: AlertsPageProps) {
     managementPlan: false,
   });
 
-  const setPick = (id: string, a: ClinicianAction) =>
-    setPicks((s) => ({ ...s, [id]: a }));
+  const setPick = (id: string, a: ClinicianAction) => setPicks((s) => ({ ...s, [id]: a }));
 
   const handleSave = async () => {
     const queue: QueuedAction[] = [];
@@ -129,11 +133,16 @@ export function AlertsPage({ current }: AlertsPageProps) {
                 Combined Clinical Alert & Decision Review
               </h1>
               <p className="mt-0.5 text-xs text-muted-foreground">
-                Patient: <span className="font-semibold text-foreground">{patient.name}</span> (<span className="font-mono">{patient.patient_id}</span>) · MRN: <span className="font-mono">{patient.mrn ?? "—"}</span> · Age: {patient.age_at_encounter ?? patient.age} · Sex: {patient.sex}
+                Patient: <span className="font-semibold text-foreground">{patient.name}</span> (
+                <span className="font-mono">{patient.patient_id}</span>) · MRN:{" "}
+                <span className="font-mono">{patient.mrn ?? "—"}</span> · Age:{" "}
+                {patient.age_at_encounter ?? patient.age} · Sex: {patient.sex}
               </p>
             </div>
             <div className="text-left sm:text-right rounded-lg bg-muted/40 p-2 sm:p-0 sm:bg-transparent border sm:border-0 border-border">
-              <span className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground">Encounter Date:</span>
+              <span className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground">
+                Encounter Date:
+              </span>
               <p className="text-sm font-bold font-mono text-foreground">
                 {patient.encounter?.clinic_date ?? "2026-08-26"}
               </p>
@@ -143,40 +152,65 @@ export function AlertsPage({ current }: AlertsPageProps) {
           {/* Vitals & Clinical Scores Summary Grid */}
           <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-7 text-xs">
             <div className="rounded-lg bg-muted/30 p-2.5 border border-border/60">
-              <span className="text-muted-foreground text-[10px] uppercase font-bold">CHA₂DS₂-VA</span>
-              <p className="text-base font-bold text-primary font-mono">{chadsScore} <span className="text-[10px] font-normal text-muted-foreground">(≥2)</span></p>
-            </div>
-            <div className="rounded-lg bg-muted/30 p-2.5 border border-border/60">
-              <span className="text-muted-foreground text-[10px] uppercase font-bold">HAS-BLED</span>
-              <p className={`text-base font-bold font-mono ${Number(hasbledScore) >= 3 ? "text-rose-600" : "text-foreground"}`}>
-                {hasbledScore} <span className="text-[10px] font-normal text-muted-foreground">(≥3 high)</span>
+              <span className="text-muted-foreground text-[10px] uppercase font-bold">
+                CHA₂DS₂-VA
+              </span>
+              <p className="text-base font-bold text-primary font-mono">
+                {chadsScore}{" "}
+                <span className="text-[10px] font-normal text-muted-foreground">(≥2)</span>
               </p>
             </div>
             <div className="rounded-lg bg-muted/30 p-2.5 border border-border/60">
-              <span className="text-muted-foreground text-[10px] uppercase font-bold">eGFR (Lab)</span>
+              <span className="text-muted-foreground text-[10px] uppercase font-bold">
+                HAS-BLED
+              </span>
+              <p
+                className={`text-base font-bold font-mono ${Number(hasbledScore) >= 3 ? "text-rose-600" : "text-foreground"}`}
+              >
+                {hasbledScore}{" "}
+                <span className="text-[10px] font-normal text-muted-foreground">(≥3 high)</span>
+              </p>
+            </div>
+            <div className="rounded-lg bg-muted/30 p-2.5 border border-border/60">
+              <span className="text-muted-foreground text-[10px] uppercase font-bold">
+                eGFR (Lab)
+              </span>
               <p className="text-base font-bold font-mono text-foreground">
-                {patient.labs.egfr ?? patient.labs.egfr_record?.value ? `${patient.labs.egfr ?? patient.labs.egfr_record?.value}` : "—"}
+                {(patient.labs.egfr ?? patient.labs.egfr_record?.value)
+                  ? `${patient.labs.egfr ?? patient.labs.egfr_record?.value}`
+                  : "—"}
                 <span className="text-[9px] font-normal text-muted-foreground ml-1">mL/min</span>
               </p>
             </div>
             <div className="rounded-lg bg-muted/30 p-2.5 border border-border/60">
-              <span className="text-muted-foreground text-[10px] uppercase font-bold">CrCl (Cockcroft)</span>
+              <span className="text-muted-foreground text-[10px] uppercase font-bold">
+                CrCl (Cockcroft)
+              </span>
               <p className="text-base font-bold font-mono text-foreground">{clcrScore}</p>
             </div>
             <div className="rounded-lg bg-muted/30 p-2.5 border border-border/60">
-              <span className="text-muted-foreground text-[10px] uppercase font-bold">Blood Pressure</span>
+              <span className="text-muted-foreground text-[10px] uppercase font-bold">
+                Blood Pressure
+              </span>
               <p className="text-xs font-semibold text-foreground font-mono mt-1">
-                {patient.vitals.bp_latest ?? "—"} <span className="text-muted-foreground font-normal">/ {patient.vitals.bp_second ?? "—"}</span>
+                {patient.vitals.bp_latest ?? "—"}{" "}
+                <span className="text-muted-foreground font-normal">
+                  / {patient.vitals.bp_second ?? "—"}
+                </span>
               </p>
             </div>
             <div className="rounded-lg bg-muted/30 p-2.5 border border-border/60">
               <span className="text-muted-foreground text-[10px] uppercase font-bold">HbA1c</span>
               <p className="text-base font-bold font-mono text-foreground">
-                {patient.labs.hba1c_record?.value ?? patient.labs.hba1c ? `${patient.labs.hba1c_record?.value ?? patient.labs.hba1c}%` : "—"}
+                {(patient.labs.hba1c_record?.value ?? patient.labs.hba1c)
+                  ? `${patient.labs.hba1c_record?.value ?? patient.labs.hba1c}%`
+                  : "—"}
               </p>
             </div>
             <div className="rounded-lg bg-muted/30 p-2.5 border border-border/60">
-              <span className="text-muted-foreground text-[10px] uppercase font-bold">Warfarin PINRR</span>
+              <span className="text-muted-foreground text-[10px] uppercase font-bold">
+                Warfarin PINRR
+              </span>
               <p className="text-base font-bold font-mono text-foreground">{pinrrScore}</p>
             </div>
           </div>
@@ -187,12 +221,16 @@ export function AlertsPage({ current }: AlertsPageProps) {
               <Pill className="size-4 text-primary shrink-0" />
               <span className="font-semibold text-foreground">Active Medication Orders:</span>
               <span className="text-muted-foreground font-medium">
-                {patient.medications.map((m) => `${m.name} ${m.dose ?? ""}`).join(", ") || "No medications recorded"}
+                {patient.medications.map((m) => `${m.name} ${m.dose ?? ""}`).join(", ") ||
+                  "No medications recorded"}
               </span>
             </div>
             {patient.clinician_plan?.next_appointment_date && (
               <span className="text-xs text-muted-foreground font-medium">
-                Next Appointment: <strong className="text-foreground font-mono">{patient.clinician_plan.next_appointment_date}</strong>
+                Next Appointment:{" "}
+                <strong className="text-foreground font-mono">
+                  {patient.clinician_plan.next_appointment_date}
+                </strong>
               </span>
             )}
           </div>
@@ -215,12 +253,16 @@ export function AlertsPage({ current }: AlertsPageProps) {
           {actionableAlerts.length === 0 ? (
             <div className="rounded-xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground bg-card">
               <CheckCircle2 className="mx-auto mb-2 size-6 text-emerald-500" />
-              <p className="font-semibold text-foreground">No active critical alerts for this encounter.</p>
-              <p className="text-xs text-muted-foreground mt-0.5">Clinical management meets standard guidelines.</p>
+              <p className="font-semibold text-foreground">
+                No active critical alerts for this encounter.
+              </p>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Clinical management meets standard guidelines.
+              </p>
             </div>
           ) : (
             <ul className="space-y-3">
-              {actionableAlerts.map((al) => {
+              {actionableAlerts.map((al: CdssAlert) => {
                 const pick = picks[al.id];
                 const isReevaluationAlert = al.id === "af-reevaluation-reassessment";
 
@@ -269,7 +311,10 @@ export function AlertsPage({ current }: AlertsPageProps) {
                                   type="checkbox"
                                   checked={Boolean(checklist.strokeBleeding)}
                                   onChange={(e) =>
-                                    setChecklist((s) => ({ ...s, strokeBleeding: e.target.checked }))
+                                    setChecklist((s) => ({
+                                      ...s,
+                                      strokeBleeding: e.target.checked,
+                                    }))
                                   }
                                   className="size-4 rounded border-border text-primary focus:ring-primary"
                                 />
@@ -291,7 +336,10 @@ export function AlertsPage({ current }: AlertsPageProps) {
                                   type="checkbox"
                                   checked={Boolean(checklist.managementPlan)}
                                   onChange={(e) =>
-                                    setChecklist((s) => ({ ...s, managementPlan: e.target.checked }))
+                                    setChecklist((s) => ({
+                                      ...s,
+                                      managementPlan: e.target.checked,
+                                    }))
                                   }
                                   className="size-4 rounded border-border text-primary focus:ring-primary"
                                 />
@@ -310,11 +358,12 @@ export function AlertsPage({ current }: AlertsPageProps) {
                         {al.rationale.length > 0 && (
                           <Collapsible className="mt-2">
                             <CollapsibleTrigger className="inline-flex items-center gap-1 text-[11px] font-semibold text-primary hover:underline">
-                              <ChevronDown className="size-3" /> Clinical Evidence & Rationale ({al.rationale.length})
+                              <ChevronDown className="size-3" /> Clinical Evidence & Rationale (
+                              {al.rationale.length})
                             </CollapsibleTrigger>
                             <CollapsibleContent className="mt-1.5 rounded-lg bg-muted/40 p-2.5 text-xs border border-border/60">
                               <ul className="list-disc space-y-1 pl-4 text-muted-foreground">
-                                {al.rationale.map((r, i) => (
+                                {al.rationale.map((r: string, i: number) => (
                                   <li key={i}>{r}</li>
                                 ))}
                               </ul>
@@ -333,12 +382,15 @@ export function AlertsPage({ current }: AlertsPageProps) {
                     <div className="border-t border-border/60 pt-3">
                       {isReevaluationAlert ? (
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                          <span className="text-xs font-bold text-foreground">Pilihan Tindakan:</span>
+                          <span className="text-xs font-bold text-foreground">
+                            Pilihan Tindakan:
+                          </span>
                           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 w-full sm:w-auto">
                             {/* No Change Required */}
                             <label
                               className={`flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold cursor-pointer border transition ${
-                                pick === "accept" && (!picksMeta[al.id] || picksMeta[al.id] === "no_change")
+                                pick === "accept" &&
+                                (!picksMeta[al.id] || picksMeta[al.id] === "no_change")
                                   ? "border-emerald-600 bg-emerald-600 text-white shadow-xs"
                                   : "border-border bg-background hover:bg-muted text-foreground"
                               }`}
@@ -346,7 +398,10 @@ export function AlertsPage({ current }: AlertsPageProps) {
                               <input
                                 type="radio"
                                 name={al.id}
-                                checked={pick === "accept" && (!picksMeta[al.id] || picksMeta[al.id] === "no_change")}
+                                checked={
+                                  pick === "accept" &&
+                                  (!picksMeta[al.id] || picksMeta[al.id] === "no_change")
+                                }
                                 onChange={() => {
                                   setPick(al.id, "accept");
                                   setPicksMeta((s) => ({ ...s, [al.id]: "no_change" }));
@@ -368,7 +423,9 @@ export function AlertsPage({ current }: AlertsPageProps) {
                               <input
                                 type="radio"
                                 name={al.id}
-                                checked={pick === "accept" && picksMeta[al.id] === "update_management"}
+                                checked={
+                                  pick === "accept" && picksMeta[al.id] === "update_management"
+                                }
                                 onChange={() => {
                                   setPick(al.id, "accept");
                                   setPicksMeta((s) => ({ ...s, [al.id]: "update_management" }));
@@ -404,7 +461,9 @@ export function AlertsPage({ current }: AlertsPageProps) {
                         </div>
                       ) : (
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                          <span className="text-xs font-bold text-foreground">Select Decision Action:</span>
+                          <span className="text-xs font-bold text-foreground">
+                            Select Decision Action:
+                          </span>
                           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 w-full sm:w-auto">
                             {/* Accept */}
                             <label
@@ -483,7 +542,7 @@ export function AlertsPage({ current }: AlertsPageProps) {
               </h2>
             </div>
             <div className="grid gap-2.5 sm:grid-cols-2">
-              {missingDataReminders.map((rem) => (
+              {missingDataReminders.map((rem: CdssAlert) => (
                 <div
                   key={rem.id}
                   className="rounded-xl border border-l-4 border-amber-500/30 border-l-amber-500 bg-card p-3.5 text-xs shadow-2xs space-y-1.5"

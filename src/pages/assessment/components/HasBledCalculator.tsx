@@ -70,7 +70,8 @@ export function HasBledCalculator({ patient, draft, setField, onOpenModal }: Pro
     alcohol: "alcohol",
   };
 
-  const resolved: Record<HBKey, { value: boolean; source: "emr" | "manual" | "default" }> = {} as never;
+  const resolved: Record<HBKey, { value: boolean; source: "emr" | "manual" | "default" }> =
+    {} as never;
   (Object.keys(draftKey) as HBKey[]).forEach((k) => {
     const dk = draftKey[k];
     const dv = draft[dk] as boolean | undefined;
@@ -98,11 +99,7 @@ export function HasBledCalculator({ patient, draft, setField, onOpenModal }: Pro
 
   const anyManual = Object.values(resolved).some((r) => r.source === "manual");
   const anyEmr = Object.values(resolved).some((r) => r.source === "emr");
-  const source: HasBledState["source"] = anyManual
-    ? anyEmr
-      ? "hybrid"
-      : "manual"
-    : "auto";
+  const source: HasBledState["source"] = anyManual ? (anyEmr ? "hybrid" : "manual") : "auto";
 
   const ITEMS: { key: HBKey; label: string }[] = [
     { key: "hypertension", label: "Hypertension (uncontrolled, sys >160)" },
@@ -161,11 +158,7 @@ export function HasBledCalculator({ patient, draft, setField, onOpenModal }: Pro
                 ? "border-[var(--clinical-ok)]/60 bg-[var(--clinical-ok-bg)]/30"
                 : "border-border";
           const Icon =
-            r.source === "manual"
-              ? PencilLine
-              : r.source === "emr"
-                ? CheckCircle2
-                : Info;
+            r.source === "manual" ? PencilLine : r.source === "emr" ? CheckCircle2 : Info;
           const iconClass =
             r.source === "manual"
               ? "text-primary"
@@ -182,16 +175,10 @@ export function HasBledCalculator({ patient, draft, setField, onOpenModal }: Pro
                 <span className="truncate">{it.label}</span>
               </div>
               <div className="flex gap-1">
-                <Pill
-                  active={r.value === true}
-                  onClick={() => setField(draftKey[it.key], true)}
-                >
+                <Pill active={r.value === true} onClick={() => setField(draftKey[it.key], true)}>
                   Yes
                 </Pill>
-                <Pill
-                  active={r.value === false}
-                  onClick={() => setField(draftKey[it.key], false)}
-                >
+                <Pill active={r.value === false} onClick={() => setField(draftKey[it.key], false)}>
                   No
                 </Pill>
               </div>
@@ -204,16 +191,15 @@ export function HasBledCalculator({ patient, draft, setField, onOpenModal }: Pro
         <div className="mt-2 flex items-start gap-1.5 rounded border border-[var(--clinical-alert)] bg-[var(--clinical-alert-bg)] px-2 py-1.5 text-xs">
           <AlertTriangle className="mt-0.5 size-3.5 shrink-0 text-[var(--clinical-alert)]" />
           <span className="font-medium text-[var(--clinical-alert)]">
-            HAS-BLED ≥3 — high bleeding risk. Review modifiable factors (not a
-            contraindication to anticoagulation).
+            HAS-BLED ≥3 — high bleeding risk. Review modifiable factors (not a contraindication to
+            anticoagulation).
           </span>
         </div>
       )}
 
       <p className="mt-2 flex items-start gap-1 text-[10px] italic text-muted-foreground">
         <Info className="mt-0.5 size-3 shrink-0" />
-        This calculation supports clinical decision-making and does not replace
-        clinician judgement.
+        This calculation supports clinical decision-making and does not replace clinician judgement.
       </p>
     </div>
   );

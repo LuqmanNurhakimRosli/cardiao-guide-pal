@@ -27,9 +27,7 @@ export function AlertDeferPage({ current, alert }: AlertDeferPageProps) {
   const { patient } = current;
   const navigate = useNavigate();
 
-  const defaultNextWeek = new Date(Date.now() + 7 * 24 * 3600_000)
-    .toISOString()
-    .slice(0, 10);
+  const defaultNextWeek = new Date(Date.now() + 7 * 24 * 3600_000).toISOString().slice(0, 10);
   const [until, setUntil] = useState(defaultNextWeek);
   const [notes, setNotes] = useState("");
   const [saving, setSaving] = useState(false);
@@ -51,7 +49,9 @@ export function AlertDeferPage({ current, alert }: AlertDeferPageProps) {
         setQueueTotal(total);
         setQueueIndex(total - queue.length + 1);
       }
-    } catch {}
+    } catch (err) {
+      console.error("Failed to parse queue state:", err);
+    }
   }, [alert?.id, defaultNextWeek]);
 
   const proceedQueue = () => {
@@ -64,6 +64,7 @@ export function AlertDeferPage({ current, alert }: AlertDeferPageProps) {
 
         if (nextQueue.length > 0) {
           const next = nextQueue[0];
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (navigate as any)({
             to: `/alerts/$alertId/${next.action}`,
             params: { alertId: next.alertId },
@@ -72,7 +73,9 @@ export function AlertDeferPage({ current, alert }: AlertDeferPageProps) {
           return;
         }
       }
-    } catch {}
+    } catch (err) {
+      console.error("Failed to process queue proceed:", err);
+    }
     navigate({ to: "/summary", search: { p: patient.patient_id } });
   };
 
@@ -93,8 +96,7 @@ export function AlertDeferPage({ current, alert }: AlertDeferPageProps) {
           visit_id: patient.encounter?.visit_id ?? "VIS-2026-001",
           snapshot: {
             cha2ds2va:
-              current.cdss.scores.cha2ds2va?.total ??
-              current.cdss.scores.cha2ds2vasc?.total,
+              current.cdss.scores.cha2ds2va?.total ?? current.cdss.scores.cha2ds2vasc?.total,
             hasbled: current.cdss.scores.hasbled?.total,
             clcr: current.cdss.scores.clcr,
             pinrr: current.cdss.scores.pinrr,
@@ -192,7 +194,12 @@ export function AlertDeferPage({ current, alert }: AlertDeferPageProps) {
                     Cancel
                   </Button>
                 </Link>
-                <Button onClick={submit} disabled={!until || saving} size="sm" className="gap-1.5 shadow-sm">
+                <Button
+                  onClick={submit}
+                  disabled={!until || saving}
+                  size="sm"
+                  className="gap-1.5 shadow-sm"
+                >
                   {saving ? "Saving…" : "Confirm Defer"}
                   <ArrowRight className="size-3.5" />
                 </Button>

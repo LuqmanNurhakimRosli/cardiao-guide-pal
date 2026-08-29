@@ -24,13 +24,19 @@ function normalizePatient(p: Patient): Patient {
       ...p.vitals,
       bp_readings:
         p.vitals?.bp_readings ??
-        [
-          p.vitals?.bp_latest ? { value: p.vitals.bp_latest, date: p.encounter?.clinic_date ?? "2026-08-26" } : undefined,
-          p.vitals?.bp_second ? { value: p.vitals.bp_second, date: p.encounter?.clinic_date ?? "2026-08-26" } : undefined,
-        ].filter(Boolean) as import("@/shared/cdss/types").DatedValue<string>[],
+        ([
+          p.vitals?.bp_latest
+            ? { value: p.vitals.bp_latest, date: p.encounter?.clinic_date ?? "2026-08-26" }
+            : undefined,
+          p.vitals?.bp_second
+            ? { value: p.vitals.bp_second, date: p.encounter?.clinic_date ?? "2026-08-26" }
+            : undefined,
+        ].filter(Boolean) as import("@/shared/cdss/types").DatedValue<string>[]),
       weight_record:
         p.vitals?.weight_record ??
-        (p.vitals?.weight ? { value: p.vitals.weight, date: p.encounter?.clinic_date ?? "2026-08-26" } : undefined),
+        (p.vitals?.weight
+          ? { value: p.vitals.weight, date: p.encounter?.clinic_date ?? "2026-08-26" }
+          : undefined),
     },
     labs: {
       ...p.labs,
@@ -46,7 +52,7 @@ function normalizePatient(p: Patient): Patient {
       egfr:
         p.labs?.egfr ??
         (p.labs?.creatinine
-          ? Math.round(Math.max(12, Math.min(120, 135 - (p.labs.creatinine / 1.8))))
+          ? Math.round(Math.max(12, Math.min(120, 135 - p.labs.creatinine / 1.8)))
           : undefined),
       egfr_record:
         p.labs?.egfr_record ??
@@ -54,23 +60,23 @@ function normalizePatient(p: Patient): Patient {
           ? {
               value:
                 p.labs?.egfr ??
-                Math.round(Math.max(12, Math.min(120, 135 - ((p.labs.creatinine ?? 100) / 1.8)))),
+                Math.round(Math.max(12, Math.min(120, 135 - (p.labs.creatinine ?? 100) / 1.8))),
               unit: "mL/min/1.73m²",
-              date:
-                p.labs?.creatinine_record?.date ??
-                p.encounter?.clinic_date ??
-                "2026-08-26",
+              date: p.labs?.creatinine_record?.date ?? p.encounter?.clinic_date ?? "2026-08-26",
             }
           : undefined),
       hba1c_record:
         p.labs?.hba1c_record ??
-        (p.labs?.hba1c ? { value: p.labs.hba1c, date: p.encounter?.clinic_date ?? "2026-08-26" } : undefined),
+        (p.labs?.hba1c
+          ? { value: p.labs.hba1c, date: p.encounter?.clinic_date ?? "2026-08-26" }
+          : undefined),
       inr_results:
         p.labs?.inr_results ??
-        (p.labs?.inr_history?.map((val, idx) => ({
+        p.labs?.inr_history?.map((val, idx) => ({
           value: val,
           date: `2026-0${Math.min(idx + 1, 8)}-15`,
-        })) ?? []),
+        })) ??
+        [],
     },
   };
 }

@@ -17,12 +17,14 @@ applies clinical rules (CHA₂DS₂-VA, HAS-BLED, Cockcroft–Gault CrCl, antico
 ## 2. System Overview
 
 ### UNIMED (EMR)
+
 - The hospital's primary system of record.
 - Source of patient demographics (MRN, DOB, age, sex), diagnoses, vitals, dated labs, medications, and clinician plans.
 - Used by clinicians during consultation (Point-of-Care).
 - Owns the user interface presented to the doctor.
 
 ### CDSS (this system)
+
 - An external decision engine operating at ultra-low latency.
 - Receives patient data via HTTPS API (`POST /api/cdss/analyze`).
 - Applies AF-specific rules:
@@ -218,18 +220,18 @@ Authorization: Bearer <token> (optional/configured)
 
 When a clinician overrides an alert, UNIMED submits one of the 10 controlled codes:
 
-| Code | Label | Requires Free Text |
-|:---|:---|:---|
-| `dose_appropriate` | Dose already appropriate | No |
-| `clinical_judgement` | Clinical judgement | No |
-| `contraindication_intolerance` | Contraindication / intolerance | No |
-| `renal_function` | Renal function issue | No |
-| `bleeding_risk` | Bleeding risk | No |
-| `adherence` | Adherence issue | No |
-| `monitoring_titration` | Monitoring / titration | No |
-| `patient_preference` | Patient preference | No |
-| `temporary_factor` | Temporary factor | No |
-| `other` | Other | **Yes (Mandatory)** |
+| Code                           | Label                          | Requires Free Text  |
+| :----------------------------- | :----------------------------- | :------------------ |
+| `dose_appropriate`             | Dose already appropriate       | No                  |
+| `clinical_judgement`           | Clinical judgement             | No                  |
+| `contraindication_intolerance` | Contraindication / intolerance | No                  |
+| `renal_function`               | Renal function issue           | No                  |
+| `bleeding_risk`                | Bleeding risk                  | No                  |
+| `adherence`                    | Adherence issue                | No                  |
+| `monitoring_titration`         | Monitoring / titration         | No                  |
+| `patient_preference`           | Patient preference             | No                  |
+| `temporary_factor`             | Temporary factor               | No                  |
+| `other`                        | Other                          | **Yes (Mandatory)** |
 
 ---
 

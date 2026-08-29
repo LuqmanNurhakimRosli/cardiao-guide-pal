@@ -1,19 +1,24 @@
-import fs from 'fs';
-import path from 'path';
+import fs from "fs";
+import path from "path";
 
-const benchmarkPath = path.resolve('src/shared/data/benchmark_patients.json');
-const hospitalPath = path.resolve('src/shared/data/hospital_patients_2024.json');
-const targetPath = path.resolve('src/shared/data/patients.json');
+const hospitalPath = path.resolve("src/shared/data/hospital_patients_2024.json");
+const benchmarkPath = path.resolve("src/shared/data/benchmark_patients.json");
+const targetPath = path.resolve("src/shared/data/patients.json");
 
-const benchmarkData = JSON.parse(fs.readFileSync(benchmarkPath, 'utf8'));
-const hospitalData = JSON.parse(fs.readFileSync(hospitalPath, 'utf8'));
+if (!fs.existsSync(hospitalPath) || !fs.existsSync(benchmarkPath)) {
+  console.error("❌ Error: dataset files not found");
+  process.exit(1);
+}
 
-const combined = [...benchmarkData, ...hospitalData];
-fs.writeFileSync(targetPath, JSON.stringify(combined, null, 2), 'utf8');
+const benchmark = JSON.parse(fs.readFileSync(benchmarkPath, "utf8"));
+const hospital = JSON.parse(fs.readFileSync(hospitalPath, "utf8"));
 
-console.log(`\n========================================================`);
-console.log(`🏥 LOADED DUAL COHORT DATASET (BENCHMARK + HASA UITM)`);
-console.log(`========================================================`);
-console.log(`✅ Loaded ${benchmarkData.length} Benchmark Cases (P001 - P012).`);
-console.log(`✅ Loaded ${hospitalData.length} Anonymized HASA UiTM Patient Cases (REAL-001 - REAL-493).`);
-console.log(`✅ Total active patients: ${combined.length}.\n`);
+const combined = [...benchmark, ...hospital];
+fs.writeFileSync(targetPath, JSON.stringify(combined, null, 2), "utf8");
+
+console.log("========================================================");
+console.log("🏥 HOSPITAL DUAL-COHORT LOADED SUCCESSFULLY");
+console.log("========================================================");
+console.log(`✅ Benchmark Cohort: ${benchmark.length} patients`);
+console.log(`✅ Hospital Cohort: ${hospital.length} patients`);
+console.log(`✅ Total Active Patients: ${combined.length} patients`);

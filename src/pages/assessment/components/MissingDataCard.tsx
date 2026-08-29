@@ -19,14 +19,9 @@ export function MissingDataCard({ reminders }: { reminders: CdssAlert[] }) {
           const impact = typeof sv.clinical_impact === "string" ? sv.clinical_impact : undefined;
           const action = typeof sv.action_required === "string" ? sv.action_required : undefined;
           return (
-            <li
-              key={r.id}
-              className="rounded border border-border bg-card px-2 py-1.5 text-xs"
-            >
+            <li key={r.id} className="rounded border border-border bg-card px-2 py-1.5 text-xs">
               <p className="font-medium">{r.title}</p>
-              {r.detail && (
-                <p className="mt-0.5 text-[11px] text-muted-foreground">{r.detail}</p>
-              )}
+              {r.detail && <p className="mt-0.5 text-[11px] text-muted-foreground">{r.detail}</p>}
               {impact && (
                 <p className="mt-0.5 text-[10px] text-muted-foreground">
                   <span className="font-semibold">Impact:</span> {impact}

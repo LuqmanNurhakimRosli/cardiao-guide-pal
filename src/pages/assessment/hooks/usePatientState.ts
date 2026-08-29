@@ -170,12 +170,9 @@ export function usePatientState(patient: Patient): PatientStateApi {
     }
   }, [patient.patient_id, localFallback]);
 
-  const setField = useCallback(
-    <K extends keyof ClinicianInputs>(k: K, v: ClinicianInputs[K]) => {
-      setDraft((d) => ({ ...d, [k]: v }));
-    },
-    [],
-  );
+  const setField = useCallback(<K extends keyof ClinicianInputs>(k: K, v: ClinicianInputs[K]) => {
+    setDraft((d) => ({ ...d, [k]: v }));
+  }, []);
 
   const reset = useCallback(() => setDraft(inputs), [inputs]);
 

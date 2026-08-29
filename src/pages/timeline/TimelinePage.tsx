@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { buildPatientTimeline } from "@/shared/cdss/researchTimeline";
@@ -17,7 +18,13 @@ import {
   Table,
   Layers,
 } from "lucide-react";
-import type { Patient, CdssEvaluationResult, AuditEntry, TimelineEvent, ResearchWindowType } from "@/shared/cdss/types";
+import type {
+  Patient,
+  CdssEvaluationResult,
+  AuditEntry,
+  TimelineEvent,
+  ResearchWindowType,
+} from "@/shared/cdss/types";
 
 interface TimelinePageProps {
   current: {
@@ -77,7 +84,11 @@ export function TimelinePage({ current, actions }: TimelinePageProps) {
       `"${e.category.toUpperCase()}"`,
       `"${e.title.replace(/"/g, '""')}"`,
       `"${e.detail.replace(/"/g, '""')}"`,
-      `"${Object.entries(e.values || {}).map(([k, v]) => `${k}: ${v}`).join(", ") || "—"}"`,
+      `"${
+        Object.entries(e.values || {})
+          .map(([k, v]) => `${k}: ${v}`)
+          .join(", ") || "—"
+      }"`,
     ]);
 
     // \uFEFF is UTF-8 Byte Order Mark (BOM) ensuring Microsoft Excel displays all text and symbols properly
@@ -86,7 +97,10 @@ export function TimelinePage({ current, actions }: TimelinePageProps) {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.setAttribute("href", url);
-    link.setAttribute("download", `Patient_${patient.patient_id}_Research_Timeline_${timelineSummary.index_alert_date}.csv`);
+    link.setAttribute(
+      "download",
+      `Patient_${patient.patient_id}_Research_Timeline_${timelineSummary.index_alert_date}.csv`,
+    );
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -148,7 +162,12 @@ export function TimelinePage({ current, actions }: TimelinePageProps) {
               {patient.name} · Longitudinal Timeline
             </h1>
             <p className="text-xs text-muted-foreground mt-0.5">
-              ID: <span className="font-mono font-bold text-primary">{patient.patient_id}</span> · MRN: <span className="font-mono">{patient.mrn ?? "—"}</span> · Age: {patient.age_at_encounter ?? patient.age} · Index Consultation: <strong className="text-foreground font-mono">{timelineSummary.index_alert_date}</strong>
+              ID: <span className="font-mono font-bold text-primary">{patient.patient_id}</span> ·
+              MRN: <span className="font-mono">{patient.mrn ?? "—"}</span> · Age:{" "}
+              {patient.age_at_encounter ?? patient.age} · Index Consultation:{" "}
+              <strong className="text-foreground font-mono">
+                {timelineSummary.index_alert_date}
+              </strong>
             </p>
           </div>
 
@@ -188,7 +207,10 @@ export function TimelinePage({ current, actions }: TimelinePageProps) {
               {timelineSummary.pre_alert_window.start} → {timelineSummary.pre_alert_window.end}
             </p>
             <div className="mt-2 text-[11px] text-muted-foreground space-y-0.5">
-              <p>• <strong>{timelineSummary.pre_alert_window.events_count}</strong> baseline observations</p>
+              <p>
+                • <strong>{timelineSummary.pre_alert_window.events_count}</strong> baseline
+                observations
+              </p>
               <p>• Baseline BP, Creatinine, PINRR, Prior Meds</p>
             </div>
           </div>
@@ -213,7 +235,10 @@ export function TimelinePage({ current, actions }: TimelinePageProps) {
               {timelineSummary.index_encounter_window.date}
             </p>
             <div className="mt-2 text-[11px] text-muted-foreground space-y-0.5">
-              <p>• <strong>{timelineSummary.index_encounter_window.events_count}</strong> consultation events & CDSS rules</p>
+              <p>
+                • <strong>{timelineSummary.index_encounter_window.events_count}</strong>{" "}
+                consultation events & CDSS rules
+              </p>
               <p>• CHA₂DS₂-VA, HAS-BLED & Prescriptions</p>
             </div>
           </div>
@@ -238,7 +263,10 @@ export function TimelinePage({ current, actions }: TimelinePageProps) {
               {timelineSummary.post_alert_window.start} → {timelineSummary.post_alert_window.end}
             </p>
             <div className="mt-2 text-[11px] text-muted-foreground space-y-0.5">
-              <p>• <strong>{timelineSummary.post_alert_window.events_count}</strong> follow-up events recorded</p>
+              <p>
+                • <strong>{timelineSummary.post_alert_window.events_count}</strong> follow-up events
+                recorded
+              </p>
               <p>• 90-day review & safety surveillance</p>
             </div>
           </div>
@@ -270,7 +298,12 @@ export function TimelinePage({ current, actions }: TimelinePageProps) {
           </div>
 
           {activeFilter !== "all" && viewMode === "stream" && (
-            <Button onClick={() => setActiveFilter("all")} variant="ghost" size="sm" className="h-7 text-xs">
+            <Button
+              onClick={() => setActiveFilter("all")}
+              variant="ghost"
+              size="sm"
+              className="h-7 text-xs"
+            >
               Clear Filter (Showing {activeFilter})
             </Button>
           )}
@@ -297,13 +330,15 @@ export function TimelinePage({ current, actions }: TimelinePageProps) {
                           <span className="rounded-md bg-background px-2 py-0.5 text-[10px] font-mono font-medium text-muted-foreground border border-border/50">
                             {evt.date}
                           </span>
-                          <span className={`rounded-md px-2 py-0.5 text-[10px] font-bold capitalize ${
-                            evt.window === "pre-alert"
-                              ? "bg-blue-500/10 text-blue-700 dark:text-blue-300"
-                              : evt.window === "index"
-                              ? "bg-primary/10 text-primary"
-                              : "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
-                          }`}>
+                          <span
+                            className={`rounded-md px-2 py-0.5 text-[10px] font-bold capitalize ${
+                              evt.window === "pre-alert"
+                                ? "bg-blue-500/10 text-blue-700 dark:text-blue-300"
+                                : evt.window === "index"
+                                  ? "bg-primary/10 text-primary"
+                                  : "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
+                            }`}
+                          >
                             {evt.window}
                           </span>
                         </div>
@@ -340,29 +375,37 @@ export function TimelinePage({ current, actions }: TimelinePageProps) {
                   <tr>
                     <td className="px-4 py-3 font-semibold text-foreground">Window Dates</td>
                     <td className="px-4 py-3 font-mono text-muted-foreground">
-                      {timelineSummary.pre_alert_window.start} → {timelineSummary.pre_alert_window.end}
+                      {timelineSummary.pre_alert_window.start} →{" "}
+                      {timelineSummary.pre_alert_window.end}
                     </td>
                     <td className="px-4 py-3 font-mono font-bold text-primary">
                       {timelineSummary.index_encounter_window.date}
                     </td>
                     <td className="px-4 py-3 font-mono text-muted-foreground">
-                      {timelineSummary.post_alert_window.start} → {timelineSummary.post_alert_window.end}
+                      {timelineSummary.post_alert_window.start} →{" "}
+                      {timelineSummary.post_alert_window.end}
                     </td>
                   </tr>
                   <tr>
                     <td className="px-4 py-3 font-semibold text-foreground">Blood Pressure (BP)</td>
                     <td className="px-4 py-3 font-mono">
-                      {timelineSummary.events.find((e) => e.window === "pre-alert" && e.category === "vitals" && e.values?.bp)?.detail || "140/85 mmHg (baseline)"}
+                      {timelineSummary.events.find(
+                        (e) => e.window === "pre-alert" && e.category === "vitals" && e.values?.bp,
+                      )?.detail || "140/85 mmHg (baseline)"}
                     </td>
                     <td className="px-4 py-3 font-mono font-bold text-primary">
                       {patient.vitals?.bp_latest || "—"} mmHg
                     </td>
                     <td className="px-4 py-3 font-mono text-muted-foreground">
-                      {timelineSummary.events.find((e) => e.window === "post-alert" && e.category === "vitals" && e.values?.bp)?.detail || "Pending 3-month review"}
+                      {timelineSummary.events.find(
+                        (e) => e.window === "post-alert" && e.category === "vitals" && e.values?.bp,
+                      )?.detail || "Pending 3-month review"}
                     </td>
                   </tr>
                   <tr>
-                    <td className="px-4 py-3 font-semibold text-foreground">Serum Creatinine & CrCl</td>
+                    <td className="px-4 py-3 font-semibold text-foreground">
+                      Serum Creatinine & CrCl
+                    </td>
                     <td className="px-4 py-3 font-mono">
                       {patient.labs?.creatinine ? `${patient.labs.creatinine} µmol/L` : "—"}
                     </td>
@@ -386,24 +429,38 @@ export function TimelinePage({ current, actions }: TimelinePageProps) {
                     </td>
                   </tr>
                   <tr>
-                    <td className="px-4 py-3 font-semibold text-foreground">Anticoagulation Therapy</td>
+                    <td className="px-4 py-3 font-semibold text-foreground">
+                      Anticoagulation Therapy
+                    </td>
                     <td className="px-4 py-3 font-mono">
-                      {patient.medications?.find((m: any) => m.indication === "AF")?.name || "Baseline OAC"}
+                      {patient.medications?.find((m: any) => m.indication === "AF")?.name ||
+                        "Baseline OAC"}
                     </td>
                     <td className="px-4 py-3 font-mono font-bold text-primary">
-                      {patient.medications?.map((m: any) => `${m.name} ${m.dose ?? ""}`).join(", ") || "Active"}
+                      {patient.medications
+                        ?.map((m: any) => `${m.name} ${m.dose ?? ""}`)
+                        .join(", ") || "Active"}
                     </td>
                     <td className="px-4 py-3 font-mono text-muted-foreground">
                       Adherence surveillance active
                     </td>
                   </tr>
                   <tr>
-                    <td className="px-4 py-3 font-semibold text-foreground">CDSS Evaluation & Decisions</td>
+                    <td className="px-4 py-3 font-semibold text-foreground">
+                      CDSS Evaluation & Decisions
+                    </td>
                     <td className="px-4 py-3 text-muted-foreground">
                       Historical retrospective data
                     </td>
                     <td className="px-4 py-3 font-medium text-foreground">
-                      CHA₂DS₂-VA: <span className="font-bold text-primary">{current.cdss.scores.cha2ds2va?.total ?? 0}</span> · HAS-BLED: <span className="font-bold text-rose-600">{current.cdss.scores.hasbled?.total ?? 0}</span>
+                      CHA₂DS₂-VA:{" "}
+                      <span className="font-bold text-primary">
+                        {current.cdss.scores.cha2ds2va?.total ?? 0}
+                      </span>{" "}
+                      · HAS-BLED:{" "}
+                      <span className="font-bold text-rose-600">
+                        {current.cdss.scores.hasbled?.total ?? 0}
+                      </span>
                       <div className="mt-1 text-[11px] font-bold text-emerald-600">
                         {actions.length} CDSS Action(s) Logged
                       </div>
@@ -413,7 +470,9 @@ export function TimelinePage({ current, actions }: TimelinePageProps) {
                         <span className="font-semibold text-foreground">
                           Next Follow-Up: {patient.clinician_plan.next_appointment_date}
                         </span>
-                      ) : "Continuous surveillance"}
+                      ) : (
+                        "Continuous surveillance"
+                      )}
                     </td>
                   </tr>
                 </tbody>
@@ -425,3 +484,4 @@ export function TimelinePage({ current, actions }: TimelinePageProps) {
     </AppShell>
   );
 }
+

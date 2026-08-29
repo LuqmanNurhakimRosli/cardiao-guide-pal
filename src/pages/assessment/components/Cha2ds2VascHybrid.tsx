@@ -56,8 +56,7 @@ export function Cha2ds2VascHybrid({ patient, draft, setField, onOpenModal }: Pro
       CHF: chf.value ? 1 : 0,
       Hypertension: htn.value ? 1 : 0,
       "Age ≥75": age.value !== undefined && age.value >= 75 ? 2 : 0,
-      "Age 65–74":
-        age.value !== undefined && age.value >= 65 && age.value < 75 ? 1 : 0,
+      "Age 65–74": age.value !== undefined && age.value >= 65 && age.value < 75 ? 1 : 0,
       Diabetes: dm.value ? 1 : 0,
       "Stroke/TIA": stroke.value ? 2 : 0,
       "Vascular disease": vasc.value ? 1 : 0,
@@ -113,8 +112,8 @@ export function Cha2ds2VascHybrid({ patient, draft, setField, onOpenModal }: Pro
         <div className="mb-2 flex items-start gap-1.5 rounded border border-[var(--clinical-warn)] bg-[var(--clinical-warn-bg)] px-2 py-1.5 text-xs">
           <AlertTriangle className="mt-0.5 size-3.5 shrink-0 text-[var(--clinical-warn)]" />
           <span>
-            <strong>Incomplete data.</strong> Score below assumes "No" for missing
-            fields — confirm each before saving.
+            <strong>Incomplete data.</strong> Score below assumes "No" for missing fields — confirm
+            each before saving.
           </span>
         </div>
       )}
@@ -174,25 +173,21 @@ export function Cha2ds2VascHybrid({ patient, draft, setField, onOpenModal }: Pro
 
       {highRisk && (
         <p className="mt-2 text-xs font-medium text-[var(--clinical-alert)]">
-          Score {totals.total} ({threshold} threshold) — oral anticoagulation indicated for stroke prevention.
+          Score {totals.total} ({threshold} threshold) — oral anticoagulation indicated for stroke
+          prevention.
         </p>
       )}
 
       <p className="mt-2 flex items-start gap-1 text-[10px] italic text-muted-foreground">
         <Info className="mt-0.5 size-3 shrink-0" />
-        Sex category (Sc) removed in CHA₂DS₂-VA per 2026.08.26 amendment. Single threshold ≥2 applies to all patients.
+        Sex category (Sc) removed in CHA₂DS₂-VA per 2026.08.26 amendment. Single threshold ≥2
+        applies to all patients.
       </p>
     </div>
   );
 }
 
-function SourceLabel({
-  source,
-  complete,
-}: {
-  source: Cha2VaState["source"];
-  complete: boolean;
-}) {
+function SourceLabel({ source, complete }: { source: Cha2VaState["source"]; complete: boolean }) {
   if (!complete) {
     return (
       <p className="mb-2 text-[11px] font-medium text-[var(--clinical-warn)]">
@@ -224,12 +219,7 @@ function FieldChrome({
       : source === "emr"
         ? "border-[var(--clinical-ok)]/60 bg-[var(--clinical-ok-bg)]/30"
         : "border-primary/60 bg-primary/5";
-  const Icon =
-    source === "missing"
-      ? AlertTriangle
-      : source === "emr"
-        ? CheckCircle2
-        : PencilLine;
+  const Icon = source === "missing" ? AlertTriangle : source === "emr" ? CheckCircle2 : PencilLine;
   const iconClass =
     source === "missing"
       ? "text-[var(--clinical-warn)]"

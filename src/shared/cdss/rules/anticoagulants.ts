@@ -134,9 +134,13 @@ export function evaluateAnticoagulants(
           group: "Drug Safety",
           title: "Avoid Apixaban (Contraindicated in ClCr <15 mL/min)",
           detail: `CrCl = ${ctx.clcr} mL/min (<15 mL/min). Apixaban is contraindicated in severe renal impairment.`,
-          rationale: [`Calculated CrCl: ${ctx.clcr} mL/min`, "Threshold: CrCl <15 mL/min is contraindicated."],
+          rationale: [
+            `Calculated CrCl: ${ctx.clcr} mL/min`,
+            "Threshold: CrCl <15 mL/min is contraindicated.",
+          ],
           guideline: "Apixaban Product Monograph / ESC Guidelines",
-          recommendation: "Discontinue Apixaban; seek nephrology / cardiology consultation for alternative anticoagulation.",
+          recommendation:
+            "Discontinue Apixaban; seek nephrology / cardiology consultation for alternative anticoagulation.",
           supporting_values: { clcr: ctx.clcr },
           priority: CLINICAL_RULES.precedence.contraindicated,
           action: {
@@ -171,7 +175,8 @@ export function evaluateAnticoagulants(
             detail: `${criteria.length} of 3 dose-reduction criteria met (${criteria.join(", ")}).`,
             rationale: criteria,
             guideline: "Apixaban Product Monograph — 2-of-3 Dose Reduction Rule",
-            recommendation: "Consider dose reduction if the current dose is 5 mg twice daily, subject to clinical review.",
+            recommendation:
+              "Consider dose reduction if the current dose is 5 mg twice daily, subject to clinical review.",
             supporting_values: { criteria_met: criteria.length },
             priority: CLINICAL_RULES.precedence.doseAdjustment,
             action: {
@@ -196,9 +201,13 @@ export function evaluateAnticoagulants(
             group: "Drug Safety",
             title: "Consider Apixaban dose reduction (CrCl 15–29 mL/min)",
             detail: `CrCl = ${ctx.clcr} mL/min (15–29 mL/min).`,
-            rationale: [`CrCl: ${ctx.clcr} mL/min`, "Threshold: CrCl 15–29 mL/min indicates severe renal impairment."],
+            rationale: [
+              `CrCl: ${ctx.clcr} mL/min`,
+              "Threshold: CrCl 15–29 mL/min indicates severe renal impairment.",
+            ],
             guideline: "Apixaban Product Monograph",
-            recommendation: "Consider dose reduction if the current dose is 5 mg twice daily, subject to clinical review.",
+            recommendation:
+              "Consider dose reduction if the current dose is 5 mg twice daily, subject to clinical review.",
             supporting_values: { clcr: ctx.clcr },
             priority: CLINICAL_RULES.precedence.doseAdjustment,
             action: {
@@ -265,7 +274,8 @@ export function evaluateAnticoagulants(
             detail: `Criteria met: ${reasons.join("; ")}.`,
             rationale: reasons,
             guideline: "Edoxaban Product Monograph — Dose Adjustment Criteria",
-            recommendation: "Consider reducing Edoxaban from 60 mg OD to 30 mg OD, subject to clinical review.",
+            recommendation:
+              "Consider reducing Edoxaban from 60 mg OD to 30 mg OD, subject to clinical review.",
             supporting_values: { clcr: ctx.clcr ?? "", weight: weight ?? "" },
             priority: CLINICAL_RULES.precedence.doseAdjustment,
             action: {
@@ -312,7 +322,12 @@ export function evaluateAnticoagulants(
           },
         }),
       );
-    } else if (!isAlreadyReduced && ctx.clcr != null && ctx.clcr >= 15 && ctx.clcr <= CLINICAL_RULES.rivaroxaban.clcrReduce) {
+    } else if (
+      !isAlreadyReduced &&
+      ctx.clcr != null &&
+      ctx.clcr >= 15 &&
+      ctx.clcr <= CLINICAL_RULES.rivaroxaban.clcrReduce
+    ) {
       rivaAlerts.push(
         buildAlert({
           id: "rivaroxaban-reduce",
@@ -321,9 +336,13 @@ export function evaluateAnticoagulants(
           group: "Drug Safety",
           title: "Consider Rivaroxaban dose reduction to 15 mg OD",
           detail: `CrCl = ${ctx.clcr} mL/min (15–49 mL/min).`,
-          rationale: [`Calculated CrCl: ${ctx.clcr} mL/min`, "Threshold: CrCl 15–49 mL/min indicates moderate renal impairment."],
+          rationale: [
+            `Calculated CrCl: ${ctx.clcr} mL/min`,
+            "Threshold: CrCl 15–49 mL/min indicates moderate renal impairment.",
+          ],
           guideline: "Rivaroxaban Product Monograph — Renal Dose Adjustment",
-          recommendation: "Consider reducing Rivaroxaban from 20 mg OD to 15 mg OD, subject to clinical review.",
+          recommendation:
+            "Consider reducing Rivaroxaban from 20 mg OD to 15 mg OD, subject to clinical review.",
           supporting_values: { clcr: ctx.clcr },
           priority: CLINICAL_RULES.precedence.doseAdjustment,
           action: {
@@ -380,9 +399,13 @@ export function evaluateAnticoagulants(
             group: "Drug Safety",
             title: "Consider Dabigatran dose reduction to 110 mg BD (CrCl 30–50 mL/min)",
             detail: `CrCl = ${ctx.clcr} mL/min (30–50 mL/min).`,
-            rationale: [`Calculated CrCl: ${ctx.clcr} mL/min`, "Threshold: CrCl 30–50 mL/min requires dose reduction."],
+            rationale: [
+              `Calculated CrCl: ${ctx.clcr} mL/min`,
+              "Threshold: CrCl 30–50 mL/min requires dose reduction.",
+            ],
             guideline: "Dabigatran Product Monograph — Renal Dosing",
-            recommendation: "Consider reducing Dabigatran from 150 mg BD to 110 mg BD, subject to clinical review.",
+            recommendation:
+              "Consider reducing Dabigatran from 150 mg BD to 110 mg BD, subject to clinical review.",
             supporting_values: { clcr: ctx.clcr },
             priority: CLINICAL_RULES.precedence.doseAdjustment,
             action: {
@@ -405,7 +428,10 @@ export function evaluateAnticoagulants(
             group: "Drug Safety",
             title: "Recommend Dabigatran dose reduction to 110 mg BD (Age ≥80)",
             detail: `Patient age is ${age} (≥80 years). Guideline recommends 110 mg BD to mitigate bleeding risk.`,
-            rationale: [`Age: ${age} years (≥80 threshold)`, "Guideline recommendation: 110 mg BD for patients aged ≥80."],
+            rationale: [
+              `Age: ${age} years (≥80 threshold)`,
+              "Guideline recommendation: 110 mg BD for patients aged ≥80.",
+            ],
             guideline: "ESC Guidelines / Dabigatran Product Monograph",
             recommendation: "Reduce Dabigatran dose to 110 mg BD.",
             supporting_values: { age },
@@ -437,7 +463,8 @@ export function evaluateAnticoagulants(
               "Consider 110 mg BD based on individual thromboembolic vs bleeding risk assessment.",
             ],
             guideline: "ESC Guidelines / Dabigatran SPC",
-            recommendation: "Evaluate bleeding risk; consider reducing to 110 mg BD if clinically warranted.",
+            recommendation:
+              "Evaluate bleeding risk; consider reducing to 110 mg BD if clinically warranted.",
             supporting_values: { age },
             priority: CLINICAL_RULES.precedence.caution,
             action: {
@@ -460,9 +487,13 @@ export function evaluateAnticoagulants(
             group: "Drug Safety",
             title: "Consider Dabigatran dose reduction to 110 mg BD (Verapamil interaction)",
             detail: "Concomitant verapamil increases dabigatran exposure through P-gp inhibition.",
-            rationale: ["Concomitant Verapamil prescription detected.", "P-glycoprotein interaction increases plasma dabigatran."],
+            rationale: [
+              "Concomitant Verapamil prescription detected.",
+              "P-glycoprotein interaction increases plasma dabigatran.",
+            ],
             guideline: "Dabigatran Product Monograph — Drug Interactions",
-            recommendation: "Consider reducing Dabigatran to 110 mg BD while on Verapamil, subject to clinical review.",
+            recommendation:
+              "Consider reducing Dabigatran to 110 mg BD while on Verapamil, subject to clinical review.",
             priority: CLINICAL_RULES.precedence.doseAdjustment,
             action: {
               kind: "medication",
@@ -500,9 +531,7 @@ function resolveDrugAlerts(alerts: CdssAlert[]): CdssAlert[] {
   // If multiple alerts share the highest priority, aggregate their rationales into one alert
   const topAlerts = sorted.filter((a) => (a.priority ?? 100) === topPriority);
   if (topAlerts.length > 1) {
-    const combinedRationale = Array.from(
-      new Set(topAlerts.flatMap((a) => a.rationale)),
-    );
+    const combinedRationale = Array.from(new Set(topAlerts.flatMap((a) => a.rationale)));
     const primary = topAlerts[0];
     return [
       {

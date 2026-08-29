@@ -1,8 +1,10 @@
-import fs from 'fs';
-import path from 'path';
-import { evaluate } from './src/shared/cdss/engine.js';
+import fs from "fs";
+import path from "path";
+import { evaluate } from "./src/shared/cdss/engine.js";
 
-const realPatients = JSON.parse(fs.readFileSync('./src/shared/data/real_patients_2024.json', 'utf8'));
+const realPatients = JSON.parse(
+  fs.readFileSync("./src/shared/data/real_patients_2024.json", "utf8"),
+);
 
 console.log(`\n========================================================`);
 console.log(`🏥 CDSS BATCH EVALUATION: ${realPatients.length} REAL HASA UITM AF PATIENTS`);
@@ -26,20 +28,28 @@ realPatients.forEach((patient) => {
   totalAlertsCount += result.alerts.length;
 
   result.alerts.forEach((alert) => {
-    alertTypes[alert.category || alert.group || 'other'] = (alertTypes[alert.category || alert.group || 'other'] || 0) + 1;
+    alertTypes[alert.category || alert.group || "other"] =
+      (alertTypes[alert.category || alert.group || "other"] || 0) + 1;
     alertSeverities[alert.severity] = (alertSeverities[alert.severity] || 0) + 1;
-    
-    if (alert.category === 'stroke-risk' || alert.group === 'Stroke Prevention') strokeRiskCount++;
-    if (alert.category === 'bleeding-risk' || alert.group === 'Bleeding Risk') bleedingRiskCount++;
-    if (alert.category === 'renal-dose' || alert.category === 'age-dose' || alert.category === 'weight-dose') doseReviewCount++;
-    if (alert.category === 'contraindication') contraindicationCount++;
-    if (alert.category === 'blood-pressure' || alert.group === 'Blood Pressure') bpAlertCount++;
-    if (alert.category === 'glycemic' || alert.group === 'Glycemic Control') hba1cAlertCount++;
+
+    if (alert.category === "stroke-risk" || alert.group === "Stroke Prevention") strokeRiskCount++;
+    if (alert.category === "bleeding-risk" || alert.group === "Bleeding Risk") bleedingRiskCount++;
+    if (
+      alert.category === "renal-dose" ||
+      alert.category === "age-dose" ||
+      alert.category === "weight-dose"
+    )
+      doseReviewCount++;
+    if (alert.category === "contraindication") contraindicationCount++;
+    if (alert.category === "blood-pressure" || alert.group === "Blood Pressure") bpAlertCount++;
+    if (alert.category === "glycemic" || alert.group === "Glycemic Control") hba1cAlertCount++;
   });
 });
 
 console.log(`✅ Total CDSS Alerts Triggered: ${totalAlertsCount}`);
-console.log(`📊 Average Alerts Per Patient: ${(totalAlertsCount / realPatients.length).toFixed(2)}`);
+console.log(
+  `📊 Average Alerts Per Patient: ${(totalAlertsCount / realPatients.length).toFixed(2)}`,
+);
 
 console.log(`\nAlert Breakdown by Severity:`);
 Object.entries(alertSeverities).forEach(([sev, cnt]) => {
@@ -52,13 +62,17 @@ Object.entries(alertTypes).forEach(([type, cnt]) => {
 });
 
 console.log(`\nKey Clinical Findings:`);
-console.log(`  - Oral Anticoagulation Indicated (CHA2DS2-VA >= 2): ${strokeRiskCount} / 493 patients (${((strokeRiskCount/realPatients.length)*100).toFixed(1)}%)`);
-console.log(`  - High Bleeding Risk Flag (HAS-BLED >= 3): ${bleedingRiskCount} / 493 patients (${((bleedingRiskCount/realPatients.length)*100).toFixed(1)}%)`);
+console.log(
+  `  - Oral Anticoagulation Indicated (CHA2DS2-VA >= 2): ${strokeRiskCount} / 493 patients (${((strokeRiskCount / realPatients.length) * 100).toFixed(1)}%)`,
+);
+console.log(
+  `  - High Bleeding Risk Flag (HAS-BLED >= 3): ${bleedingRiskCount} / 493 patients (${((bleedingRiskCount / realPatients.length) * 100).toFixed(1)}%)`,
+);
 console.log(`  - Blood Pressure Clinical Alerts: ${bpAlertCount} instances`);
 console.log(`  - Glycemic Control (HbA1c > 7.0%) Alerts: ${hba1cAlertCount} instances`);
 
 console.log(`\n========================================================`);
-console.log(`Sample Real Patient CDSS Result (Patient #1 - CTC0050673):`);
+console.log(`Sample Real Patient CDSS Result (Patient #1 - HASA-MRN-0001):`);
 const sampleResult = evaluate(realPatients[0], { afConfirmed: true });
 console.log(`  Name: ${realPatients[0].name}, Age: ${realPatients[0].age}`);
 console.log(`  CHA2DS2-VA Score: ${sampleResult.scores.cha2ds2va?.total}`);

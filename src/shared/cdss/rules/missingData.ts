@@ -66,7 +66,9 @@ export function detectMissingData(p: Patient): CdssAlert[] {
         group: "Missing Data",
         title: "Vascular disease status undocumented",
         detail: "Vascular disease status affects CHA₂DS₂-VA scoring (+1 point).",
-        rationale: ["No prior myocardial infarction, peripheral artery disease, or aortic plaque documented."],
+        rationale: [
+          "No prior myocardial infarction, peripheral artery disease, or aortic plaque documented.",
+        ],
         supporting_values: {
           reason: "Vascular disease not documented",
           clinical_impact: "May under-score stroke risk.",

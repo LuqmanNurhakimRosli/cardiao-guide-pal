@@ -78,7 +78,13 @@ export function AnalyticsPage({ patients }: AnalyticsPageProps) {
 
   // Drug Distribution
   const drugDist = useMemo(() => {
-    const counts: Record<string, number> = { Warfarin: 0, Apixaban: 0, Dabigatran: 0, Rivaroxaban: 0, Other: 0 };
+    const counts: Record<string, number> = {
+      Warfarin: 0,
+      Apixaban: 0,
+      Dabigatran: 0,
+      Rivaroxaban: 0,
+      Other: 0,
+    };
     filteredPatients.forEach((p: PatientRow) => {
       const drug = p.active_drug || "Warfarin";
       if (counts[drug] !== undefined) counts[drug]++;
@@ -88,11 +94,18 @@ export function AnalyticsPage({ patients }: AnalyticsPageProps) {
   }, [filteredPatients]);
 
   // Key KPI metrics
-  const highStrokeRisk = filteredPatients.filter((p: PatientRow) => (p.cha2ds2va_score ?? 0) >= 2).length;
-  const highBleedRisk = filteredPatients.filter((p: PatientRow) => (p.has_bled_score ?? 0) >= 3).length;
+  const highStrokeRisk = filteredPatients.filter(
+    (p: PatientRow) => (p.cha2ds2va_score ?? 0) >= 2,
+  ).length;
+  const highBleedRisk = filteredPatients.filter(
+    (p: PatientRow) => (p.has_bled_score ?? 0) >= 3,
+  ).length;
   const doseAlertCount = filteredPatients.filter((p: PatientRow) => p.has_dose_alert).length;
   const valvularCount = filteredPatients.filter((p: PatientRow) => p.is_valvular).length;
-  const totalAlerts = filteredPatients.reduce((sum: number, p: PatientRow) => sum + p.alerts_count, 0);
+  const totalAlerts = filteredPatients.reduce(
+    (sum: number, p: PatientRow) => sum + p.alerts_count,
+    0,
+  );
 
   // Export to CSV function
   const handleExportCSV = () => {
@@ -124,17 +137,26 @@ export function AnalyticsPage({ patients }: AnalyticsPageProps) {
       p.active_drug || "Warfarin",
       p.is_valvular ? "Yes" : "No",
       p.cha2ds2va_score ?? 0,
-      (p.cha2ds2va_score ?? 0) >= 2 ? "High (OAC Indicated)" : (p.cha2ds2va_score ?? 0) === 1 ? "Intermediate" : "Low",
+      (p.cha2ds2va_score ?? 0) >= 2
+        ? "High (OAC Indicated)"
+        : (p.cha2ds2va_score ?? 0) === 1
+          ? "Intermediate"
+          : "Low",
       p.has_bled_score ?? 0,
       (p.has_bled_score ?? 0) >= 3 ? "High Bleed Risk" : "Low-Mod Bleed Risk",
       p.alerts_count,
     ]);
 
-    const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map((e) => e.join(","))].join("\n");
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      [headers.join(","), ...rows.map((e) => e.join(","))].join("\n");
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `CDSS_AF_Cohort_Audit_${cohortFilter}_${new Date().toISOString().split("T")[0]}.csv`);
+    link.setAttribute(
+      "download",
+      `CDSS_AF_Cohort_Audit_${cohortFilter}_${new Date().toISOString().split("T")[0]}.csv`,
+    );
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -151,7 +173,8 @@ export function AnalyticsPage({ patients }: AnalyticsPageProps) {
               AF Cohort Analytics & Clinical Audit
             </h1>
             <p className="mt-0.5 text-xs text-muted-foreground">
-              Aggregated clinical decision support analytics, risk stratification, and guideline adherence metrics.
+              Aggregated clinical decision support analytics, risk stratification, and guideline
+              adherence metrics.
             </p>
           </div>
 
@@ -187,7 +210,15 @@ export function AnalyticsPage({ patients }: AnalyticsPageProps) {
             }`}
           >
             <Database className="size-4 text-emerald-600" />
-            HASA UiTM Cohort ({patients.filter((p: PatientRow) => (p.cohort ?? (p.patient_id.startsWith("REAL-") ? "hospital" : "benchmark")) === "hospital").length})
+            HASA UiTM Cohort (
+            {
+              patients.filter(
+                (p: PatientRow) =>
+                  (p.cohort ?? (p.patient_id.startsWith("REAL-") ? "hospital" : "benchmark")) ===
+                  "hospital",
+              ).length
+            }
+            )
           </button>
           <button
             onClick={() => setCohortFilter("benchmark")}
@@ -198,7 +229,15 @@ export function AnalyticsPage({ patients }: AnalyticsPageProps) {
             }`}
           >
             <BookmarkCheck className="size-4 text-blue-600" />
-            Benchmark Cases ({patients.filter((p: PatientRow) => (p.cohort ?? (p.patient_id.startsWith("REAL-") ? "hospital" : "benchmark")) === "benchmark").length})
+            Benchmark Cases (
+            {
+              patients.filter(
+                (p: PatientRow) =>
+                  (p.cohort ?? (p.patient_id.startsWith("REAL-") ? "hospital" : "benchmark")) ===
+                  "benchmark",
+              ).length
+            }
+            )
           </button>
           <button
             onClick={() => setCohortFilter("all")}
@@ -216,29 +255,39 @@ export function AnalyticsPage({ patients }: AnalyticsPageProps) {
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <div className="rounded-xl border border-border bg-card p-4 shadow-2xs">
             <div className="flex items-center justify-between text-muted-foreground">
-              <span className="text-[11px] font-semibold uppercase tracking-wider">Total Patients Analyzed</span>
+              <span className="text-[11px] font-semibold uppercase tracking-wider">
+                Total Patients Analyzed
+              </span>
               <div className="flex size-7 items-center justify-center rounded-lg bg-blue-500/10 text-blue-600">
                 <Users className="size-4" />
               </div>
             </div>
             <div className="mt-3 flex items-baseline gap-2">
-              <span className="text-2xl font-bold font-mono text-foreground">{filteredPatients.length}</span>
+              <span className="text-2xl font-bold font-mono text-foreground">
+                {filteredPatients.length}
+              </span>
               <span className="text-xs font-medium text-muted-foreground">Active Cohort</span>
             </div>
             <div className="mt-2 text-[11px] text-muted-foreground font-mono">
-              Mean Age: {(filteredPatients.reduce((s: number, p: PatientRow) => s + p.age, 0) / n).toFixed(1)} yrs
+              Mean Age:{" "}
+              {(filteredPatients.reduce((s: number, p: PatientRow) => s + p.age, 0) / n).toFixed(1)}{" "}
+              yrs
             </div>
           </div>
 
           <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-4 shadow-2xs">
             <div className="flex items-center justify-between text-amber-700 dark:text-amber-300">
-              <span className="text-[11px] font-semibold uppercase tracking-wider">Stroke Prevention Indicated</span>
+              <span className="text-[11px] font-semibold uppercase tracking-wider">
+                Stroke Prevention Indicated
+              </span>
               <div className="flex size-7 items-center justify-center rounded-lg bg-amber-500/10 text-amber-600">
                 <ShieldAlert className="size-4" />
               </div>
             </div>
             <div className="mt-3 flex items-baseline gap-2">
-              <span className="text-2xl font-bold font-mono text-amber-900 dark:text-amber-100">{highStrokeRisk}</span>
+              <span className="text-2xl font-bold font-mono text-amber-900 dark:text-amber-100">
+                {highStrokeRisk}
+              </span>
               <span className="text-xs font-bold text-amber-700 dark:text-amber-300 font-mono">
                 ({((highStrokeRisk / n) * 100).toFixed(1)}%)
               </span>
@@ -250,13 +299,17 @@ export function AnalyticsPage({ patients }: AnalyticsPageProps) {
 
           <div className="rounded-xl border border-rose-500/30 bg-rose-500/5 p-4 shadow-2xs">
             <div className="flex items-center justify-between text-rose-700 dark:text-rose-300">
-              <span className="text-[11px] font-semibold uppercase tracking-wider">High Bleeding Risk</span>
+              <span className="text-[11px] font-semibold uppercase tracking-wider">
+                High Bleeding Risk
+              </span>
               <div className="flex size-7 items-center justify-center rounded-lg bg-rose-500/10 text-rose-600">
                 <HeartPulse className="size-4" />
               </div>
             </div>
             <div className="mt-3 flex items-baseline gap-2">
-              <span className="text-2xl font-bold font-mono text-rose-900 dark:text-rose-100">{highBleedRisk}</span>
+              <span className="text-2xl font-bold font-mono text-rose-900 dark:text-rose-100">
+                {highBleedRisk}
+              </span>
               <span className="text-xs font-bold text-rose-700 dark:text-rose-300 font-mono">
                 ({((highBleedRisk / n) * 100).toFixed(1)}%)
               </span>
@@ -268,13 +321,17 @@ export function AnalyticsPage({ patients }: AnalyticsPageProps) {
 
           <div className="rounded-xl border border-purple-500/30 bg-purple-500/5 p-4 shadow-2xs">
             <div className="flex items-center justify-between text-purple-700 dark:text-purple-300">
-              <span className="text-[11px] font-semibold uppercase tracking-wider">Drug Safety Alerts</span>
+              <span className="text-[11px] font-semibold uppercase tracking-wider">
+                Drug Safety Alerts
+              </span>
               <div className="flex size-7 items-center justify-center rounded-lg bg-purple-500/10 text-purple-600">
                 <Pill className="size-4" />
               </div>
             </div>
             <div className="mt-3 flex items-baseline gap-2">
-              <span className="text-2xl font-bold font-mono text-purple-900 dark:text-purple-100">{doseAlertCount}</span>
+              <span className="text-2xl font-bold font-mono text-purple-900 dark:text-purple-100">
+                {doseAlertCount}
+              </span>
               <span className="text-xs font-bold text-purple-700 dark:text-purple-300 font-mono">
                 ({((doseAlertCount / n) * 100).toFixed(1)}%)
               </span>
@@ -312,7 +369,8 @@ export function AnalyticsPage({ patients }: AnalyticsPageProps) {
                 return (
                   <div key={score} className="flex items-center gap-2 text-xs">
                     <span className="w-16 font-mono font-medium text-muted-foreground">
-                      Score {score}{score === 7 ? "+" : ""}
+                      Score {score}
+                      {score === 7 ? "+" : ""}
                     </span>
                     <div className="h-5 flex-1 overflow-hidden rounded-md bg-muted/60 flex">
                       <div
@@ -356,7 +414,8 @@ export function AnalyticsPage({ patients }: AnalyticsPageProps) {
                 return (
                   <div key={score} className="flex items-center gap-2 text-xs">
                     <span className="w-16 font-mono font-medium text-muted-foreground">
-                      Score {score}{score === 5 ? "+" : ""}
+                      Score {score}
+                      {score === 5 ? "+" : ""}
                     </span>
                     <div className="h-5 flex-1 overflow-hidden rounded-md bg-muted/60 flex">
                       <div
@@ -386,7 +445,10 @@ export function AnalyticsPage({ patients }: AnalyticsPageProps) {
             </h3>
             <div className="space-y-2 text-xs pt-1">
               {Object.entries(drugDist).map(([drug, count]) => (
-                <div key={drug} className="flex items-center justify-between border-b border-border/50 py-1.5 last:border-0">
+                <div
+                  key={drug}
+                  className="flex items-center justify-between border-b border-border/50 py-1.5 last:border-0"
+                >
                   <span className="font-semibold text-foreground">{drug}</span>
                   <span className="font-mono font-medium text-muted-foreground">
                     {count} ({((count / n) * 100).toFixed(1)}%)
@@ -403,16 +465,21 @@ export function AnalyticsPage({ patients }: AnalyticsPageProps) {
               Valvular AF (Mitral Stenosis / MVR)
             </h3>
             <p className="text-[11px] text-muted-foreground mb-3">
-              Per AHA/ESC guidelines, DOACs are contraindicated in moderate-severe MS / Mechanical Valves.
+              Per AHA/ESC guidelines, DOACs are contraindicated in moderate-severe MS / Mechanical
+              Valves.
             </p>
             <div className="space-y-2 text-xs">
               <div className="flex justify-between border-b border-border/50 py-1.5">
                 <span className="font-medium text-muted-foreground">Valvular AF Patients:</span>
-                <span className="font-bold text-blue-600 font-mono">{valvularCount} ({((valvularCount / n) * 100).toFixed(1)}%)</span>
+                <span className="font-bold text-blue-600 font-mono">
+                  {valvularCount} ({((valvularCount / n) * 100).toFixed(1)}%)
+                </span>
               </div>
               <div className="flex justify-between border-b border-border/50 py-1.5">
                 <span className="font-medium text-muted-foreground">Non-Valvular AF:</span>
-                <span className="font-mono text-muted-foreground">{n - valvularCount} ({(((n - valvularCount) / n) * 100).toFixed(1)}%)</span>
+                <span className="font-mono text-muted-foreground">
+                  {n - valvularCount} ({(((n - valvularCount) / n) * 100).toFixed(1)}%)
+                </span>
               </div>
               <div className="flex justify-between py-1.5">
                 <span className="font-medium text-muted-foreground">DOAC Guard Status:</span>
@@ -435,7 +502,9 @@ export function AnalyticsPage({ patients }: AnalyticsPageProps) {
             <div className="space-y-2 text-xs">
               <div className="flex justify-between border-b border-border/50 py-1.5">
                 <span className="font-medium text-muted-foreground">Apixaban Dose Reduction:</span>
-                <span className="text-[11px] font-semibold text-emerald-600">"Consider..." Advisory</span>
+                <span className="text-[11px] font-semibold text-emerald-600">
+                  "Consider..." Advisory
+                </span>
               </div>
               <div className="flex justify-between border-b border-border/50 py-1.5">
                 <span className="font-medium text-muted-foreground">Clinical Review Clause:</span>
@@ -452,7 +521,9 @@ export function AnalyticsPage({ patients }: AnalyticsPageProps) {
         {/* Clinical Audit Matrix Table */}
         <div className="rounded-xl border border-border bg-card shadow-2xs overflow-hidden">
           <div className="border-b border-border bg-muted/40 px-4 py-3">
-            <h3 className="text-sm font-bold text-foreground">CDSS Clinical Rules Execution Matrix</h3>
+            <h3 className="text-sm font-bold text-foreground">
+              CDSS Clinical Rules Execution Matrix
+            </h3>
             <p className="text-[11px] text-muted-foreground">
               Automated audit summary across all active clinical rule modules in the CDSS engine.
             </p>
@@ -470,32 +541,70 @@ export function AnalyticsPage({ patients }: AnalyticsPageProps) {
               </thead>
               <tbody className="divide-y divide-border/60">
                 <tr>
-                  <td className="px-4 py-3 font-semibold text-foreground">Stroke Risk (CHA₂DS₂-VA)</td>
-                  <td className="px-4 py-3 text-muted-foreground font-mono">2024 ESC (Threshold ≥2)</td>
-                  <td className="px-4 py-3 font-bold text-amber-700 dark:text-amber-300 font-mono">{highStrokeRisk} patients ({((highStrokeRisk / n) * 100).toFixed(1)}%)</td>
-                  <td className="px-4 py-3 text-muted-foreground">Recommends Oral Anticoagulation (DOAC preferred)</td>
-                  <td className="px-4 py-3 text-right text-emerald-600 font-bold">100% Compliant</td>
+                  <td className="px-4 py-3 font-semibold text-foreground">
+                    Stroke Risk (CHA₂DS₂-VA)
+                  </td>
+                  <td className="px-4 py-3 text-muted-foreground font-mono">
+                    2024 ESC (Threshold ≥2)
+                  </td>
+                  <td className="px-4 py-3 font-bold text-amber-700 dark:text-amber-300 font-mono">
+                    {highStrokeRisk} patients ({((highStrokeRisk / n) * 100).toFixed(1)}%)
+                  </td>
+                  <td className="px-4 py-3 text-muted-foreground">
+                    Recommends Oral Anticoagulation (DOAC preferred)
+                  </td>
+                  <td className="px-4 py-3 text-right text-emerald-600 font-bold">
+                    100% Compliant
+                  </td>
                 </tr>
                 <tr>
-                  <td className="px-4 py-3 font-semibold text-foreground">Bleeding Risk (HAS-BLED)</td>
+                  <td className="px-4 py-3 font-semibold text-foreground">
+                    Bleeding Risk (HAS-BLED)
+                  </td>
                   <td className="px-4 py-3 text-muted-foreground font-mono">HAS-BLED Score ≥3</td>
-                  <td className="px-4 py-3 font-bold text-rose-700 dark:text-rose-300 font-mono">{highBleedRisk} patients ({((highBleedRisk / n) * 100).toFixed(1)}%)</td>
-                  <td className="px-4 py-3 text-muted-foreground">Emits informational alert for modifiable bleeding factors</td>
-                  <td className="px-4 py-3 text-right text-emerald-600 font-bold">100% Compliant</td>
+                  <td className="px-4 py-3 font-bold text-rose-700 dark:text-rose-300 font-mono">
+                    {highBleedRisk} patients ({((highBleedRisk / n) * 100).toFixed(1)}%)
+                  </td>
+                  <td className="px-4 py-3 text-muted-foreground">
+                    Emits informational alert for modifiable bleeding factors
+                  </td>
+                  <td className="px-4 py-3 text-right text-emerald-600 font-bold">
+                    100% Compliant
+                  </td>
                 </tr>
                 <tr>
-                  <td className="px-4 py-3 font-semibold text-foreground">DOAC Renal Dose Reduction</td>
-                  <td className="px-4 py-3 text-muted-foreground font-mono">Cockcroft-Gault CrCl</td>
-                  <td className="px-4 py-3 font-bold text-purple-700 dark:text-purple-300 font-mono">{doseAlertCount} alerts</td>
-                  <td className="px-4 py-3 text-muted-foreground">Advisory "Consider dose reduction" (Apixaban / Rivaroxaban / Dabigatran)</td>
-                  <td className="px-4 py-3 text-right text-emerald-600 font-bold">100% Compliant</td>
+                  <td className="px-4 py-3 font-semibold text-foreground">
+                    DOAC Renal Dose Reduction
+                  </td>
+                  <td className="px-4 py-3 text-muted-foreground font-mono">
+                    Cockcroft-Gault CrCl
+                  </td>
+                  <td className="px-4 py-3 font-bold text-purple-700 dark:text-purple-300 font-mono">
+                    {doseAlertCount} alerts
+                  </td>
+                  <td className="px-4 py-3 text-muted-foreground">
+                    Advisory "Consider dose reduction" (Apixaban / Rivaroxaban / Dabigatran)
+                  </td>
+                  <td className="px-4 py-3 text-right text-emerald-600 font-bold">
+                    100% Compliant
+                  </td>
                 </tr>
                 <tr>
-                  <td className="px-4 py-3 font-semibold text-foreground">Valvular AF Contraindication</td>
-                  <td className="px-4 py-3 text-muted-foreground font-mono">AHA / ESC Guidelines</td>
-                  <td className="px-4 py-3 font-bold text-blue-700 dark:text-blue-300 font-mono">{valvularCount} patients</td>
-                  <td className="px-4 py-3 text-muted-foreground">Enforces Warfarin; alerts DOAC contraindication</td>
-                  <td className="px-4 py-3 text-right text-emerald-600 font-bold">100% Compliant</td>
+                  <td className="px-4 py-3 font-semibold text-foreground">
+                    Valvular AF Contraindication
+                  </td>
+                  <td className="px-4 py-3 text-muted-foreground font-mono">
+                    AHA / ESC Guidelines
+                  </td>
+                  <td className="px-4 py-3 font-bold text-blue-700 dark:text-blue-300 font-mono">
+                    {valvularCount} patients
+                  </td>
+                  <td className="px-4 py-3 text-muted-foreground">
+                    Enforces Warfarin; alerts DOAC contraindication
+                  </td>
+                  <td className="px-4 py-3 text-right text-emerald-600 font-bold">
+                    100% Compliant
+                  </td>
                 </tr>
               </tbody>
             </table>

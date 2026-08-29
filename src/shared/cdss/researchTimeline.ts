@@ -14,10 +14,7 @@ import type {
   ResearchWindowType,
 } from "./types";
 
-export function classifyDateWindow(
-  eventDateStr: string,
-  indexDateStr: string,
-): ResearchWindowType {
+export function classifyDateWindow(eventDateStr: string, indexDateStr: string): ResearchWindowType {
   if (!eventDateStr || !indexDateStr) return "outside";
 
   const eventDate = new Date(`${eventDateStr.slice(0, 10)}T00:00:00Z`);
@@ -55,8 +52,7 @@ export function buildPatientTimeline(
   auditEntries: AuditEntry[] = [],
   indexDateOverride?: string,
 ): ResearchTimelineSummary {
-  const indexDate =
-    indexDateOverride ?? patient.encounter?.clinic_date ?? "2026-08-26";
+  const indexDate = indexDateOverride ?? patient.encounter?.clinic_date ?? "2026-08-26";
   const events: TimelineEvent[] = [];
 
   // 1. Dated BP readings
@@ -176,10 +172,10 @@ export function buildPatientTimeline(
         detail: action.override_reason
           ? `Reason: ${action.override_reason}`
           : action.defer_until
-          ? `Deferred until: ${action.defer_until}`
-          : action.med_change
-          ? `Order change: ${action.med_change.name} → ${action.med_change.new_dose}`
-          : "Action accepted by clinician.",
+            ? `Deferred until: ${action.defer_until}`
+            : action.med_change
+              ? `Order change: ${action.med_change.name} → ${action.med_change.new_dose}`
+              : "Action accepted by clinician.",
       });
     });
 
@@ -209,7 +205,8 @@ export function buildPatientTimeline(
       start: preStartDate.toISOString().slice(0, 10),
       end: preEndDate.toISOString().slice(0, 10),
       events_count: preEvents.length,
-      completeness: preEvents.length >= 3 ? "Complete" : preEvents.length > 0 ? "Partial" : "Missing",
+      completeness:
+        preEvents.length >= 3 ? "Complete" : preEvents.length > 0 ? "Partial" : "Missing",
     },
     index_encounter_window: {
       date: indexDate,

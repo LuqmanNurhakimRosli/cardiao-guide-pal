@@ -30,7 +30,10 @@ export function hasBled(i: HasBledInputs) {
   return { total, breakdown, highRisk: total >= CLINICAL_RULES.hasBled.highRiskThreshold };
 }
 
-export function evaluateHasBledAlert(total: number, breakdown: Record<string, number>): CdssAlert | null {
+export function evaluateHasBledAlert(
+  total: number,
+  breakdown: Record<string, number>,
+): CdssAlert | null {
   if (total < CLINICAL_RULES.hasBled.highRiskThreshold) return null;
   const rationale = Object.entries(breakdown)
     .filter(([, v]) => v > 0)

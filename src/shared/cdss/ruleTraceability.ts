@@ -91,7 +91,8 @@ export const RULE_TRACEABILITY: RuleTraceabilityItem[] = [
   {
     id: "FR-11",
     category: "FR",
-    title: "Edoxaban dosing rules (ClCr < 15 Avoid, ClCr 15-50 / Weight <= 60 kg reduce if on 60 mg OD)",
+    title:
+      "Edoxaban dosing rules (ClCr < 15 Avoid, ClCr 15-50 / Weight <= 60 kg reduce if on 60 mg OD)",
     module: "src/shared/cdss/rules/anticoagulants.ts",
     ruleConstant: "CLINICAL_RULES.edoxaban",
     governanceSignOff: true,
@@ -107,7 +108,8 @@ export const RULE_TRACEABILITY: RuleTraceabilityItem[] = [
   {
     id: "FR-13",
     category: "FR",
-    title: "Dabigatran dosing rules (ClCr < 30 Avoid, Age >= 80 Recommend, Age 75-79 Consider, ClCr 30-50 reduce)",
+    title:
+      "Dabigatran dosing rules (ClCr < 30 Avoid, Age >= 80 Recommend, Age 75-79 Consider, ClCr 30-50 reduce)",
     module: "src/shared/cdss/rules/anticoagulants.ts",
     ruleConstant: "CLINICAL_RULES.dabigatran",
     governanceSignOff: true,
@@ -115,7 +117,8 @@ export const RULE_TRACEABILITY: RuleTraceabilityItem[] = [
   {
     id: "FR-14",
     category: "FR",
-    title: "Anticoagulant Precedence Resolver (Avoid suppresses dose reductions; max 1 alert per drug)",
+    title:
+      "Anticoagulant Precedence Resolver (Avoid suppresses dose reductions; max 1 alert per drug)",
     module: "src/shared/cdss/rules/anticoagulants.ts",
     ruleConstant: "CLINICAL_RULES.precedence",
     governanceSignOff: true,
@@ -130,7 +133,8 @@ export const RULE_TRACEABILITY: RuleTraceabilityItem[] = [
   {
     id: "FR-16",
     category: "FR",
-    title: "Combined Clinical Alert Panel presentation (patient summary, scores, dated values, plans)",
+    title:
+      "Combined Clinical Alert Panel presentation (patient summary, scores, dated values, plans)",
     module: "src/routes/alerts.index.tsx",
     governanceSignOff: true,
   },

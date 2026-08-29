@@ -58,12 +58,17 @@ export function evaluateBP(p: Patient): {
   const isHypertensive = isHypertensivePatient(p);
 
   // Extract dated readings or fallback to bp_latest / bp_second
-  const readings = p.vitals?.bp_readings && p.vitals.bp_readings.length > 0
-    ? p.vitals.bp_readings
-    : [
-        p.vitals?.bp_latest ? { value: p.vitals.bp_latest, date: p.encounter?.clinic_date ?? "" } : undefined,
-        p.vitals?.bp_second ? { value: p.vitals.bp_second, date: p.encounter?.clinic_date ?? "" } : undefined,
-      ].filter(Boolean) as import("../types").DatedValue<string>[];
+  const readings =
+    p.vitals?.bp_readings && p.vitals.bp_readings.length > 0
+      ? p.vitals.bp_readings
+      : ([
+          p.vitals?.bp_latest
+            ? { value: p.vitals.bp_latest, date: p.encounter?.clinic_date ?? "" }
+            : undefined,
+          p.vitals?.bp_second
+            ? { value: p.vitals.bp_second, date: p.encounter?.clinic_date ?? "" }
+            : undefined,
+        ].filter(Boolean) as import("../types").DatedValue<string>[]);
 
   if (readings.length === 0) {
     if (isHypertensive) {
@@ -74,13 +79,15 @@ export function evaluateBP(p: Patient): {
           category: "bp",
           group: "BP",
           title: "Hypertension documented with missing blood pressure — monitor BP",
-          detail: "Patient has diagnosed Hypertension, but no blood pressure reading is recorded for this encounter. Active blood pressure monitoring is required to assess control and stroke/bleeding risk.",
+          detail:
+            "Patient has diagnosed Hypertension, but no blood pressure reading is recorded for this encounter. Active blood pressure monitoring is required to assess control and stroke/bleeding risk.",
           rationale: [
             "Patient has a documented history or pharmacotherapy for Hypertension.",
             "No dated BP readings found for this encounter.",
           ],
           guideline: "MOH Malaysia CPG Hypertension 5th Ed.",
-          recommendation: "Measure blood pressure (obtain 2 seated readings) and monitor BP control.",
+          recommendation:
+            "Measure blood pressure (obtain 2 seated readings) and monitor BP control.",
           action: {
             kind: "monitoring",
             prompt_order: "Measure Blood Pressure (2 readings required)",
@@ -152,7 +159,8 @@ export function evaluateBP(p: Patient): {
             "Target: ≤140/90 mmHg in patients with AF.",
           ],
           guideline: "MOH Malaysia CPG Hypertension 5th Ed.",
-          recommendation: "Review antihypertensive regimen and adherence; adjust therapy to achieve BP target.",
+          recommendation:
+            "Review antihypertensive regimen and adherence; adjust therapy to achieve BP target.",
           supporting_values: {
             bp_reading_1: r1.value,
             bp_date_1: r1.date,

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Runtime configuration for the CDSS frontend.
  * Kept intentionally minimal so it can be swapped for a config service later.
@@ -15,8 +16,8 @@ export const cdssConfig = {
    * in the browser. Enable explicitly with VITE_CDSS_PERSIST_DRAFTS=1.
    */
   persistDrafts:
-    ((env as any).VITE_CDSS_PERSIST_DRAFTS as string | undefined) === "1" ||
-    !(env as any).PROD,
+    ((env as any).VITE_CDSS_PERSIST_DRAFTS as string | undefined) === "1" || !(env as any).PROD,
   /** Debounce (ms) between draft edits and the live-preview API call. */
   draftDebounceMs: 300,
 };
+

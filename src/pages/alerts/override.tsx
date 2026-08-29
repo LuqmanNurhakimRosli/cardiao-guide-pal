@@ -57,7 +57,9 @@ export function AlertOverridePage({ current, alert }: AlertOverridePageProps) {
         setQueueTotal(total);
         setQueueIndex(total - queue.length + 1);
       }
-    } catch {}
+    } catch (err) {
+      console.error("Failed to parse queue state:", err);
+    }
   }, [alert?.id]);
 
   const proceedQueue = () => {
@@ -70,6 +72,7 @@ export function AlertOverridePage({ current, alert }: AlertOverridePageProps) {
 
         if (nextQueue.length > 0) {
           const next = nextQueue[0];
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (navigate as any)({
             to: `/alerts/$alertId/${next.action}`,
             params: { alertId: next.alertId },
@@ -78,7 +81,9 @@ export function AlertOverridePage({ current, alert }: AlertOverridePageProps) {
           return;
         }
       }
-    } catch {}
+    } catch (err) {
+      console.error("Failed to process queue proceed:", err);
+    }
     navigate({ to: "/summary", search: { p: patient.patient_id } });
   };
 
@@ -90,9 +95,7 @@ export function AlertOverridePage({ current, alert }: AlertOverridePageProps) {
     try {
       const selectedReason = OVERRIDE_REASONS.find((r) => r.code === reasonCode);
       const reasonLabel =
-        reasonCode === "other"
-          ? otherText.trim()
-          : (selectedReason?.label ?? reasonCode);
+        reasonCode === "other" ? otherText.trim() : (selectedReason?.label ?? reasonCode);
 
       await logAction({
         data: {
@@ -107,8 +110,7 @@ export function AlertOverridePage({ current, alert }: AlertOverridePageProps) {
           visit_id: patient.encounter?.visit_id ?? "VIS-2026-001",
           snapshot: {
             cha2ds2va:
-              current.cdss.scores.cha2ds2va?.total ??
-              current.cdss.scores.cha2ds2vasc?.total,
+              current.cdss.scores.cha2ds2va?.total ?? current.cdss.scores.cha2ds2vasc?.total,
             hasbled: current.cdss.scores.hasbled?.total,
             clcr: current.cdss.scores.clcr,
             pinrr: current.cdss.scores.pinrr,

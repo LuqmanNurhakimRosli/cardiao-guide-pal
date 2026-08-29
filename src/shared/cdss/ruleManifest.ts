@@ -66,6 +66,4 @@ export const OVERRIDE_REASONS = [
 
 export type OverrideReasonCode = (typeof OVERRIDE_REASONS)[number]["code"];
 
-export const OVERRIDE_REASON_CODES = new Set<string>(
-  OVERRIDE_REASONS.map((reason) => reason.code),
-);
+export const OVERRIDE_REASON_CODES = new Set<string>(OVERRIDE_REASONS.map((reason) => reason.code));

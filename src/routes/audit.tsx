@@ -8,10 +8,7 @@ const searchSchema = z.object({ p: z.string().optional() });
 export const Route = createFileRoute("/audit")({
   validateSearch: searchSchema,
   loader: async () => {
-    const [patients, audit] = await Promise.all([
-      listPatients(),
-      getAuditLog(),
-    ]);
+    const [patients, audit] = await Promise.all([listPatients(), getAuditLog()]);
     return { patients, audit };
   },
   component: AuditRouteComponent,

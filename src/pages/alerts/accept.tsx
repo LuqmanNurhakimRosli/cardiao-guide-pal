@@ -32,9 +32,8 @@ export function AlertAcceptPage({ current, alert }: AlertAcceptPageProps) {
   const suggestedDose = alert?.action?.suggested_dose;
 
   const currentMed = suggestedMedName
-    ? patient.medications.find(
-        (m: Medication) =>
-          m.name.toLowerCase().includes(suggestedMedName.toLowerCase()),
+    ? patient.medications.find((m: Medication) =>
+        m.name.toLowerCase().includes(suggestedMedName.toLowerCase()),
       )
     : undefined;
 
@@ -57,7 +56,9 @@ export function AlertAcceptPage({ current, alert }: AlertAcceptPageProps) {
         setQueueTotal(total);
         setQueueIndex(total - queue.length + 1);
       }
-    } catch {}
+    } catch (err) {
+      console.error("Failed to parse queue state:", err);
+    }
   }, [alert?.id, suggestedDose, currentMed?.dose]);
 
   const proceedQueue = () => {
@@ -70,6 +71,7 @@ export function AlertAcceptPage({ current, alert }: AlertAcceptPageProps) {
 
         if (nextQueue.length > 0) {
           const next = nextQueue[0];
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           (navigate as any)({
             to: `/alerts/$alertId/${next.action}`,
             params: { alertId: next.alertId },
@@ -78,7 +80,9 @@ export function AlertAcceptPage({ current, alert }: AlertAcceptPageProps) {
           return;
         }
       }
-    } catch {}
+    } catch (err) {
+      console.error("Failed to process queue proceed:", err);
+    }
     navigate({ to: "/summary", search: { p: patient.patient_id } });
   };
 
@@ -94,12 +98,12 @@ export function AlertAcceptPage({ current, alert }: AlertAcceptPageProps) {
       const acceptRationale = isReevalAlert
         ? "AF clinical reevaluation completed: risk factors, stroke/bleeding risks, AF symptoms, and ongoing management plan reviewed."
         : isStrokeAlert
-        ? `Oral anticoagulation indicated (CHA₂DS₂-VA = ${current.cdss.scores.cha2ds2va?.total ?? current.cdss.scores.cha2ds2vasc?.total ?? "≥2"}). Guideline anticoagulation therapy confirmed.`
-        : isMedChange
-        ? `Prescription updated to ${suggestedMedName} ${dose}.`
-        : alert.recommendation
-        ? `Advisory recommendation accepted: ${alert.recommendation}`
-        : "Clinical recommendation accepted and incorporated into management plan.";
+          ? `Oral anticoagulation indicated (CHA₂DS₂-VA = ${current.cdss.scores.cha2ds2va?.total ?? current.cdss.scores.cha2ds2vasc?.total ?? "≥2"}). Guideline anticoagulation therapy confirmed.`
+          : isMedChange
+            ? `Prescription updated to ${suggestedMedName} ${dose}.`
+            : alert.recommendation
+              ? `Advisory recommendation accepted: ${alert.recommendation}`
+              : "Clinical recommendation accepted and incorporated into management plan.";
 
       await logAction({
         data: {
@@ -108,15 +112,12 @@ export function AlertAcceptPage({ current, alert }: AlertAcceptPageProps) {
           alert_title: alert.title,
           action: "accept",
           override_notes: acceptRationale,
-          med_change: isMedChange
-            ? { name: suggestedMedName!, new_dose: dose }
-            : undefined,
+          med_change: isMedChange ? { name: suggestedMedName!, new_dose: dose } : undefined,
           request_id: `REQ-${Date.now()}`,
           visit_id: patient.encounter?.visit_id ?? "VIS-2026-001",
           snapshot: {
             cha2ds2va:
-              current.cdss.scores.cha2ds2va?.total ??
-              current.cdss.scores.cha2ds2vasc?.total,
+              current.cdss.scores.cha2ds2va?.total ?? current.cdss.scores.cha2ds2vasc?.total,
             hasbled: current.cdss.scores.hasbled?.total,
             clcr: current.cdss.scores.clcr,
             pinrr: current.cdss.scores.pinrr,
@@ -191,9 +192,7 @@ export function AlertAcceptPage({ current, alert }: AlertAcceptPageProps) {
                   <span className="text-[10px] font-bold uppercase tracking-wider text-primary">
                     Advisory Recommendation
                   </span>
-                  <p className="text-xs font-medium text-foreground mt-1">
-                    {alert.recommendation}
-                  </p>
+                  <p className="text-xs font-medium text-foreground mt-1">{alert.recommendation}</p>
                 </div>
               )}
 
@@ -208,8 +207,15 @@ export function AlertAcceptPage({ current, alert }: AlertAcceptPageProps) {
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div className="space-y-1">
-                      <Label htmlFor="med" className="text-[11px]">Medication</Label>
-                      <Input id="med" value={suggestedMedName} readOnly className="text-xs bg-muted/50" />
+                      <Label htmlFor="med" className="text-[11px]">
+                        Medication
+                      </Label>
+                      <Input
+                        id="med"
+                        value={suggestedMedName}
+                        readOnly
+                        className="text-xs bg-muted/50"
+                      />
                     </div>
                     <div className="space-y-1">
                       <Label htmlFor="dose" className="text-[11px] font-semibold text-primary">
@@ -226,11 +232,13 @@ export function AlertAcceptPage({ current, alert }: AlertAcceptPageProps) {
                 </div>
               ) : isStrokeAlert ? (
                 <div className="rounded-md border border-border bg-muted/30 p-3 text-muted-foreground leading-relaxed">
-                  Accepting this alert will document initiation of anticoagulation therapy in accordance with guideline recommendations.
+                  Accepting this alert will document initiation of anticoagulation therapy in
+                  accordance with guideline recommendations.
                 </div>
               ) : (
                 <div className="rounded-md border border-dashed border-border p-3 text-muted-foreground">
-                  Accepting will log that this advisory was reviewed and acted upon during consultation.
+                  Accepting will log that this advisory was reviewed and acted upon during
+                  consultation.
                 </div>
               )}
 

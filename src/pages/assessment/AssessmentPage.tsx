@@ -1,10 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
-import {
-  logFieldChange,
-  logScoreCalculation,
-} from "@/shared/cdss/server.functions";
+import { logFieldChange, logScoreCalculation } from "@/shared/cdss/server.functions";
 import { usePatientState, type ClinicianInputs } from "@/pages/assessment/hooks/usePatientState";
 import { AppShell } from "@/shared/components/layout/AppShell";
 import { HasBledCalculator } from "@/pages/assessment/components/HasBledCalculator";
@@ -69,7 +67,19 @@ export function AssessmentPage({ current }: AssessmentPageProps) {
   const { patient } = current;
 
   const state = usePatientState(patient);
-  const { draft, inputs, dirty, setField, reset, saveAndRecalculate, draftCdss, cdss, loading, error, source } = state;
+  const {
+    draft,
+    inputs,
+    dirty,
+    setField,
+    reset,
+    saveAndRecalculate,
+    draftCdss,
+    cdss,
+    loading,
+    error,
+    source,
+  } = state;
 
   const logField = useServerFn(logFieldChange);
   const logScore = useServerFn(logScoreCalculation);
@@ -151,9 +161,13 @@ export function AssessmentPage({ current }: AssessmentPageProps) {
                   <span className="font-mono text-xs font-bold rounded-md bg-primary/10 px-2 py-0.5 text-primary border border-primary/20">
                     {patient.patient_id}
                   </span>
-                  <span className={`rounded-md px-2 py-0.5 text-[10px] font-bold ${
-                    isReal ? "bg-emerald-500/10 text-emerald-700 border border-emerald-500/20" : "bg-blue-500/10 text-blue-700 border border-blue-500/20"
-                  }`}>
+                  <span
+                    className={`rounded-md px-2 py-0.5 text-[10px] font-bold ${
+                      isReal
+                        ? "bg-emerald-500/10 text-emerald-700 border border-emerald-500/20"
+                        : "bg-blue-500/10 text-blue-700 border border-blue-500/20"
+                    }`}
+                  >
                     {isReal ? "HASA UiTM" : "Benchmark Case"}
                   </span>
                   {(patient as any).is_valvular && (
@@ -163,9 +177,15 @@ export function AssessmentPage({ current }: AssessmentPageProps) {
                   )}
                 </div>
                 <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
-                  <span><strong>MRN:</strong> <span className="font-mono">{patient.mrn ?? "—"}</span></span>
-                  <span><strong>Age:</strong> {patient.age_at_encounter ?? patient.age} yrs</span>
-                  <span><strong>Sex:</strong> {patient.sex}</span>
+                  <span>
+                    <strong>MRN:</strong> <span className="font-mono">{patient.mrn ?? "—"}</span>
+                  </span>
+                  <span>
+                    <strong>Age:</strong> {patient.age_at_encounter ?? patient.age} yrs
+                  </span>
+                  <span>
+                    <strong>Sex:</strong> {patient.sex}
+                  </span>
                   <span className="flex items-center gap-1">
                     <Building2 className="size-3 text-muted-foreground" />
                     {patient.clinic_location}
@@ -193,14 +213,19 @@ export function AssessmentPage({ current }: AssessmentPageProps) {
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-[280px_1fr_340px]">
           {/* LEFT: Clinical Background & Diagnoses */}
           <aside className="space-y-3">
-            <Section icon={<Stethoscope className="size-4 text-primary" />} title="Comorbidities (EMR)">
+            <Section
+              icon={<Stethoscope className="size-4 text-primary" />}
+              title="Comorbidities (EMR)"
+            >
               <div className="divide-y divide-border/60">
                 {Object.entries(patient.comorbidities).map(([k, v]) => (
                   <Row
                     key={k}
                     k={k}
                     v={
-                      <span className={`font-semibold ${v ? "text-foreground" : "text-muted-foreground/60"}`}>
+                      <span
+                        className={`font-semibold ${v ? "text-foreground" : "text-muted-foreground/60"}`}
+                      >
                         {v === undefined ? "—" : v ? "Yes" : "No"}
                       </span>
                     }
@@ -212,13 +237,17 @@ export function AssessmentPage({ current }: AssessmentPageProps) {
             <Section icon={<FileText className="size-4 text-purple-600" />} title="Diagnoses & ECG">
               <ul className="space-y-1.5">
                 {patient.diagnoses.map((d: string) => (
-                  <li key={d} className="rounded-lg bg-muted/60 px-2.5 py-1 font-mono text-[11px] text-foreground">
+                  <li
+                    key={d}
+                    className="rounded-lg bg-muted/60 px-2.5 py-1 font-mono text-[11px] text-foreground"
+                  >
                     {d}
                   </li>
                 ))}
               </ul>
               <div className="mt-2.5 rounded-lg border border-border/80 bg-background/50 p-2 text-[11px] text-muted-foreground">
-                <span className="font-semibold text-foreground">ECG Rhythm:</span> {patient.ecg_results.join(", ") || "Atrial Fibrillation"}
+                <span className="font-semibold text-foreground">ECG Rhythm:</span>{" "}
+                {patient.ecg_results.join(", ") || "Atrial Fibrillation"}
               </div>
             </Section>
 
@@ -237,10 +266,7 @@ export function AssessmentPage({ current }: AssessmentPageProps) {
           {/* CENTER: CDSS Calculation Engine & Interactive Scorers */}
           <section className="space-y-3">
             {!livecdss.clinicEligible ? (
-              <ClinicGateBanner
-                clinic={patient.clinic_location}
-                reason={livecdss.reason}
-              />
+              <ClinicGateBanner clinic={patient.clinic_location} reason={livecdss.reason} />
             ) : (
               <div className="flex items-center justify-between rounded-xl border border-emerald-500/20 bg-emerald-500/5 px-3.5 py-2.5 text-xs">
                 <div className="flex items-center gap-2">
@@ -313,7 +339,10 @@ export function AssessmentPage({ current }: AssessmentPageProps) {
             />
 
             {/* Vitals Grid */}
-            <Section icon={<Activity className="size-4 text-blue-600" />} title="Vitals & Encounters">
+            <Section
+              icon={<Activity className="size-4 text-blue-600" />}
+              title="Vitals & Encounters"
+            >
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
                 <Stat label="BP Latest" value={patient.vitals.bp_latest ?? "—"} />
                 <Stat label="BP Prior" value={patient.vitals.bp_second ?? "—"} />
@@ -325,7 +354,10 @@ export function AssessmentPage({ current }: AssessmentPageProps) {
             </Section>
 
             {/* Labs Grid */}
-            <Section icon={<FlaskConical className="size-4 text-purple-600" />} title="Laboratory Metrics & Clearance">
+            <Section
+              icon={<FlaskConical className="size-4 text-purple-600" />}
+              title="Laboratory Metrics & Clearance"
+            >
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5">
                 <Stat
                   label="Creatinine"
@@ -334,7 +366,11 @@ export function AssessmentPage({ current }: AssessmentPageProps) {
                       ? `${patient.labs.creatinine} ${patient.labs.creatinine_unit ?? "umol/L"}`
                       : "—"
                   }
-                  subLabel={patient.labs.creatinine_record?.date ? `Sample: ${patient.labs.creatinine_record.date}` : undefined}
+                  subLabel={
+                    patient.labs.creatinine_record?.date
+                      ? `Sample: ${patient.labs.creatinine_record.date}`
+                      : undefined
+                  }
                 />
                 <Stat
                   label="eGFR (Lab Report)"
@@ -342,8 +378,8 @@ export function AssessmentPage({ current }: AssessmentPageProps) {
                     patient.labs.egfr
                       ? `${patient.labs.egfr} mL/min`
                       : patient.labs.egfr_record?.value
-                      ? `${patient.labs.egfr_record.value} mL/min`
-                      : "—"
+                        ? `${patient.labs.egfr_record.value} mL/min`
+                        : "—"
                   }
                   subLabel={
                     patient.labs.egfr_record?.date
@@ -373,18 +409,14 @@ export function AssessmentPage({ current }: AssessmentPageProps) {
                     patient.labs.hba1c_record?.date
                       ? `Date: ${patient.labs.hba1c_record.date}`
                       : patient.comorbidities.diabetes
-                      ? "Diabetic"
-                      : "Non-diabetic"
+                        ? "Diabetic"
+                        : "Non-diabetic"
                   }
                   flag={(patient.labs.hba1c ?? 0) > 7.0}
                 />
                 <Stat
                   label="Warfarin PINRR"
-                  value={
-                    livecdss.scores.pinrr != null
-                      ? `${livecdss.scores.pinrr}%`
-                      : "—"
-                  }
+                  value={livecdss.scores.pinrr != null ? `${livecdss.scores.pinrr}%` : "—"}
                   subLabel="TTR Quality"
                   flag={(livecdss.scores.pinrr ?? 100) < 56}
                 />
@@ -392,7 +424,10 @@ export function AssessmentPage({ current }: AssessmentPageProps) {
             </Section>
 
             {/* Medications Summary */}
-            <Section icon={<Pill className="size-4 text-emerald-600" />} title="Current Medication Orders">
+            <Section
+              icon={<Pill className="size-4 text-emerald-600" />}
+              title="Current Medication Orders"
+            >
               <ul className="space-y-2">
                 {patient.medications.map((m: import("@/shared/cdss/types").Medication) => (
                   <li
@@ -498,7 +533,8 @@ export function AssessmentPage({ current }: AssessmentPageProps) {
                   <div className="flex items-start gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 p-2.5 text-xs text-amber-900 dark:text-amber-200">
                     <AlertTriangle className="size-4 shrink-0 text-amber-600 mt-0.5" />
                     <p className="leading-snug">
-                      <strong>Incomplete inputs:</strong> Confirm missing clinical fields before clinical action.
+                      <strong>Incomplete inputs:</strong> Confirm missing clinical fields before
+                      clinical action.
                     </p>
                   </div>
                 )}
@@ -515,7 +551,9 @@ export function AssessmentPage({ current }: AssessmentPageProps) {
                           className="rounded-lg border border-l-4 border-rose-500/30 border-l-rose-500 bg-rose-500/5 p-2.5 text-xs"
                         >
                           <p className="font-bold text-foreground leading-snug">{al.title}</p>
-                          <p className="mt-1 text-[11px] text-muted-foreground leading-relaxed">{al.detail}</p>
+                          <p className="mt-1 text-[11px] text-muted-foreground leading-relaxed">
+                            {al.detail}
+                          </p>
                         </li>
                       ))}
                     </ul>
@@ -549,11 +587,7 @@ export function AssessmentPage({ current }: AssessmentPageProps) {
                 )}
 
                 {(livecdss.alerts.length > 0 || livecdss.reminders.length > 0) && (
-                  <Link
-                    to="/alerts"
-                    search={{ p: patient.patient_id }}
-                    className="block pt-1"
-                  >
+                  <Link to="/alerts" search={{ p: patient.patient_id }} className="block pt-1">
                     <Button
                       className="w-full text-xs font-semibold shadow-xs"
                       size="sm"
@@ -645,10 +679,14 @@ function Stat({
         </div>
       </div>
       {subLabel && (
-        <div className="mt-1 text-[9.5px] text-muted-foreground truncate font-mono" title={subLabel}>
+        <div
+          className="mt-1 text-[9.5px] text-muted-foreground truncate font-mono"
+          title={subLabel}
+        >
           {subLabel}
         </div>
       )}
     </div>
   );
 }
+

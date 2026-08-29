@@ -209,7 +209,9 @@ export function AppShell({
               <p className="text-sm font-bold leading-tight tracking-tight">My HEART:AFCArE</p>
               <div className="flex items-center gap-1.5 mt-0.5">
                 <span className="inline-block size-1.5 rounded-full bg-emerald-500 animate-pulse-dot" />
-                <span className="text-[10px] font-mono text-muted-foreground">CDSS AF (2026.08.26)</span>
+                <span className="text-[10px] font-mono text-muted-foreground">
+                  CDSS AF (2026.08.26)
+                </span>
               </div>
             </div>
           </div>
@@ -249,9 +251,7 @@ export function AppShell({
           <nav className="flex-1 space-y-1 p-2.5 overflow-y-auto">
             {NAV.map((item) => {
               const active =
-                item.to === "/"
-                  ? location.pathname === "/"
-                  : location.pathname.startsWith(item.to);
+                item.to === "/" ? location.pathname === "/" : location.pathname.startsWith(item.to);
               const Icon = item.icon;
               const search = item.requiresPatient && selectedId ? { p: selectedId } : {};
               const disabled = item.requiresPatient && !selectedId;
@@ -281,7 +281,9 @@ export function AppShell({
                   }`}
                 >
                   <div className="flex items-center gap-2.5">
-                    <Icon className={`size-4 transition-transform ${active ? "scale-110" : "group-hover:scale-105"}`} />
+                    <Icon
+                      className={`size-4 transition-transform ${active ? "scale-110" : "group-hover:scale-105"}`}
+                    />
                     {item.label}
                   </div>
                   {active && <span className="size-1.5 rounded-full bg-primary-foreground" />}
@@ -334,9 +336,7 @@ export function AppShell({
           </header>
 
           {/* Content Container (padded for mobile bottom nav) */}
-          <main className="flex-1 overflow-x-hidden pb-16 md:pb-6">
-            {children}
-          </main>
+          <main className="flex-1 overflow-x-hidden pb-16 md:pb-6">{children}</main>
         </div>
       </div>
 
@@ -344,9 +344,7 @@ export function AppShell({
       <div className="fixed bottom-0 left-0 right-0 z-30 flex items-center justify-around border-t border-border bg-card/95 px-2 py-1.5 backdrop-blur-lg md:hidden">
         {MOBILE_BOTTOM_NAV.map((item) => {
           const active =
-            item.to === "/"
-              ? location.pathname === "/"
-              : location.pathname.startsWith(item.to);
+            item.to === "/" ? location.pathname === "/" : location.pathname.startsWith(item.to);
           const Icon = item.icon;
           const search = item.requiresPatient && selectedId ? { p: selectedId } : {};
           const disabled = item.requiresPatient && !selectedId;
@@ -369,9 +367,7 @@ export function AppShell({
               to={item.to}
               search={search}
               className={`flex flex-col items-center gap-0.5 rounded-lg px-3 py-1 text-[10px] font-medium transition ${
-                active
-                  ? "text-primary font-bold"
-                  : "text-muted-foreground hover:text-foreground"
+                active ? "text-primary font-bold" : "text-muted-foreground hover:text-foreground"
               }`}
             >
               <Icon className={`size-4 ${active ? "stroke-[2.5]" : ""}`} />

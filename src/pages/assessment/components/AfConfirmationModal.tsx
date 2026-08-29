@@ -27,8 +27,8 @@ export function AfConfirmationModal({
           <h2 className="text-base font-bold">AF Evidence Detected</h2>
         </div>
         <p className="mb-3 text-sm text-muted-foreground">
-          The system found evidence of Atrial Fibrillation from multiple EMR
-          sources. Please confirm the diagnosis before proceeding.
+          The system found evidence of Atrial Fibrillation from multiple EMR sources. Please confirm
+          the diagnosis before proceeding.
         </p>
         <ul className="mb-4 space-y-1 rounded border border-border bg-background p-2">
           {evidence.map((e, i) => (

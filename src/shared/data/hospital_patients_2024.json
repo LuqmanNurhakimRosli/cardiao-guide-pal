@@ -1,7 +1,7 @@
 [
   {
     "patient_id": "REAL-001",
-    "mrn": "CTC0050673",
+    "mrn": "HASA-MRN-0001",
     "name": "Zainab binti Zainal",
     "dob": "1954-06-15",
     "age": 70,
@@ -135,7 +135,7 @@
   },
   {
     "patient_id": "REAL-002",
-    "mrn": "CTC0037224",
+    "mrn": "HASA-MRN-0002",
     "name": "Fatimah binti Adnan",
     "dob": "1965-06-15",
     "age": 59,
@@ -201,7 +201,7 @@
     "labs": {
       "creatinine": 102,
       "creatinine_unit": "umol/L",
-      "hba1c": 7.0,
+      "hba1c": 7,
       "inr_history": [
         2.1,
         2.4,
@@ -215,7 +215,7 @@
         "date": "2024-04-10"
       },
       "hba1c_record": {
-        "value": 7.0,
+        "value": 7,
         "date": "2024-04-10"
       },
       "inr_results": [
@@ -257,7 +257,7 @@
   },
   {
     "patient_id": "REAL-003",
-    "mrn": "CTC0033495",
+    "mrn": "HASA-MRN-0003",
     "name": "Che Som binti Salleh",
     "dob": "1949-06-15",
     "age": 75,
@@ -303,7 +303,7 @@
     "vitals": {
       "bp_latest": "91/60",
       "bp_second": "91/60",
-      "weight": 69.0,
+      "weight": 69,
       "bp_readings": [
         {
           "value": "91/60",
@@ -315,7 +315,7 @@
         }
       ],
       "weight_record": {
-        "value": 69.0,
+        "value": 69,
         "date": "2024-04-15"
       }
     },
@@ -378,7 +378,7 @@
   },
   {
     "patient_id": "REAL-004",
-    "mrn": "CTC0000012",
+    "mrn": "HASA-MRN-0004",
     "name": "Lim Nget Ngo",
     "dob": "1948-06-15",
     "age": 76,
@@ -431,7 +431,7 @@
     "vitals": {
       "bp_latest": "136/63",
       "bp_second": "136/63",
-      "weight": 81.0,
+      "weight": 81,
       "bp_readings": [
         {
           "value": "136/63",
@@ -443,7 +443,7 @@
         }
       ],
       "weight_record": {
-        "value": 81.0,
+        "value": 81,
         "date": "2024-04-15"
       }
     },
@@ -506,7 +506,7 @@
   },
   {
     "patient_id": "REAL-005",
-    "mrn": "CTC0033495",
+    "mrn": "HASA-MRN-0003",
     "name": "Zaiton binti Bahari",
     "dob": "1949-06-15",
     "age": 75,
@@ -552,7 +552,7 @@
     "vitals": {
       "bp_latest": "91/60",
       "bp_second": "91/60",
-      "weight": 69.0,
+      "weight": 69,
       "bp_readings": [
         {
           "value": "91/60",
@@ -564,7 +564,7 @@
         }
       ],
       "weight_record": {
-        "value": 69.0,
+        "value": 69,
         "date": "2024-04-15"
       }
     },
@@ -627,7 +627,7 @@
   },
   {
     "patient_id": "REAL-006",
-    "mrn": "CTC0041649",
+    "mrn": "HASA-MRN-0005",
     "name": "Shanthi a/p Ramasamy",
     "dob": "1962-06-15",
     "age": 62,
@@ -749,7 +749,7 @@
   },
   {
     "patient_id": "REAL-007",
-    "mrn": "CTC0004435",
+    "mrn": "HASA-MRN-0006",
     "name": "Rusnah binti Basir",
     "dob": "1985-06-15",
     "age": 39,
@@ -865,7 +865,7 @@
   },
   {
     "patient_id": "REAL-008",
-    "mrn": "CTC0003513",
+    "mrn": "HASA-MRN-0007",
     "name": "Rosni binti Hashim",
     "dob": "1960-06-15",
     "age": 64,
@@ -993,7 +993,7 @@
   },
   {
     "patient_id": "REAL-009",
-    "mrn": "CTC0013909",
+    "mrn": "HASA-MRN-0008",
     "name": "Khoo Sock Ping",
     "dob": "1950-06-15",
     "age": 74,
@@ -1114,7 +1114,7 @@
   },
   {
     "patient_id": "REAL-010",
-    "mrn": "CTC0008857",
+    "mrn": "HASA-MRN-0009",
     "name": "Sarimah binti Ghazali",
     "dob": "1970-06-15",
     "age": 54,
@@ -1160,7 +1160,7 @@
     "vitals": {
       "bp_latest": "144/94",
       "bp_second": "144/94",
-      "weight": 108.0,
+      "weight": 108,
       "bp_readings": [
         {
           "value": "144/94",
@@ -1172,7 +1172,7 @@
         }
       ],
       "weight_record": {
-        "value": 108.0,
+        "value": 108,
         "date": "2024-04-15"
       }
     },
@@ -1235,7 +1235,7 @@
   },
   {
     "patient_id": "REAL-011",
-    "mrn": "CTC0037224",
+    "mrn": "HASA-MRN-0002",
     "name": "Faridah binti Hussein",
     "dob": "1965-06-15",
     "age": 59,
@@ -1301,7 +1301,7 @@
     "labs": {
       "creatinine": 102,
       "creatinine_unit": "umol/L",
-      "hba1c": 7.0,
+      "hba1c": 7,
       "inr_history": [
         2.1,
         2.4,
@@ -1315,7 +1315,7 @@
         "date": "2024-04-10"
       },
       "hba1c_record": {
-        "value": 7.0,
+        "value": 7,
         "date": "2024-04-10"
       },
       "inr_results": [
@@ -1357,7 +1357,7 @@
   },
   {
     "patient_id": "REAL-012",
-    "mrn": "CTC0033495",
+    "mrn": "HASA-MRN-0003",
     "name": "Habibah binti Ariffin",
     "dob": "1949-06-15",
     "age": 75,
@@ -1403,7 +1403,7 @@
     "vitals": {
       "bp_latest": "91/60",
       "bp_second": "91/60",
-      "weight": 69.0,
+      "weight": 69,
       "bp_readings": [
         {
           "value": "91/60",
@@ -1415,7 +1415,7 @@
         }
       ],
       "weight_record": {
-        "value": 69.0,
+        "value": 69,
         "date": "2024-04-15"
       }
     },
@@ -1478,7 +1478,7 @@
   },
   {
     "patient_id": "REAL-013",
-    "mrn": "CTC0003513",
+    "mrn": "HASA-MRN-0007",
     "name": "Latifah binti Harun",
     "dob": "1960-06-15",
     "age": 64,
@@ -1606,7 +1606,7 @@
   },
   {
     "patient_id": "REAL-014",
-    "mrn": "CTC0027324",
+    "mrn": "HASA-MRN-0010",
     "name": "Laila binti Kadir",
     "dob": "1954-06-15",
     "age": 70,
@@ -1722,7 +1722,7 @@
   },
   {
     "patient_id": "REAL-015",
-    "mrn": "CTC0022755",
+    "mrn": "HASA-MRN-0011",
     "name": "Laili binti Bakar",
     "dob": "1957-06-15",
     "age": 67,
@@ -1794,7 +1794,7 @@
     "labs": {
       "creatinine": 170,
       "creatinine_unit": "umol/L",
-      "hba1c": 8.0,
+      "hba1c": 8,
       "inr_history": [
         2.1,
         2.4,
@@ -1808,7 +1808,7 @@
         "date": "2024-04-10"
       },
       "hba1c_record": {
-        "value": 8.0,
+        "value": 8,
         "date": "2024-04-10"
       },
       "inr_results": [
@@ -1850,7 +1850,7 @@
   },
   {
     "patient_id": "REAL-016",
-    "mrn": "CTC0033749",
+    "mrn": "HASA-MRN-0012",
     "name": "Khadijah binti Idris",
     "dob": "1941-06-15",
     "age": 83,
@@ -1965,7 +1965,7 @@
   },
   {
     "patient_id": "REAL-017",
-    "mrn": "CTC0050673",
+    "mrn": "HASA-MRN-0001",
     "name": "Saodah binti Ahmad",
     "dob": "1954-06-15",
     "age": 70,
@@ -2099,7 +2099,7 @@
   },
   {
     "patient_id": "REAL-018",
-    "mrn": "CTC0011659",
+    "mrn": "HASA-MRN-0013",
     "name": "Teoh Wai Yee",
     "dob": "1956-06-15",
     "age": 68,
@@ -2226,7 +2226,7 @@
   },
   {
     "patient_id": "REAL-019",
-    "mrn": "CTC0011659",
+    "mrn": "HASA-MRN-0013",
     "name": "Liew Ah Lan",
     "dob": "1956-06-15",
     "age": 68,
@@ -2353,7 +2353,7 @@
   },
   {
     "patient_id": "REAL-020",
-    "mrn": "CTC0040428",
+    "mrn": "HASA-MRN-0014",
     "name": "Zabedah binti Abdullah",
     "dob": "1965-06-15",
     "age": 59,
@@ -2469,7 +2469,7 @@
   },
   {
     "patient_id": "REAL-021",
-    "mrn": "CTC0004435",
+    "mrn": "HASA-MRN-0006",
     "name": "Noraini binti Jaafar",
     "dob": "1985-06-15",
     "age": 39,
@@ -2585,7 +2585,7 @@
   },
   {
     "patient_id": "REAL-022",
-    "mrn": "CTC0003513",
+    "mrn": "HASA-MRN-0007",
     "name": "Mariam binti Karim",
     "dob": "1960-06-15",
     "age": 64,
@@ -2713,7 +2713,7 @@
   },
   {
     "patient_id": "REAL-023",
-    "mrn": "CTC0015732",
+    "mrn": "HASA-MRN-0015",
     "name": "Maznah binti Ismail",
     "dob": "1953-06-15",
     "age": 71,
@@ -2840,7 +2840,7 @@
   },
   {
     "patient_id": "REAL-024",
-    "mrn": "CTC0033495",
+    "mrn": "HASA-MRN-0003",
     "name": "Nurul binti Kasim",
     "dob": "1949-06-15",
     "age": 75,
@@ -2886,7 +2886,7 @@
     "vitals": {
       "bp_latest": "91/60",
       "bp_second": "91/60",
-      "weight": 69.0,
+      "weight": 69,
       "bp_readings": [
         {
           "value": "91/60",
@@ -2898,7 +2898,7 @@
         }
       ],
       "weight_record": {
-        "value": 69.0,
+        "value": 69,
         "date": "2024-04-15"
       }
     },
@@ -2961,7 +2961,7 @@
   },
   {
     "patient_id": "REAL-025",
-    "mrn": "CTC0050673",
+    "mrn": "HASA-MRN-0001",
     "name": "Rafidah binti Majid",
     "dob": "1954-06-15",
     "age": 70,
@@ -3095,7 +3095,7 @@
   },
   {
     "patient_id": "REAL-026",
-    "mrn": "CTC0000012",
+    "mrn": "HASA-MRN-0004",
     "name": "Cheah Suet Fong",
     "dob": "1948-06-15",
     "age": 76,
@@ -3148,7 +3148,7 @@
     "vitals": {
       "bp_latest": "136/63",
       "bp_second": "136/63",
-      "weight": 81.0,
+      "weight": 81,
       "bp_readings": [
         {
           "value": "136/63",
@@ -3160,7 +3160,7 @@
         }
       ],
       "weight_record": {
-        "value": 81.0,
+        "value": 81,
         "date": "2024-04-15"
       }
     },
@@ -3223,7 +3223,7 @@
   },
   {
     "patient_id": "REAL-027",
-    "mrn": "CTC0027324",
+    "mrn": "HASA-MRN-0010",
     "name": "Zaleha binti Latif",
     "dob": "1954-06-15",
     "age": 70,
@@ -3339,7 +3339,7 @@
   },
   {
     "patient_id": "REAL-028",
-    "mrn": "CTC0011659",
+    "mrn": "HASA-MRN-0013",
     "name": "Heng Yoke Chin",
     "dob": "1956-06-15",
     "age": 68,
@@ -3466,7 +3466,7 @@
   },
   {
     "patient_id": "REAL-029",
-    "mrn": "CTC0014247",
+    "mrn": "HASA-MRN-0016",
     "name": "Hanizah binti Othman",
     "dob": "1935-06-15",
     "age": 89,
@@ -3587,7 +3587,7 @@
   },
   {
     "patient_id": "REAL-030",
-    "mrn": "CTC0011659",
+    "mrn": "HASA-MRN-0013",
     "name": "Wong Hui Min",
     "dob": "1956-06-15",
     "age": 68,
@@ -3714,7 +3714,7 @@
   },
   {
     "patient_id": "REAL-031",
-    "mrn": "CTC0050673",
+    "mrn": "HASA-MRN-0001",
     "name": "Haslinda binti Osman",
     "dob": "1954-06-15",
     "age": 70,
@@ -3848,7 +3848,7 @@
   },
   {
     "patient_id": "REAL-032",
-    "mrn": "CTC0003513",
+    "mrn": "HASA-MRN-0007",
     "name": "Rohana binti Zakaria",
     "dob": "1960-06-15",
     "age": 64,
@@ -3976,7 +3976,7 @@
   },
   {
     "patient_id": "REAL-033",
-    "mrn": "CTC0027324",
+    "mrn": "HASA-MRN-0010",
     "name": "Rokiah binti Nordin",
     "dob": "1954-06-15",
     "age": 70,
@@ -4092,7 +4092,7 @@
   },
   {
     "patient_id": "REAL-034",
-    "mrn": "CTC0011659",
+    "mrn": "HASA-MRN-0013",
     "name": "Lim Shook Wah",
     "dob": "1956-06-15",
     "age": 68,
@@ -4219,7 +4219,7 @@
   },
   {
     "patient_id": "REAL-035",
-    "mrn": "CTC0033495",
+    "mrn": "HASA-MRN-0003",
     "name": "Sapiah binti Hassan",
     "dob": "1949-06-15",
     "age": 75,
@@ -4265,7 +4265,7 @@
     "vitals": {
       "bp_latest": "91/60",
       "bp_second": "91/60",
-      "weight": 69.0,
+      "weight": 69,
       "bp_readings": [
         {
           "value": "91/60",
@@ -4277,7 +4277,7 @@
         }
       ],
       "weight_record": {
-        "value": 69.0,
+        "value": 69,
         "date": "2024-04-15"
       }
     },
@@ -4340,7 +4340,7 @@
   },
   {
     "patient_id": "REAL-036",
-    "mrn": "CTC0033495",
+    "mrn": "HASA-MRN-0003",
     "name": "Tijah binti Omar",
     "dob": "1949-06-15",
     "age": 75,
@@ -4386,7 +4386,7 @@
     "vitals": {
       "bp_latest": "91/60",
       "bp_second": "91/60",
-      "weight": 69.0,
+      "weight": 69,
       "bp_readings": [
         {
           "value": "91/60",
@@ -4398,7 +4398,7 @@
         }
       ],
       "weight_record": {
-        "value": 69.0,
+        "value": 69,
         "date": "2024-04-15"
       }
     },
@@ -4461,7 +4461,7 @@
   },
   {
     "patient_id": "REAL-037",
-    "mrn": "CTC0040428",
+    "mrn": "HASA-MRN-0014",
     "name": "Ummi binti Samad",
     "dob": "1965-06-15",
     "age": 59,
@@ -4577,7 +4577,7 @@
   },
   {
     "patient_id": "REAL-038",
-    "mrn": "CTC0048615",
+    "mrn": "HASA-MRN-0017",
     "name": "Hasnah binti Ramli",
     "dob": "1954-06-15",
     "age": 70,
@@ -4699,7 +4699,7 @@
   },
   {
     "patient_id": "REAL-039",
-    "mrn": "CTC0014247",
+    "mrn": "HASA-MRN-0016",
     "name": "Jamaliah binti Razak",
     "dob": "1935-06-15",
     "age": 89,
@@ -4820,7 +4820,7 @@
   },
   {
     "patient_id": "REAL-040",
-    "mrn": "CTC0033495",
+    "mrn": "HASA-MRN-0003",
     "name": "Mastura binti Talib",
     "dob": "1949-06-15",
     "age": 75,
@@ -4866,7 +4866,7 @@
     "vitals": {
       "bp_latest": "91/60",
       "bp_second": "91/60",
-      "weight": 69.0,
+      "weight": 69,
       "bp_readings": [
         {
           "value": "91/60",
@@ -4878,7 +4878,7 @@
         }
       ],
       "weight_record": {
-        "value": 69.0,
+        "value": 69,
         "date": "2024-04-15"
       }
     },
@@ -4941,7 +4941,7 @@
   },
   {
     "patient_id": "REAL-041",
-    "mrn": "CTC0033495",
+    "mrn": "HASA-MRN-0003",
     "name": "Minah binti Ibrahim",
     "dob": "1949-06-15",
     "age": 75,
@@ -4987,7 +4987,7 @@
     "vitals": {
       "bp_latest": "91/60",
       "bp_second": "91/60",
-      "weight": 69.0,
+      "weight": 69,
       "bp_readings": [
         {
           "value": "91/60",
@@ -4999,7 +4999,7 @@
         }
       ],
       "weight_record": {
-        "value": 69.0,
+        "value": 69,
         "date": "2024-04-15"
       }
     },
@@ -5062,7 +5062,7 @@
   },
   {
     "patient_id": "REAL-042",
-    "mrn": "CTC0050673",
+    "mrn": "HASA-MRN-0001",
     "name": "Munah binti Sulaiman",
     "dob": "1954-06-15",
     "age": 70,
@@ -5196,7 +5196,7 @@
   },
   {
     "patient_id": "REAL-043",
-    "mrn": "CTC0048615",
+    "mrn": "HASA-MRN-0017",
     "name": "Fuziah binti Wahab",
     "dob": "1954-06-15",
     "age": 70,
@@ -5318,7 +5318,7 @@
   },
   {
     "patient_id": "REAL-044",
-    "mrn": "CTC0033495",
+    "mrn": "HASA-MRN-0003",
     "name": "Sharifah binti Ali",
     "dob": "1949-06-15",
     "age": 75,
@@ -5364,7 +5364,7 @@
     "vitals": {
       "bp_latest": "91/60",
       "bp_second": "91/60",
-      "weight": 69.0,
+      "weight": 69,
       "bp_readings": [
         {
           "value": "91/60",
@@ -5376,7 +5376,7 @@
         }
       ],
       "weight_record": {
-        "value": 69.0,
+        "value": 69,
         "date": "2024-04-15"
       }
     },
@@ -5439,7 +5439,7 @@
   },
   {
     "patient_id": "REAL-045",
-    "mrn": "CTC0000012",
+    "mrn": "HASA-MRN-0004",
     "name": "Chia Mei Ling",
     "dob": "1948-06-15",
     "age": 76,
@@ -5492,7 +5492,7 @@
     "vitals": {
       "bp_latest": "136/63",
       "bp_second": "136/63",
-      "weight": 81.0,
+      "weight": 81,
       "bp_readings": [
         {
           "value": "136/63",
@@ -5504,7 +5504,7 @@
         }
       ],
       "weight_record": {
-        "value": 81.0,
+        "value": 81,
         "date": "2024-04-15"
       }
     },
@@ -5567,7 +5567,7 @@
   },
   {
     "patient_id": "REAL-046",
-    "mrn": "CTC0037224",
+    "mrn": "HASA-MRN-0002",
     "name": "Azlina binti Yunus",
     "dob": "1965-06-15",
     "age": 59,
@@ -5633,7 +5633,7 @@
     "labs": {
       "creatinine": 102,
       "creatinine_unit": "umol/L",
-      "hba1c": 7.0,
+      "hba1c": 7,
       "inr_history": [
         2.1,
         2.4,
@@ -5647,7 +5647,7 @@
         "date": "2024-04-10"
       },
       "hba1c_record": {
-        "value": 7.0,
+        "value": 7,
         "date": "2024-04-10"
       },
       "inr_results": [
@@ -5689,7 +5689,7 @@
   },
   {
     "patient_id": "REAL-047",
-    "mrn": "CTC0051937",
+    "mrn": "HASA-MRN-0018",
     "name": "Lee Yoke Lan",
     "dob": "1960-06-15",
     "age": 64,
@@ -5810,7 +5810,7 @@
   },
   {
     "patient_id": "REAL-048",
-    "mrn": "CTC0033749",
+    "mrn": "HASA-MRN-0012",
     "name": "Siti binti Yahya",
     "dob": "1941-06-15",
     "age": 83,
@@ -5925,7 +5925,7 @@
   },
   {
     "patient_id": "REAL-049",
-    "mrn": "CTC0021962",
+    "mrn": "HASA-MRN-0019",
     "name": "Norlia binti Zubir",
     "dob": "1960-06-15",
     "age": 64,
@@ -6065,7 +6065,7 @@
   },
   {
     "patient_id": "REAL-050",
-    "mrn": "CTC0000012",
+    "mrn": "HASA-MRN-0004",
     "name": "Tee Poh Sim",
     "dob": "1948-06-15",
     "age": 76,
@@ -6118,7 +6118,7 @@
     "vitals": {
       "bp_latest": "136/63",
       "bp_second": "136/63",
-      "weight": 81.0,
+      "weight": 81,
       "bp_readings": [
         {
           "value": "136/63",
@@ -6130,7 +6130,7 @@
         }
       ],
       "weight_record": {
-        "value": 81.0,
+        "value": 81,
         "date": "2024-04-15"
       }
     },
@@ -6193,7 +6193,7 @@
   },
   {
     "patient_id": "REAL-051",
-    "mrn": "CTC0048615",
+    "mrn": "HASA-MRN-0017",
     "name": "Rabiatul binti Zainal",
     "dob": "1954-06-15",
     "age": 70,
@@ -6315,7 +6315,7 @@
   },
   {
     "patient_id": "REAL-052",
-    "mrn": "CTC0050673",
+    "mrn": "HASA-MRN-0001",
     "name": "Rubiah binti Adnan",
     "dob": "1954-06-15",
     "age": 70,
@@ -6449,7 +6449,7 @@
   },
   {
     "patient_id": "REAL-053",
-    "mrn": "CTC0053155",
+    "mrn": "HASA-MRN-0020",
     "name": "Rukiah binti Salleh",
     "dob": "1954-06-15",
     "age": 70,
@@ -6490,7 +6490,7 @@
     "vitals": {
       "bp_latest": "/",
       "bp_second": "/",
-      "weight": 53.0,
+      "weight": 53,
       "bp_readings": [
         {
           "value": "/",
@@ -6502,7 +6502,7 @@
         }
       ],
       "weight_record": {
-        "value": 53.0,
+        "value": 53,
         "date": "2024-04-15"
       }
     },
@@ -6565,7 +6565,7 @@
   },
   {
     "patient_id": "REAL-054",
-    "mrn": "CTC0021962",
+    "mrn": "HASA-MRN-0019",
     "name": "Azizah binti Aziz",
     "dob": "1960-06-15",
     "age": 64,
@@ -6705,7 +6705,7 @@
   },
   {
     "patient_id": "REAL-055",
-    "mrn": "CTC0008857",
+    "mrn": "HASA-MRN-0009",
     "name": "Fauziah binti Bahari",
     "dob": "1970-06-15",
     "age": 54,
@@ -6751,7 +6751,7 @@
     "vitals": {
       "bp_latest": "144/94",
       "bp_second": "144/94",
-      "weight": 108.0,
+      "weight": 108,
       "bp_readings": [
         {
           "value": "144/94",
@@ -6763,7 +6763,7 @@
         }
       ],
       "weight_record": {
-        "value": 108.0,
+        "value": 108,
         "date": "2024-04-15"
       }
     },
@@ -6826,7 +6826,7 @@
   },
   {
     "patient_id": "REAL-056",
-    "mrn": "CTC0003513",
+    "mrn": "HASA-MRN-0007",
     "name": "Jamilah binti Mahmud",
     "dob": "1960-06-15",
     "age": 64,
@@ -7082,7 +7082,7 @@
   },
   {
     "patient_id": "REAL-058",
-    "mrn": "CTC0050673",
+    "mrn": "HASA-MRN-0001",
     "name": "Kamaliza binti Hashim",
     "dob": "1954-06-15",
     "age": 70,
@@ -7216,7 +7216,7 @@
   },
   {
     "patient_id": "REAL-059",
-    "mrn": "CTC0033749",
+    "mrn": "HASA-MRN-0012",
     "name": "Halimah binti Daud",
     "dob": "1941-06-15",
     "age": 83,
@@ -7331,7 +7331,7 @@
   },
   {
     "patient_id": "REAL-060",
-    "mrn": "CTC0050673",
+    "mrn": "HASA-MRN-0001",
     "name": "Rosnah binti Ghazali",
     "dob": "1954-06-15",
     "age": 70,
@@ -7465,7 +7465,7 @@
   },
   {
     "patient_id": "REAL-061",
-    "mrn": "CTC0044213",
+    "mrn": "HASA-MRN-0021",
     "name": "Jayanthi a/p Velu",
     "dob": "1946-06-15",
     "age": 78,
@@ -7581,7 +7581,7 @@
   },
   {
     "patient_id": "REAL-062",
-    "mrn": "CTC0027324",
+    "mrn": "HASA-MRN-0010",
     "name": "Sufiah binti Ariffin",
     "dob": "1954-06-15",
     "age": 70,
@@ -7697,7 +7697,7 @@
   },
   {
     "patient_id": "REAL-063",
-    "mrn": "CTC0011659",
+    "mrn": "HASA-MRN-0013",
     "name": "Chua Li Kuan",
     "dob": "1956-06-15",
     "age": 68,
@@ -7824,7 +7824,7 @@
   },
   {
     "patient_id": "REAL-064",
-    "mrn": "CTC0021962",
+    "mrn": "HASA-MRN-0019",
     "name": "Zainon binti Kadir",
     "dob": "1960-06-15",
     "age": 64,
@@ -7964,7 +7964,7 @@
   },
   {
     "patient_id": "REAL-065",
-    "mrn": "CTC0002857",
+    "mrn": "HASA-MRN-0022",
     "name": "Maimunah binti Bakar",
     "dob": "1955-06-15",
     "age": 69,
@@ -8092,7 +8092,7 @@
   },
   {
     "patient_id": "REAL-066",
-    "mrn": "CTC0003513",
+    "mrn": "HASA-MRN-0007",
     "name": "Kamariah binti Idris",
     "dob": "1960-06-15",
     "age": 64,
@@ -8220,7 +8220,7 @@
   },
   {
     "patient_id": "REAL-067",
-    "mrn": "CTC0048615",
+    "mrn": "HASA-MRN-0017",
     "name": "Noraziah binti Ahmad",
     "dob": "1954-06-15",
     "age": 70,
@@ -8342,7 +8342,7 @@
   },
   {
     "patient_id": "REAL-068",
-    "mrn": "CTC0014247",
+    "mrn": "HASA-MRN-0016",
     "name": "Noriah binti Hamzah",
     "dob": "1935-06-15",
     "age": 89,
@@ -8463,7 +8463,7 @@
   },
   {
     "patient_id": "REAL-069",
-    "mrn": "CTC0022755",
+    "mrn": "HASA-MRN-0011",
     "name": "Norlela binti Jalil",
     "dob": "1957-06-15",
     "age": 67,
@@ -8535,7 +8535,7 @@
     "labs": {
       "creatinine": 170,
       "creatinine_unit": "umol/L",
-      "hba1c": 8.0,
+      "hba1c": 8,
       "inr_history": [
         2.1,
         2.4,
@@ -8549,7 +8549,7 @@
         "date": "2024-04-10"
       },
       "hba1c_record": {
-        "value": 8.0,
+        "value": 8,
         "date": "2024-04-10"
       },
       "inr_results": [
@@ -8591,7 +8591,7 @@
   },
   {
     "patient_id": "REAL-070",
-    "mrn": "CTC0000012",
+    "mrn": "HASA-MRN-0004",
     "name": "Lau Fong Meng",
     "dob": "1948-06-15",
     "age": 76,
@@ -8644,7 +8644,7 @@
     "vitals": {
       "bp_latest": "136/63",
       "bp_second": "136/63",
-      "weight": 81.0,
+      "weight": 81,
       "bp_readings": [
         {
           "value": "136/63",
@@ -8656,7 +8656,7 @@
         }
       ],
       "weight_record": {
-        "value": 81.0,
+        "value": 81,
         "date": "2024-04-15"
       }
     },
@@ -8719,7 +8719,7 @@
   },
   {
     "patient_id": "REAL-071",
-    "mrn": "CTC0011659",
+    "mrn": "HASA-MRN-0013",
     "name": "Tay Kew Moy",
     "dob": "1956-06-15",
     "age": 68,
@@ -8846,7 +8846,7 @@
   },
   {
     "patient_id": "REAL-072",
-    "mrn": "CTC0037224",
+    "mrn": "HASA-MRN-0002",
     "name": "Fatimah binti Karim",
     "dob": "1965-06-15",
     "age": 59,
@@ -8912,7 +8912,7 @@
     "labs": {
       "creatinine": 102,
       "creatinine_unit": "umol/L",
-      "hba1c": 7.0,
+      "hba1c": 7,
       "inr_history": [
         2.1,
         2.4,
@@ -8926,7 +8926,7 @@
         "date": "2024-04-10"
       },
       "hba1c_record": {
-        "value": 7.0,
+        "value": 7,
         "date": "2024-04-10"
       },
       "inr_results": [
@@ -8968,7 +8968,7 @@
   },
   {
     "patient_id": "REAL-073",
-    "mrn": "CTC0021962",
+    "mrn": "HASA-MRN-0019",
     "name": "Che Som binti Ismail",
     "dob": "1960-06-15",
     "age": 64,
@@ -9108,7 +9108,7 @@
   },
   {
     "patient_id": "REAL-074",
-    "mrn": "CTC0015732",
+    "mrn": "HASA-MRN-0015",
     "name": "Che Mah binti Kasim",
     "dob": "1953-06-15",
     "age": 71,
@@ -9235,7 +9235,7 @@
   },
   {
     "patient_id": "REAL-075",
-    "mrn": "CTC0050673",
+    "mrn": "HASA-MRN-0001",
     "name": "Zaiton binti Majid",
     "dob": "1954-06-15",
     "age": 70,
@@ -9369,7 +9369,7 @@
   },
   {
     "patient_id": "REAL-076",
-    "mrn": "CTC0048615",
+    "mrn": "HASA-MRN-0017",
     "name": "Rahmah binti Yusof",
     "dob": "1954-06-15",
     "age": 70,
@@ -9491,7 +9491,7 @@
   },
   {
     "patient_id": "REAL-077",
-    "mrn": "CTC0054300",
+    "mrn": "HASA-MRN-0023",
     "name": "Rusnah binti Latif",
     "dob": "1963-06-15",
     "age": 61,
@@ -9607,7 +9607,7 @@
   },
   {
     "patient_id": "REAL-078",
-    "mrn": "CTC0027324",
+    "mrn": "HASA-MRN-0010",
     "name": "Rosni binti Nasir",
     "dob": "1954-06-15",
     "age": 70,
@@ -9723,7 +9723,7 @@
   },
   {
     "patient_id": "REAL-079",
-    "mrn": "CTC0011659",
+    "mrn": "HASA-MRN-0013",
     "name": "Liew Chin Bee",
     "dob": "1956-06-15",
     "age": 68,
@@ -9850,7 +9850,7 @@
   },
   {
     "patient_id": "REAL-080",
-    "mrn": "CTC0015732",
+    "mrn": "HASA-MRN-0015",
     "name": "Sarimah binti Mansor",
     "dob": "1953-06-15",
     "age": 71,
@@ -9977,7 +9977,7 @@
   },
   {
     "patient_id": "REAL-081",
-    "mrn": "CTC0013909",
+    "mrn": "HASA-MRN-0008",
     "name": "Tan Hwee Lan",
     "dob": "1950-06-15",
     "age": 74,
@@ -10098,7 +10098,7 @@
   },
   {
     "patient_id": "REAL-082",
-    "mrn": "CTC0048615",
+    "mrn": "HASA-MRN-0017",
     "name": "Habibah binti Zakaria",
     "dob": "1954-06-15",
     "age": 70,
@@ -10220,7 +10220,7 @@
   },
   {
     "patient_id": "REAL-083",
-    "mrn": "CTC0014247",
+    "mrn": "HASA-MRN-0016",
     "name": "Latifah binti Nordin",
     "dob": "1935-06-15",
     "age": 89,
@@ -10341,7 +10341,7 @@
   },
   {
     "patient_id": "REAL-084",
-    "mrn": "CTC0022755",
+    "mrn": "HASA-MRN-0011",
     "name": "Laila binti Radzi",
     "dob": "1957-06-15",
     "age": 67,
@@ -10413,7 +10413,7 @@
     "labs": {
       "creatinine": 170,
       "creatinine_unit": "umol/L",
-      "hba1c": 8.0,
+      "hba1c": 8,
       "inr_history": [
         2.1,
         2.4,
@@ -10427,7 +10427,7 @@
         "date": "2024-04-10"
       },
       "hba1c_record": {
-        "value": 8.0,
+        "value": 8,
         "date": "2024-04-10"
       },
       "inr_results": [
@@ -10469,7 +10469,7 @@
   },
   {
     "patient_id": "REAL-085",
-    "mrn": "CTC0003513",
+    "mrn": "HASA-MRN-0007",
     "name": "Laili binti Hassan",
     "dob": "1960-06-15",
     "age": 64,
@@ -10597,7 +10597,7 @@
   },
   {
     "patient_id": "REAL-086",
-    "mrn": "CTC0011659",
+    "mrn": "HASA-MRN-0013",
     "name": "Cheah Siew Hua",
     "dob": "1956-06-15",
     "age": 68,
@@ -10724,7 +10724,7 @@
   },
   {
     "patient_id": "REAL-087",
-    "mrn": "CTC0041649",
+    "mrn": "HASA-MRN-0005",
     "name": "Anjalai a/p Govindasamy",
     "dob": "1962-06-15",
     "age": 62,
@@ -10846,7 +10846,7 @@
   },
   {
     "patient_id": "REAL-088",
-    "mrn": "CTC0050673",
+    "mrn": "HASA-MRN-0001",
     "name": "Zaharah binti Ramli",
     "dob": "1954-06-15",
     "age": 70,
@@ -10980,7 +10980,7 @@
   },
   {
     "patient_id": "REAL-089",
-    "mrn": "CTC0033749",
+    "mrn": "HASA-MRN-0012",
     "name": "Zakiah binti Razak",
     "dob": "1941-06-15",
     "age": 83,
@@ -11095,7 +11095,7 @@
   },
   {
     "patient_id": "REAL-090",
-    "mrn": "CTC0027324",
+    "mrn": "HASA-MRN-0010",
     "name": "Zabedah binti Talib",
     "dob": "1954-06-15",
     "age": 70,
@@ -11211,7 +11211,7 @@
   },
   {
     "patient_id": "REAL-091",
-    "mrn": "CTC0048615",
+    "mrn": "HASA-MRN-0017",
     "name": "Noraini binti Ibrahim",
     "dob": "1954-06-15",
     "age": 70,
@@ -11333,7 +11333,7 @@
   },
   {
     "patient_id": "REAL-092",
-    "mrn": "CTC0003513",
+    "mrn": "HASA-MRN-0007",
     "name": "Mariam binti Sulaiman",
     "dob": "1960-06-15",
     "age": 64,
@@ -11461,7 +11461,7 @@
   },
   {
     "patient_id": "REAL-093",
-    "mrn": "CTC0000012",
+    "mrn": "HASA-MRN-0004",
     "name": "Chua Pek Sim",
     "dob": "1948-06-15",
     "age": 76,
@@ -11514,7 +11514,7 @@
     "vitals": {
       "bp_latest": "136/63",
       "bp_second": "136/63",
-      "weight": 81.0,
+      "weight": 81,
       "bp_readings": [
         {
           "value": "136/63",
@@ -11526,7 +11526,7 @@
         }
       ],
       "weight_record": {
-        "value": 81.0,
+        "value": 81,
         "date": "2024-04-15"
       }
     },
@@ -11589,7 +11589,7 @@
   },
   {
     "patient_id": "REAL-094",
-    "mrn": "CTC0022755",
+    "mrn": "HASA-MRN-0011",
     "name": "Nurul binti Ali",
     "dob": "1957-06-15",
     "age": 67,
@@ -11661,7 +11661,7 @@
     "labs": {
       "creatinine": 170,
       "creatinine_unit": "umol/L",
-      "hba1c": 8.0,
+      "hba1c": 8,
       "inr_history": [
         2.1,
         2.4,
@@ -11675,7 +11675,7 @@
         "date": "2024-04-10"
       },
       "hba1c_record": {
-        "value": 8.0,
+        "value": 8,
         "date": "2024-04-10"
       },
       "inr_results": [
@@ -11717,7 +11717,7 @@
   },
   {
     "patient_id": "REAL-095",
-    "mrn": "CTC0021962",
+    "mrn": "HASA-MRN-0019",
     "name": "Rafidah binti Taib",
     "dob": "1960-06-15",
     "age": 64,
@@ -11857,7 +11857,7 @@
   },
   {
     "patient_id": "REAL-096",
-    "mrn": "CTC0025977",
+    "mrn": "HASA-MRN-0024",
     "name": "Ramlah binti Yunus",
     "dob": "1947-06-15",
     "age": 77,
@@ -11910,7 +11910,7 @@
     "vitals": {
       "bp_latest": "145/66",
       "bp_second": "145/66",
-      "weight": 62.0,
+      "weight": 62,
       "bp_readings": [
         {
           "value": "145/66",
@@ -11922,7 +11922,7 @@
         }
       ],
       "weight_record": {
-        "value": 62.0,
+        "value": 62,
         "date": "2024-04-15"
       }
     },
@@ -11985,7 +11985,7 @@
   },
   {
     "patient_id": "REAL-097",
-    "mrn": "CTC0017648",
+    "mrn": "HASA-MRN-0025",
     "name": "Zaleha binti Mohamad",
     "dob": "1959-06-15",
     "age": 65,
@@ -12107,7 +12107,7 @@
   },
   {
     "patient_id": "REAL-098",
-    "mrn": "CTC0013909",
+    "mrn": "HASA-MRN-0008",
     "name": "Soo Chwee Tin",
     "dob": "1950-06-15",
     "age": 74,
@@ -12228,7 +12228,7 @@
   },
   {
     "patient_id": "REAL-099",
-    "mrn": "CTC0014247",
+    "mrn": "HASA-MRN-0016",
     "name": "Hanizah binti Zubir",
     "dob": "1935-06-15",
     "age": 89,
@@ -12349,7 +12349,7 @@
   },
   {
     "patient_id": "REAL-100",
-    "mrn": "CTC0041649",
+    "mrn": "HASA-MRN-0005",
     "name": "Meenachi a/p Krishnan",
     "dob": "1962-06-15",
     "age": 62,
@@ -12471,7 +12471,7 @@
   },
   {
     "patient_id": "REAL-101",
-    "mrn": "CTC0015732",
+    "mrn": "HASA-MRN-0015",
     "name": "Haslinda binti Zainal",
     "dob": "1953-06-15",
     "age": 71,
@@ -12598,7 +12598,7 @@
   },
   {
     "patient_id": "REAL-102",
-    "mrn": "CTC0022755",
+    "mrn": "HASA-MRN-0011",
     "name": "Rohana binti Adnan",
     "dob": "1957-06-15",
     "age": 67,
@@ -12670,7 +12670,7 @@
     "labs": {
       "creatinine": 170,
       "creatinine_unit": "umol/L",
-      "hba1c": 8.0,
+      "hba1c": 8,
       "inr_history": [
         2.1,
         2.4,
@@ -12684,7 +12684,7 @@
         "date": "2024-04-10"
       },
       "hba1c_record": {
-        "value": 8.0,
+        "value": 8,
         "date": "2024-04-10"
       },
       "inr_results": [
@@ -12726,7 +12726,7 @@
   },
   {
     "patient_id": "REAL-103",
-    "mrn": "CTC0000012",
+    "mrn": "HASA-MRN-0004",
     "name": "Ng Moy Lan",
     "dob": "1948-06-15",
     "age": 76,
@@ -12779,7 +12779,7 @@
     "vitals": {
       "bp_latest": "136/63",
       "bp_second": "136/63",
-      "weight": 81.0,
+      "weight": 81,
       "bp_readings": [
         {
           "value": "136/63",
@@ -12791,7 +12791,7 @@
         }
       ],
       "weight_record": {
-        "value": 81.0,
+        "value": 81,
         "date": "2024-04-15"
       }
     },
@@ -12854,7 +12854,7 @@
   },
   {
     "patient_id": "REAL-104",
-    "mrn": "CTC0025977",
+    "mrn": "HASA-MRN-0024",
     "name": "Sabariah binti Aziz",
     "dob": "1947-06-15",
     "age": 77,
@@ -12907,7 +12907,7 @@
     "vitals": {
       "bp_latest": "145/66",
       "bp_second": "145/66",
-      "weight": 62.0,
+      "weight": 62,
       "bp_readings": [
         {
           "value": "145/66",
@@ -12919,7 +12919,7 @@
         }
       ],
       "weight_record": {
-        "value": 62.0,
+        "value": 62,
         "date": "2024-04-15"
       }
     },
@@ -12982,7 +12982,7 @@
   },
   {
     "patient_id": "REAL-105",
-    "mrn": "CTC0015732",
+    "mrn": "HASA-MRN-0015",
     "name": "Sapiah binti Bahari",
     "dob": "1953-06-15",
     "age": 71,
@@ -13109,7 +13109,7 @@
   },
   {
     "patient_id": "REAL-106",
-    "mrn": "CTC0013909",
+    "mrn": "HASA-MRN-0008",
     "name": "Ang Wai Fong",
     "dob": "1950-06-15",
     "age": 74,
@@ -13230,7 +13230,7 @@
   },
   {
     "patient_id": "REAL-107",
-    "mrn": "CTC0033749",
+    "mrn": "HASA-MRN-0012",
     "name": "Ummi binti Basir",
     "dob": "1941-06-15",
     "age": 83,
@@ -13345,7 +13345,7 @@
   },
   {
     "patient_id": "REAL-108",
-    "mrn": "CTC0014247",
+    "mrn": "HASA-MRN-0016",
     "name": "Hasnah binti Hashim",
     "dob": "1935-06-15",
     "age": 89,
@@ -13466,7 +13466,7 @@
   },
   {
     "patient_id": "REAL-109",
-    "mrn": "CTC0040428",
+    "mrn": "HASA-MRN-0014",
     "name": "Jamaliah binti Daud",
     "dob": "1965-06-15",
     "age": 59,
@@ -13582,7 +13582,7 @@
   },
   {
     "patient_id": "REAL-110",
-    "mrn": "CTC0011659",
+    "mrn": "HASA-MRN-0013",
     "name": "Tee Chai Hong",
     "dob": "1956-06-15",
     "age": 68,
@@ -13709,7 +13709,7 @@
   },
   {
     "patient_id": "REAL-111",
-    "mrn": "CTC0015732",
+    "mrn": "HASA-MRN-0015",
     "name": "Minah binti Hussein",
     "dob": "1953-06-15",
     "age": 71,
@@ -13836,7 +13836,7 @@
   },
   {
     "patient_id": "REAL-112",
-    "mrn": "CTC0013909",
+    "mrn": "HASA-MRN-0008",
     "name": "Chan Li Ching",
     "dob": "1950-06-15",
     "age": 74,
@@ -13957,7 +13957,7 @@
   },
   {
     "patient_id": "REAL-113",
-    "mrn": "CTC0014247",
+    "mrn": "HASA-MRN-0016",
     "name": "Fuziah binti Harun",
     "dob": "1935-06-15",
     "age": 89,
@@ -14078,7 +14078,7 @@
   },
   {
     "patient_id": "REAL-114",
-    "mrn": "CTC0048615",
+    "mrn": "HASA-MRN-0017",
     "name": "Sharifah binti Kadir",
     "dob": "1954-06-15",
     "age": 70,
@@ -14200,7 +14200,7 @@
   },
   {
     "patient_id": "REAL-115",
-    "mrn": "CTC0054300",
+    "mrn": "HASA-MRN-0023",
     "name": "Asmah binti Bakar",
     "dob": "1963-06-15",
     "age": 61,
@@ -14316,7 +14316,7 @@
   },
   {
     "patient_id": "REAL-116",
-    "mrn": "CTC0054940",
+    "mrn": "HASA-MRN-0026",
     "name": "Azlina binti Idris",
     "dob": "1973-06-15",
     "age": 51,
@@ -14437,7 +14437,7 @@
   },
   {
     "patient_id": "REAL-117",
-    "mrn": "CTC0022755",
+    "mrn": "HASA-MRN-0011",
     "name": "Aini binti Ahmad",
     "dob": "1957-06-15",
     "age": 67,
@@ -14509,7 +14509,7 @@
     "labs": {
       "creatinine": 170,
       "creatinine_unit": "umol/L",
-      "hba1c": 8.0,
+      "hba1c": 8,
       "inr_history": [
         2.1,
         2.4,
@@ -14523,7 +14523,7 @@
         "date": "2024-04-10"
       },
       "hba1c_record": {
-        "value": 8.0,
+        "value": 8,
         "date": "2024-04-10"
       },
       "inr_results": [
@@ -14565,7 +14565,7 @@
   },
   {
     "patient_id": "REAL-118",
-    "mrn": "CTC0020966",
+    "mrn": "HASA-MRN-0027",
     "name": "Siti binti Hamzah",
     "dob": "1975-06-15",
     "age": 49,
@@ -14681,7 +14681,7 @@
   },
   {
     "patient_id": "REAL-119",
-    "mrn": "CTC0048615",
+    "mrn": "HASA-MRN-0017",
     "name": "Norlia binti Jalil",
     "dob": "1954-06-15",
     "age": 70,
@@ -14803,7 +14803,7 @@
   },
   {
     "patient_id": "REAL-120",
-    "mrn": "CTC0013016",
+    "mrn": "HASA-MRN-0028",
     "name": "Wong Fong Meng",
     "dob": "1969-06-15",
     "age": 55,
@@ -14925,7 +14925,7 @@
   },
   {
     "patient_id": "REAL-121",
-    "mrn": "CTC0054940",
+    "mrn": "HASA-MRN-0026",
     "name": "Rabiatul binti Jaafar",
     "dob": "1973-06-15",
     "age": 51,
@@ -15046,7 +15046,7 @@
   },
   {
     "patient_id": "REAL-122",
-    "mrn": "CTC0038511",
+    "mrn": "HASA-MRN-0029",
     "name": "Rubiah binti Karim",
     "dob": "1964-06-15",
     "age": 60,
@@ -15104,7 +15104,7 @@
     "vitals": {
       "bp_latest": "129/80",
       "bp_second": "129/80",
-      "weight": 57.0,
+      "weight": 57,
       "bp_readings": [
         {
           "value": "129/80",
@@ -15116,7 +15116,7 @@
         }
       ],
       "weight_record": {
-        "value": 57.0,
+        "value": 57,
         "date": "2024-04-15"
       }
     },
@@ -15179,7 +15179,7 @@
   },
   {
     "patient_id": "REAL-123",
-    "mrn": "CTC0011659",
+    "mrn": "HASA-MRN-0013",
     "name": "Chua Choo Eng",
     "dob": "1956-06-15",
     "age": 68,
@@ -15306,7 +15306,7 @@
   },
   {
     "patient_id": "REAL-124",
-    "mrn": "CTC0048615",
+    "mrn": "HASA-MRN-0017",
     "name": "Azizah binti Kasim",
     "dob": "1954-06-15",
     "age": 70,
@@ -15428,7 +15428,7 @@
   },
   {
     "patient_id": "REAL-125",
-    "mrn": "CTC0013909",
+    "mrn": "HASA-MRN-0008",
     "name": "Low Yoke Keng",
     "dob": "1950-06-15",
     "age": 74,
@@ -15549,7 +15549,7 @@
   },
   {
     "patient_id": "REAL-126",
-    "mrn": "CTC0015732",
+    "mrn": "HASA-MRN-0015",
     "name": "Jamilah binti Yusof",
     "dob": "1953-06-15",
     "age": 71,
@@ -15676,7 +15676,7 @@
   },
   {
     "patient_id": "REAL-127",
-    "mrn": "CTC0040428",
+    "mrn": "HASA-MRN-0014",
     "name": "Kalthom binti Latif",
     "dob": "1965-06-15",
     "age": 59,
@@ -15792,7 +15792,7 @@
   },
   {
     "patient_id": "REAL-128",
-    "mrn": "CTC0003513",
+    "mrn": "HASA-MRN-0007",
     "name": "Kamaliza binti Nasir",
     "dob": "1960-06-15",
     "age": 64,
@@ -15920,7 +15920,7 @@
   },
   {
     "patient_id": "REAL-129",
-    "mrn": "CTC0014247",
+    "mrn": "HASA-MRN-0016",
     "name": "Halimah binti Othman",
     "dob": "1935-06-15",
     "age": 89,
@@ -16041,7 +16041,7 @@
   },
   {
     "patient_id": "REAL-130",
-    "mrn": "CTC0049779",
+    "mrn": "HASA-MRN-0030",
     "name": "Rosnah binti Mansor",
     "dob": "1990-06-15",
     "age": 34,
@@ -16151,7 +16151,7 @@
   },
   {
     "patient_id": "REAL-131",
-    "mrn": "CTC0025977",
+    "mrn": "HASA-MRN-0024",
     "name": "Salmah binti Osman",
     "dob": "1947-06-15",
     "age": 77,
@@ -16204,7 +16204,7 @@
     "vitals": {
       "bp_latest": "145/66",
       "bp_second": "145/66",
-      "weight": 62.0,
+      "weight": 62,
       "bp_readings": [
         {
           "value": "145/66",
@@ -16216,7 +16216,7 @@
         }
       ],
       "weight_record": {
-        "value": 62.0,
+        "value": 62,
         "date": "2024-04-15"
       }
     },
@@ -16279,7 +16279,7 @@
   },
   {
     "patient_id": "REAL-132",
-    "mrn": "CTC0033749",
+    "mrn": "HASA-MRN-0012",
     "name": "Sufiah binti Zakaria",
     "dob": "1941-06-15",
     "age": 83,
@@ -16394,7 +16394,7 @@
   },
   {
     "patient_id": "REAL-133",
-    "mrn": "CTC0053155",
+    "mrn": "HASA-MRN-0020",
     "name": "Wan Mariam binti Nordin",
     "dob": "1954-06-15",
     "age": 70,
@@ -16435,7 +16435,7 @@
     "vitals": {
       "bp_latest": "/",
       "bp_second": "/",
-      "weight": 53.0,
+      "weight": 53,
       "bp_readings": [
         {
           "value": "/",
@@ -16447,7 +16447,7 @@
         }
       ],
       "weight_record": {
-        "value": 53.0,
+        "value": 53,
         "date": "2024-04-15"
       }
     },
@@ -16510,7 +16510,7 @@
   },
   {
     "patient_id": "REAL-134",
-    "mrn": "CTC0050673",
+    "mrn": "HASA-MRN-0001",
     "name": "Zainon binti Radzi",
     "dob": "1954-06-15",
     "age": 70,
@@ -16644,7 +16644,7 @@
   },
   {
     "patient_id": "REAL-135",
-    "mrn": "CTC0011659",
+    "mrn": "HASA-MRN-0013",
     "name": "Chia Siew Peng",
     "dob": "1956-06-15",
     "age": 68,
@@ -16771,7 +16771,7 @@
   },
   {
     "patient_id": "REAL-136",
-    "mrn": "CTC0033749",
+    "mrn": "HASA-MRN-0012",
     "name": "Kamariah binti Omar",
     "dob": "1941-06-15",
     "age": 83,
@@ -16886,7 +16886,7 @@
   },
   {
     "patient_id": "REAL-137",
-    "mrn": "CTC0040428",
+    "mrn": "HASA-MRN-0014",
     "name": "Noraziah binti Samad",
     "dob": "1965-06-15",
     "age": 59,
@@ -17002,7 +17002,7 @@
   },
   {
     "patient_id": "REAL-138",
-    "mrn": "CTC0022755",
+    "mrn": "HASA-MRN-0011",
     "name": "Noriah binti Ramli",
     "dob": "1957-06-15",
     "age": 67,
@@ -17074,7 +17074,7 @@
     "labs": {
       "creatinine": 170,
       "creatinine_unit": "umol/L",
-      "hba1c": 8.0,
+      "hba1c": 8,
       "inr_history": [
         2.1,
         2.4,
@@ -17088,7 +17088,7 @@
         "date": "2024-04-10"
       },
       "hba1c_record": {
-        "value": 8.0,
+        "value": 8,
         "date": "2024-04-10"
       },
       "inr_results": [
@@ -17130,7 +17130,7 @@
   },
   {
     "patient_id": "REAL-139",
-    "mrn": "CTC0027324",
+    "mrn": "HASA-MRN-0010",
     "name": "Norlela binti Razak",
     "dob": "1954-06-15",
     "age": 70,
@@ -17246,7 +17246,7 @@
   },
   {
     "patient_id": "REAL-140",
-    "mrn": "CTC0054300",
+    "mrn": "HASA-MRN-0023",
     "name": "Salmiah binti Talib",
     "dob": "1963-06-15",
     "age": 61,
@@ -17362,7 +17362,7 @@
   },
   {
     "patient_id": "REAL-141",
-    "mrn": "CTC0013909",
+    "mrn": "HASA-MRN-0008",
     "name": "Tan Geok Lan",
     "dob": "1950-06-15",
     "age": 74,
@@ -17483,7 +17483,7 @@
   },
   {
     "patient_id": "REAL-142",
-    "mrn": "CTC0014247",
+    "mrn": "HASA-MRN-0016",
     "name": "Fatimah binti Sulaiman",
     "dob": "1935-06-15",
     "age": 89,
@@ -17604,7 +17604,7 @@
   },
   {
     "patient_id": "REAL-143",
-    "mrn": "CTC0000012",
+    "mrn": "HASA-MRN-0004",
     "name": "Chong Pek Sim",
     "dob": "1948-06-15",
     "age": 76,
@@ -17657,7 +17657,7 @@
     "vitals": {
       "bp_latest": "136/63",
       "bp_second": "136/63",
-      "weight": 81.0,
+      "weight": 81,
       "bp_readings": [
         {
           "value": "136/63",
@@ -17669,7 +17669,7 @@
         }
       ],
       "weight_record": {
-        "value": 81.0,
+        "value": 81,
         "date": "2024-04-15"
       }
     },
@@ -17732,7 +17732,7 @@
   },
   {
     "patient_id": "REAL-144",
-    "mrn": "CTC0050673",
+    "mrn": "HASA-MRN-0001",
     "name": "Che Mah binti Ali",
     "dob": "1954-06-15",
     "age": 70,
@@ -17866,7 +17866,7 @@
   },
   {
     "patient_id": "REAL-145",
-    "mrn": "CTC0003513",
+    "mrn": "HASA-MRN-0007",
     "name": "Zaiton binti Taib",
     "dob": "1960-06-15",
     "age": 64,
@@ -17994,7 +17994,7 @@
   },
   {
     "patient_id": "REAL-146",
-    "mrn": "CTC0022755",
+    "mrn": "HASA-MRN-0011",
     "name": "Rahmah binti Yunus",
     "dob": "1957-06-15",
     "age": 67,
@@ -18066,7 +18066,7 @@
     "labs": {
       "creatinine": 170,
       "creatinine_unit": "umol/L",
-      "hba1c": 8.0,
+      "hba1c": 8,
       "inr_history": [
         2.1,
         2.4,
@@ -18080,7 +18080,7 @@
         "date": "2024-04-10"
       },
       "hba1c_record": {
-        "value": 8.0,
+        "value": 8,
         "date": "2024-04-10"
       },
       "inr_results": [
@@ -18122,7 +18122,7 @@
   },
   {
     "patient_id": "REAL-147",
-    "mrn": "CTC0025977",
+    "mrn": "HASA-MRN-0024",
     "name": "Rusnah binti Mohamad",
     "dob": "1947-06-15",
     "age": 77,
@@ -18175,7 +18175,7 @@
     "vitals": {
       "bp_latest": "145/66",
       "bp_second": "145/66",
-      "weight": 62.0,
+      "weight": 62,
       "bp_readings": [
         {
           "value": "145/66",
@@ -18187,7 +18187,7 @@
         }
       ],
       "weight_record": {
-        "value": 62.0,
+        "value": 62,
         "date": "2024-04-15"
       }
     },
@@ -18250,7 +18250,7 @@
   },
   {
     "patient_id": "REAL-148",
-    "mrn": "CTC0050673",
+    "mrn": "HASA-MRN-0001",
     "name": "Rosni binti Yahya",
     "dob": "1954-06-15",
     "age": 70,
@@ -18384,7 +18384,7 @@
   },
   {
     "patient_id": "REAL-149",
-    "mrn": "CTC0050673",
+    "mrn": "HASA-MRN-0001",
     "name": "Sanisah binti Zubir",
     "dob": "1954-06-15",
     "age": 70,
@@ -18518,7 +18518,7 @@
   },
   {
     "patient_id": "REAL-150",
-    "mrn": "CTC0033749",
+    "mrn": "HASA-MRN-0012",
     "name": "Sarimah binti Rahman",
     "dob": "1941-06-15",
     "age": 83,
@@ -18633,7 +18633,7 @@
   },
   {
     "patient_id": "REAL-151",
-    "mrn": "CTC0004435",
+    "mrn": "HASA-MRN-0006",
     "name": "Faridah binti Zainal",
     "dob": "1985-06-15",
     "age": 39,
@@ -18749,7 +18749,7 @@
   },
   {
     "patient_id": "REAL-152",
-    "mrn": "CTC0011659",
+    "mrn": "HASA-MRN-0013",
     "name": "Ong Mei Keng",
     "dob": "1956-06-15",
     "age": 68,
@@ -18876,7 +18876,7 @@
   },
   {
     "patient_id": "REAL-153",
-    "mrn": "CTC0021962",
+    "mrn": "HASA-MRN-0019",
     "name": "Latifah binti Salleh",
     "dob": "1960-06-15",
     "age": 64,
@@ -19016,7 +19016,7 @@
   },
   {
     "patient_id": "REAL-154",
-    "mrn": "CTC0015732",
+    "mrn": "HASA-MRN-0015",
     "name": "Laila binti Aziz",
     "dob": "1953-06-15",
     "age": 71,
@@ -19143,7 +19143,7 @@
   },
   {
     "patient_id": "REAL-155",
-    "mrn": "CTC0050673",
+    "mrn": "HASA-MRN-0001",
     "name": "Laili binti Bahari",
     "dob": "1954-06-15",
     "age": 70,
@@ -19277,7 +19277,7 @@
   },
   {
     "patient_id": "REAL-156",
-    "mrn": "CTC0004435",
+    "mrn": "HASA-MRN-0006",
     "name": "Khadijah binti Mahmud",
     "dob": "1985-06-15",
     "age": 39,
@@ -19393,7 +19393,7 @@
   },
   {
     "patient_id": "REAL-157",
-    "mrn": "CTC0011659",
+    "mrn": "HASA-MRN-0013",
     "name": "Sim Bee Hong",
     "dob": "1956-06-15",
     "age": 68,
@@ -19635,7 +19635,7 @@
   },
   {
     "patient_id": "REAL-159",
-    "mrn": "CTC0022755",
+    "mrn": "HASA-MRN-0011",
     "name": "Zakiah binti Daud",
     "dob": "1957-06-15",
     "age": 67,
@@ -19707,7 +19707,7 @@
     "labs": {
       "creatinine": 170,
       "creatinine_unit": "umol/L",
-      "hba1c": 8.0,
+      "hba1c": 8,
       "inr_history": [
         2.1,
         2.4,
@@ -19721,7 +19721,7 @@
         "date": "2024-04-10"
       },
       "hba1c_record": {
-        "value": 8.0,
+        "value": 8,
         "date": "2024-04-10"
       },
       "inr_results": [
@@ -19763,7 +19763,7 @@
   },
   {
     "patient_id": "REAL-160",
-    "mrn": "CTC0014247",
+    "mrn": "HASA-MRN-0016",
     "name": "Zabedah binti Ghazali",
     "dob": "1935-06-15",
     "age": 89,
@@ -19884,7 +19884,7 @@
   },
   {
     "patient_id": "REAL-161",
-    "mrn": "CTC0025977",
+    "mrn": "HASA-MRN-0024",
     "name": "Noraini binti Hussein",
     "dob": "1947-06-15",
     "age": 77,
@@ -19937,7 +19937,7 @@
     "vitals": {
       "bp_latest": "145/66",
       "bp_second": "145/66",
-      "weight": 62.0,
+      "weight": 62,
       "bp_readings": [
         {
           "value": "145/66",
@@ -19949,7 +19949,7 @@
         }
       ],
       "weight_record": {
-        "value": 62.0,
+        "value": 62,
         "date": "2024-04-15"
       }
     },
@@ -20127,7 +20127,7 @@
   },
   {
     "patient_id": "REAL-163",
-    "mrn": "CTC0037224",
+    "mrn": "HASA-MRN-0002",
     "name": "Maznah binti Harun",
     "dob": "1965-06-15",
     "age": 59,
@@ -20193,7 +20193,7 @@
     "labs": {
       "creatinine": 102,
       "creatinine_unit": "umol/L",
-      "hba1c": 7.0,
+      "hba1c": 7,
       "inr_history": [
         2.1,
         2.4,
@@ -20207,7 +20207,7 @@
         "date": "2024-04-10"
       },
       "hba1c_record": {
-        "value": 7.0,
+        "value": 7,
         "date": "2024-04-10"
       },
       "inr_results": [
@@ -20249,7 +20249,7 @@
   },
   {
     "patient_id": "REAL-164",
-    "mrn": "CTC0033749",
+    "mrn": "HASA-MRN-0012",
     "name": "Nurul binti Kadir",
     "dob": "1941-06-15",
     "age": 83,
@@ -20364,7 +20364,7 @@
   },
   {
     "patient_id": "REAL-165",
-    "mrn": "CTC0053155",
+    "mrn": "HASA-MRN-0020",
     "name": "Rafidah binti Bakar",
     "dob": "1954-06-15",
     "age": 70,
@@ -20405,7 +20405,7 @@
     "vitals": {
       "bp_latest": "/",
       "bp_second": "/",
-      "weight": 53.0,
+      "weight": 53,
       "bp_readings": [
         {
           "value": "/",
@@ -20417,7 +20417,7 @@
         }
       ],
       "weight_record": {
-        "value": 53.0,
+        "value": 53,
         "date": "2024-04-15"
       }
     },
@@ -20480,7 +20480,7 @@
   },
   {
     "patient_id": "REAL-166",
-    "mrn": "CTC0015732",
+    "mrn": "HASA-MRN-0015",
     "name": "Ramlah binti Idris",
     "dob": "1953-06-15",
     "age": 71,
@@ -20607,7 +20607,7 @@
   },
   {
     "patient_id": "REAL-167",
-    "mrn": "CTC0050673",
+    "mrn": "HASA-MRN-0001",
     "name": "Zaleha binti Ahmad",
     "dob": "1954-06-15",
     "age": 70,
@@ -20741,7 +20741,7 @@
   },
   {
     "patient_id": "REAL-168",
-    "mrn": "CTC0022755",
+    "mrn": "HASA-MRN-0011",
     "name": "Aminah binti Hamzah",
     "dob": "1957-06-15",
     "age": 67,
@@ -20813,7 +20813,7 @@
     "labs": {
       "creatinine": 170,
       "creatinine_unit": "umol/L",
-      "hba1c": 8.0,
+      "hba1c": 8,
       "inr_history": [
         2.1,
         2.4,
@@ -20827,7 +20827,7 @@
         "date": "2024-04-10"
       },
       "hba1c_record": {
-        "value": 8.0,
+        "value": 8,
         "date": "2024-04-10"
       },
       "inr_results": [
@@ -20869,7 +20869,7 @@
   },
   {
     "patient_id": "REAL-169",
-    "mrn": "CTC0014247",
+    "mrn": "HASA-MRN-0016",
     "name": "Hanizah binti Jalil",
     "dob": "1935-06-15",
     "age": 89,
@@ -21105,7 +21105,7 @@
   },
   {
     "patient_id": "REAL-171",
-    "mrn": "CTC0027324",
+    "mrn": "HASA-MRN-0010",
     "name": "Haslinda binti Jaafar",
     "dob": "1954-06-15",
     "age": 70,
@@ -21221,7 +21221,7 @@
   },
   {
     "patient_id": "REAL-172",
-    "mrn": "CTC0027324",
+    "mrn": "HASA-MRN-0010",
     "name": "Rohana binti Karim",
     "dob": "1954-06-15",
     "age": 70,
@@ -21337,7 +21337,7 @@
   },
   {
     "patient_id": "REAL-173",
-    "mrn": "CTC0013909",
+    "mrn": "HASA-MRN-0008",
     "name": "Chong Choo Eng",
     "dob": "1950-06-15",
     "age": 74,
@@ -21458,7 +21458,7 @@
   },
   {
     "patient_id": "REAL-174",
-    "mrn": "CTC0000012",
+    "mrn": "HASA-MRN-0004",
     "name": "Yap Pek Hoon",
     "dob": "1948-06-15",
     "age": 76,
@@ -21511,7 +21511,7 @@
     "vitals": {
       "bp_latest": "136/63",
       "bp_second": "136/63",
-      "weight": 81.0,
+      "weight": 81,
       "bp_readings": [
         {
           "value": "136/63",
@@ -21523,7 +21523,7 @@
         }
       ],
       "weight_record": {
-        "value": 81.0,
+        "value": 81,
         "date": "2024-04-15"
       }
     },
@@ -21586,7 +21586,7 @@
   },
   {
     "patient_id": "REAL-175",
-    "mrn": "CTC0011659",
+    "mrn": "HASA-MRN-0013",
     "name": "Leong Yoke Keng",
     "dob": "1956-06-15",
     "age": 68,
@@ -21713,7 +21713,7 @@
   },
   {
     "patient_id": "REAL-176",
-    "mrn": "CTC0014247",
+    "mrn": "HASA-MRN-0016",
     "name": "Tijah binti Yusof",
     "dob": "1935-06-15",
     "age": 89,
@@ -21834,7 +21834,7 @@
   },
   {
     "patient_id": "REAL-177",
-    "mrn": "CTC0021962",
+    "mrn": "HASA-MRN-0019",
     "name": "Ummi binti Latif",
     "dob": "1960-06-15",
     "age": 64,
@@ -21974,7 +21974,7 @@
   },
   {
     "patient_id": "REAL-178",
-    "mrn": "CTC0033749",
+    "mrn": "HASA-MRN-0012",
     "name": "Hasnah binti Nasir",
     "dob": "1941-06-15",
     "age": 83,
@@ -22089,7 +22089,7 @@
   },
   {
     "patient_id": "REAL-179",
-    "mrn": "CTC0025977",
+    "mrn": "HASA-MRN-0024",
     "name": "Jamaliah binti Othman",
     "dob": "1947-06-15",
     "age": 77,
@@ -22142,7 +22142,7 @@
     "vitals": {
       "bp_latest": "145/66",
       "bp_second": "145/66",
-      "weight": 62.0,
+      "weight": 62,
       "bp_readings": [
         {
           "value": "145/66",
@@ -22154,7 +22154,7 @@
         }
       ],
       "weight_record": {
-        "value": 62.0,
+        "value": 62,
         "date": "2024-04-15"
       }
     },
@@ -22283,7 +22283,7 @@
     "labs": {
       "creatinine": 79,
       "creatinine_unit": "umol/L",
-      "hba1c": 8.0,
+      "hba1c": 8,
       "inr_history": [
         2.1,
         2.4,
@@ -22297,7 +22297,7 @@
         "date": "2024-04-10"
       },
       "hba1c_record": {
-        "value": 8.0,
+        "value": 8,
         "date": "2024-04-10"
       },
       "inr_results": [
@@ -22339,7 +22339,7 @@
   },
   {
     "patient_id": "REAL-181",
-    "mrn": "CTC0014247",
+    "mrn": "HASA-MRN-0016",
     "name": "Minah binti Osman",
     "dob": "1935-06-15",
     "age": 89,
@@ -22460,7 +22460,7 @@
   },
   {
     "patient_id": "REAL-182",
-    "mrn": "CTC0014247",
+    "mrn": "HASA-MRN-0016",
     "name": "Munah binti Zakaria",
     "dob": "1935-06-15",
     "age": 89,
@@ -22697,7 +22697,7 @@
   },
   {
     "patient_id": "REAL-184",
-    "mrn": "CTC0037224",
+    "mrn": "HASA-MRN-0002",
     "name": "Sharifah binti Radzi",
     "dob": "1965-06-15",
     "age": 59,
@@ -22763,7 +22763,7 @@
     "labs": {
       "creatinine": 102,
       "creatinine_unit": "umol/L",
-      "hba1c": 7.0,
+      "hba1c": 7,
       "inr_history": [
         2.1,
         2.4,
@@ -22777,7 +22777,7 @@
         "date": "2024-04-10"
       },
       "hba1c_record": {
-        "value": 7.0,
+        "value": 7,
         "date": "2024-04-10"
       },
       "inr_results": [
@@ -22819,7 +22819,7 @@
   },
   {
     "patient_id": "REAL-185",
-    "mrn": "CTC0000012",
+    "mrn": "HASA-MRN-0004",
     "name": "Low Siew Peng",
     "dob": "1948-06-15",
     "age": 76,
@@ -22872,7 +22872,7 @@
     "vitals": {
       "bp_latest": "136/63",
       "bp_second": "136/63",
-      "weight": 81.0,
+      "weight": 81,
       "bp_readings": [
         {
           "value": "136/63",
@@ -22884,7 +22884,7 @@
         }
       ],
       "weight_record": {
-        "value": 81.0,
+        "value": 81,
         "date": "2024-04-15"
       }
     },
@@ -22947,7 +22947,7 @@
   },
   {
     "patient_id": "REAL-186",
-    "mrn": "CTC0020966",
+    "mrn": "HASA-MRN-0027",
     "name": "Azlina binti Omar",
     "dob": "1975-06-15",
     "age": 49,
@@ -23178,7 +23178,7 @@
   },
   {
     "patient_id": "REAL-188",
-    "mrn": "CTC0050673",
+    "mrn": "HASA-MRN-0001",
     "name": "Siti binti Ramli",
     "dob": "1954-06-15",
     "age": 70,
@@ -23312,7 +23312,7 @@
   },
   {
     "patient_id": "REAL-189",
-    "mrn": "CTC0002857",
+    "mrn": "HASA-MRN-0022",
     "name": "Norlia binti Razak",
     "dob": "1955-06-15",
     "age": 69,
@@ -23556,7 +23556,7 @@
   },
   {
     "patient_id": "REAL-191",
-    "mrn": "CTC0048615",
+    "mrn": "HASA-MRN-0017",
     "name": "Rabiatul binti Ibrahim",
     "dob": "1954-06-15",
     "age": 70,
@@ -23908,7 +23908,7 @@
   },
   {
     "patient_id": "REAL-194",
-    "mrn": "CTC0038027",
+    "mrn": "HASA-MRN-0031",
     "name": "Azizah binti Ali",
     "dob": "1962-06-15",
     "age": 62,
@@ -24023,7 +24023,7 @@
   },
   {
     "patient_id": "REAL-195",
-    "mrn": "CTC0038027",
+    "mrn": "HASA-MRN-0031",
     "name": "Fauziah binti Taib",
     "dob": "1962-06-15",
     "age": 62,
@@ -24138,7 +24138,7 @@
   },
   {
     "patient_id": "REAL-196",
-    "mrn": "CTC0050673",
+    "mrn": "HASA-MRN-0001",
     "name": "Jamilah binti Yunus",
     "dob": "1954-06-15",
     "age": 70,
@@ -24272,7 +24272,7 @@
   },
   {
     "patient_id": "REAL-197",
-    "mrn": "CTC0033749",
+    "mrn": "HASA-MRN-0012",
     "name": "Kalthom binti Mohamad",
     "dob": "1941-06-15",
     "age": 83,
@@ -24387,7 +24387,7 @@
   },
   {
     "patient_id": "REAL-198",
-    "mrn": "CTC0020966",
+    "mrn": "HASA-MRN-0027",
     "name": "Kamaliza binti Yahya",
     "dob": "1975-06-15",
     "age": 49,
@@ -24503,7 +24503,7 @@
   },
   {
     "patient_id": "REAL-199",
-    "mrn": "CTC0038027",
+    "mrn": "HASA-MRN-0031",
     "name": "Halimah binti Zubir",
     "dob": "1962-06-15",
     "age": 62,
@@ -24618,7 +24618,7 @@
   },
   {
     "patient_id": "REAL-200",
-    "mrn": "CTC0015732",
+    "mrn": "HASA-MRN-0015",
     "name": "Rosnah binti Rahman",
     "dob": "1953-06-15",
     "age": 71,
@@ -24982,7 +24982,7 @@
   },
   {
     "patient_id": "REAL-203",
-    "mrn": "CTC0013909",
+    "mrn": "HASA-MRN-0008",
     "name": "Chong Moy Lan",
     "dob": "1950-06-15",
     "age": 74,
@@ -25450,7 +25450,7 @@
   },
   {
     "patient_id": "REAL-207",
-    "mrn": "CTC0012575",
+    "mrn": "HASA-MRN-0032",
     "name": "Anjalai a/p Govindasamy",
     "dob": "1964-06-15",
     "age": 60,
@@ -25572,7 +25572,7 @@
   },
   {
     "patient_id": "REAL-208",
-    "mrn": "CTC0038027",
+    "mrn": "HASA-MRN-0031",
     "name": "Noriah binti Hashim",
     "dob": "1962-06-15",
     "age": 62,
@@ -25687,7 +25687,7 @@
   },
   {
     "patient_id": "REAL-209",
-    "mrn": "CTC0013909",
+    "mrn": "HASA-MRN-0008",
     "name": "Khor Sock Ping",
     "dob": "1950-06-15",
     "age": 74,
@@ -26038,7 +26038,7 @@
   },
   {
     "patient_id": "REAL-212",
-    "mrn": "CTC0011659",
+    "mrn": "HASA-MRN-0013",
     "name": "Ong Li Ching",
     "dob": "1956-06-15",
     "age": 68,
@@ -26281,7 +26281,7 @@
   },
   {
     "patient_id": "REAL-214",
-    "mrn": "CTC0022755",
+    "mrn": "HASA-MRN-0011",
     "name": "Che Mah binti Kadir",
     "dob": "1957-06-15",
     "age": 67,
@@ -26353,7 +26353,7 @@
     "labs": {
       "creatinine": 170,
       "creatinine_unit": "umol/L",
-      "hba1c": 8.0,
+      "hba1c": 8,
       "inr_history": [
         2.1,
         2.4,
@@ -26367,7 +26367,7 @@
         "date": "2024-04-10"
       },
       "hba1c_record": {
-        "value": 8.0,
+        "value": 8,
         "date": "2024-04-10"
       },
       "inr_results": [
@@ -26525,7 +26525,7 @@
   },
   {
     "patient_id": "REAL-216",
-    "mrn": "CTC0046174",
+    "mrn": "HASA-MRN-0033",
     "name": "Rahmah binti Idris",
     "dob": "1965-06-15",
     "age": 59,
@@ -26652,7 +26652,7 @@
   },
   {
     "patient_id": "REAL-217",
-    "mrn": "CTC0013909",
+    "mrn": "HASA-MRN-0008",
     "name": "Sim Wah Bee",
     "dob": "1950-06-15",
     "age": 74,
@@ -26773,7 +26773,7 @@
   },
   {
     "patient_id": "REAL-218",
-    "mrn": "CTC0003513",
+    "mrn": "HASA-MRN-0007",
     "name": "Rosni binti Hamzah",
     "dob": "1960-06-15",
     "age": 64,
@@ -26901,7 +26901,7 @@
   },
   {
     "patient_id": "REAL-219",
-    "mrn": "CTC0015732",
+    "mrn": "HASA-MRN-0015",
     "name": "Sanisah binti Jalil",
     "dob": "1953-06-15",
     "age": 71,
@@ -27150,7 +27150,7 @@
   },
   {
     "patient_id": "REAL-221",
-    "mrn": "CTC0046174",
+    "mrn": "HASA-MRN-0033",
     "name": "Faridah binti Jaafar",
     "dob": "1965-06-15",
     "age": 59,
@@ -27393,7 +27393,7 @@
   },
   {
     "patient_id": "REAL-223",
-    "mrn": "CTC0040428",
+    "mrn": "HASA-MRN-0014",
     "name": "Latifah binti Ismail",
     "dob": "1965-06-15",
     "age": 59,
@@ -27509,7 +27509,7 @@
   },
   {
     "patient_id": "REAL-224",
-    "mrn": "CTC0038027",
+    "mrn": "HASA-MRN-0031",
     "name": "Laila binti Kasim",
     "dob": "1962-06-15",
     "age": 62,
@@ -27855,7 +27855,7 @@
   },
   {
     "patient_id": "REAL-227",
-    "mrn": "CTC0003513",
+    "mrn": "HASA-MRN-0007",
     "name": "Saodah binti Latif",
     "dob": "1960-06-15",
     "age": 64,
@@ -27983,7 +27983,7 @@
   },
   {
     "patient_id": "REAL-228",
-    "mrn": "CTC0033749",
+    "mrn": "HASA-MRN-0012",
     "name": "Zaharah binti Nasir",
     "dob": "1941-06-15",
     "age": 83,
@@ -28098,7 +28098,7 @@
   },
   {
     "patient_id": "REAL-229",
-    "mrn": "CTC0011659",
+    "mrn": "HASA-MRN-0013",
     "name": "Liew Chin Bee",
     "dob": "1956-06-15",
     "age": 68,
@@ -28225,7 +28225,7 @@
   },
   {
     "patient_id": "REAL-230",
-    "mrn": "CTC0000012",
+    "mrn": "HASA-MRN-0004",
     "name": "Tee Hui Min",
     "dob": "1948-06-15",
     "age": 76,
@@ -28278,7 +28278,7 @@
     "vitals": {
       "bp_latest": "136/63",
       "bp_second": "136/63",
-      "weight": 81.0,
+      "weight": 81,
       "bp_readings": [
         {
           "value": "136/63",
@@ -28290,7 +28290,7 @@
         }
       ],
       "weight_record": {
-        "value": 81.0,
+        "value": 81,
         "date": "2024-04-15"
       }
     },
@@ -28353,7 +28353,7 @@
   },
   {
     "patient_id": "REAL-231",
-    "mrn": "CTC0033749",
+    "mrn": "HASA-MRN-0012",
     "name": "Noraini binti Osman",
     "dob": "1941-06-15",
     "age": 83,
@@ -28583,7 +28583,7 @@
   },
   {
     "patient_id": "REAL-233",
-    "mrn": "CTC0000012",
+    "mrn": "HASA-MRN-0004",
     "name": "Chong Lay Keow",
     "dob": "1948-06-15",
     "age": 76,
@@ -28636,7 +28636,7 @@
     "vitals": {
       "bp_latest": "136/63",
       "bp_second": "136/63",
-      "weight": 81.0,
+      "weight": 81,
       "bp_readings": [
         {
           "value": "136/63",
@@ -28648,7 +28648,7 @@
         }
       ],
       "weight_record": {
-        "value": 81.0,
+        "value": 81,
         "date": "2024-04-15"
       }
     },
@@ -28711,7 +28711,7 @@
   },
   {
     "patient_id": "REAL-234",
-    "mrn": "CTC0003513",
+    "mrn": "HASA-MRN-0007",
     "name": "Nurul binti Radzi",
     "dob": "1960-06-15",
     "age": 64,
@@ -28839,7 +28839,7 @@
   },
   {
     "patient_id": "REAL-235",
-    "mrn": "CTC0013909",
+    "mrn": "HASA-MRN-0008",
     "name": "Leong Siew Peng",
     "dob": "1950-06-15",
     "age": 74,
@@ -28960,7 +28960,7 @@
   },
   {
     "patient_id": "REAL-236",
-    "mrn": "CTC0015732",
+    "mrn": "HASA-MRN-0015",
     "name": "Ramlah binti Omar",
     "dob": "1953-06-15",
     "age": 71,
@@ -29209,7 +29209,7 @@
   },
   {
     "patient_id": "REAL-238",
-    "mrn": "CTC0040428",
+    "mrn": "HASA-MRN-0014",
     "name": "Aminah binti Ramli",
     "dob": "1965-06-15",
     "age": 59,
@@ -29325,7 +29325,7 @@
   },
   {
     "patient_id": "REAL-239",
-    "mrn": "CTC0046174",
+    "mrn": "HASA-MRN-0033",
     "name": "Hanizah binti Razak",
     "dob": "1965-06-15",
     "age": 59,
@@ -29452,7 +29452,7 @@
   },
   {
     "patient_id": "REAL-240",
-    "mrn": "CTC0003513",
+    "mrn": "HASA-MRN-0007",
     "name": "Hamidah binti Talib",
     "dob": "1960-06-15",
     "age": 64,
@@ -29811,7 +29811,7 @@
   },
   {
     "patient_id": "REAL-243",
-    "mrn": "CTC0000012",
+    "mrn": "HASA-MRN-0004",
     "name": "Chua Pek Sim",
     "dob": "1948-06-15",
     "age": 76,
@@ -29864,7 +29864,7 @@
     "vitals": {
       "bp_latest": "136/63",
       "bp_second": "136/63",
-      "weight": 81.0,
+      "weight": 81,
       "bp_readings": [
         {
           "value": "136/63",
@@ -29876,7 +29876,7 @@
         }
       ],
       "weight_record": {
-        "value": 81.0,
+        "value": 81,
         "date": "2024-04-15"
       }
     },
@@ -29939,7 +29939,7 @@
   },
   {
     "patient_id": "REAL-244",
-    "mrn": "CTC0054619",
+    "mrn": "HASA-MRN-0034",
     "name": "Sabariah binti Ali",
     "dob": "1966-06-15",
     "age": 58,
@@ -29999,7 +29999,7 @@
     "labs": {
       "creatinine": 85,
       "creatinine_unit": "umol/L",
-      "hba1c": 6.0,
+      "hba1c": 6,
       "inr_history": [
         2.1,
         2.4,
@@ -30013,7 +30013,7 @@
         "date": "2024-04-10"
       },
       "hba1c_record": {
-        "value": 6.0,
+        "value": 6,
         "date": "2024-04-10"
       },
       "inr_results": [
@@ -30055,7 +30055,7 @@
   },
   {
     "patient_id": "REAL-245",
-    "mrn": "CTC0034862",
+    "mrn": "HASA-MRN-0035",
     "name": "Sapiah binti Taib",
     "dob": "1976-06-15",
     "age": 48,
@@ -30096,7 +30096,7 @@
     "vitals": {
       "bp_latest": "132/88",
       "bp_second": "132/88",
-      "weight": 82.0,
+      "weight": 82,
       "bp_readings": [
         {
           "value": "132/88",
@@ -30108,7 +30108,7 @@
         }
       ],
       "weight_record": {
-        "value": 82.0,
+        "value": 82,
         "date": "2024-04-15"
       }
     },
@@ -30171,7 +30171,7 @@
   },
   {
     "patient_id": "REAL-246",
-    "mrn": "CTC0022755",
+    "mrn": "HASA-MRN-0011",
     "name": "Tijah binti Yunus",
     "dob": "1957-06-15",
     "age": 67,
@@ -30243,7 +30243,7 @@
     "labs": {
       "creatinine": 170,
       "creatinine_unit": "umol/L",
-      "hba1c": 8.0,
+      "hba1c": 8,
       "inr_history": [
         2.1,
         2.4,
@@ -30257,7 +30257,7 @@
         "date": "2024-04-10"
       },
       "hba1c_record": {
-        "value": 8.0,
+        "value": 8,
         "date": "2024-04-10"
       },
       "inr_results": [
@@ -30421,7 +30421,7 @@
   },
   {
     "patient_id": "REAL-248",
-    "mrn": "CTC0003513",
+    "mrn": "HASA-MRN-0007",
     "name": "Hasnah binti Yahya",
     "dob": "1960-06-15",
     "age": 64,
@@ -30549,7 +30549,7 @@
   },
   {
     "patient_id": "REAL-249",
-    "mrn": "CTC0046174",
+    "mrn": "HASA-MRN-0033",
     "name": "Jamaliah binti Zubir",
     "dob": "1965-06-15",
     "age": 59,
@@ -30792,7 +30792,7 @@
   },
   {
     "patient_id": "REAL-251",
-    "mrn": "CTC0020966",
+    "mrn": "HASA-MRN-0027",
     "name": "Minah binti Zainal",
     "dob": "1975-06-15",
     "age": 49,
@@ -30908,7 +30908,7 @@
   },
   {
     "patient_id": "REAL-252",
-    "mrn": "CTC0038027",
+    "mrn": "HASA-MRN-0031",
     "name": "Munah binti Adnan",
     "dob": "1962-06-15",
     "age": 62,
@@ -31253,7 +31253,7 @@
   },
   {
     "patient_id": "REAL-255",
-    "mrn": "CTC0029390",
+    "mrn": "HASA-MRN-0036",
     "name": "Chia Siew Lan",
     "dob": "1970-06-15",
     "age": 54,
@@ -31387,7 +31387,7 @@
   },
   {
     "patient_id": "REAL-256",
-    "mrn": "CTC0038027",
+    "mrn": "HASA-MRN-0031",
     "name": "Azlina binti Mahmud",
     "dob": "1962-06-15",
     "age": 62,
@@ -31502,7 +31502,7 @@
   },
   {
     "patient_id": "REAL-257",
-    "mrn": "CTC0003513",
+    "mrn": "HASA-MRN-0007",
     "name": "Aini binti Basir",
     "dob": "1960-06-15",
     "age": 64,
@@ -31630,7 +31630,7 @@
   },
   {
     "patient_id": "REAL-258",
-    "mrn": "CTC0033749",
+    "mrn": "HASA-MRN-0012",
     "name": "Siti binti Hashim",
     "dob": "1941-06-15",
     "age": 83,
@@ -31745,7 +31745,7 @@
   },
   {
     "patient_id": "REAL-259",
-    "mrn": "CTC0053721",
+    "mrn": "HASA-MRN-0037",
     "name": "Liew Sock Ping",
     "dob": "1961-06-15",
     "age": 63,
@@ -31860,7 +31860,7 @@
   },
   {
     "patient_id": "REAL-260",
-    "mrn": "CTC0036541",
+    "mrn": "HASA-MRN-0038",
     "name": "Normah binti Ghazali",
     "dob": "1967-06-15",
     "age": 57,
@@ -32224,7 +32224,7 @@
   },
   {
     "patient_id": "REAL-263",
-    "mrn": "CTC0016393",
+    "mrn": "HASA-MRN-0039",
     "name": "Rukiah binti Harun",
     "dob": "1966-06-15",
     "age": 58,
@@ -32478,7 +32478,7 @@
   },
   {
     "patient_id": "REAL-265",
-    "mrn": "CTC0037224",
+    "mrn": "HASA-MRN-0002",
     "name": "Fauziah binti Bakar",
     "dob": "1965-06-15",
     "age": 59,
@@ -32544,7 +32544,7 @@
     "labs": {
       "creatinine": 102,
       "creatinine_unit": "umol/L",
-      "hba1c": 7.0,
+      "hba1c": 7,
       "inr_history": [
         2.1,
         2.4,
@@ -32558,7 +32558,7 @@
         "date": "2024-04-10"
       },
       "hba1c_record": {
-        "value": 7.0,
+        "value": 7,
         "date": "2024-04-10"
       },
       "inr_results": [
@@ -32715,7 +32715,7 @@
   },
   {
     "patient_id": "REAL-267",
-    "mrn": "CTC0043953",
+    "mrn": "HASA-MRN-0040",
     "name": "Kalthom binti Ahmad",
     "dob": "1938-06-15",
     "age": 86,
@@ -32773,7 +32773,7 @@
     "vitals": {
       "bp_latest": "/",
       "bp_second": "/",
-      "weight": 46.0,
+      "weight": 46,
       "bp_readings": [
         {
           "value": "/",
@@ -32785,7 +32785,7 @@
         }
       ],
       "weight_record": {
-        "value": 46.0,
+        "value": 46,
         "date": "2024-04-15"
       }
     },
@@ -32848,7 +32848,7 @@
   },
   {
     "patient_id": "REAL-268",
-    "mrn": "CTC0038027",
+    "mrn": "HASA-MRN-0031",
     "name": "Kamaliza binti Hamzah",
     "dob": "1962-06-15",
     "age": 62,
@@ -32963,7 +32963,7 @@
   },
   {
     "patient_id": "REAL-269",
-    "mrn": "CTC0017769",
+    "mrn": "HASA-MRN-0041",
     "name": "Halimah binti Jalil",
     "dob": "1946-06-15",
     "age": 78,
@@ -33212,7 +33212,7 @@
   },
   {
     "patient_id": "REAL-271",
-    "mrn": "CTC0017769",
+    "mrn": "HASA-MRN-0041",
     "name": "Salmah binti Jaafar",
     "dob": "1946-06-15",
     "age": 78,
@@ -33339,7 +33339,7 @@
   },
   {
     "patient_id": "REAL-272",
-    "mrn": "CTC0033749",
+    "mrn": "HASA-MRN-0012",
     "name": "Sufiah binti Karim",
     "dob": "1941-06-15",
     "age": 83,
@@ -33817,7 +33817,7 @@
   },
   {
     "patient_id": "REAL-276",
-    "mrn": "CTC0022790",
+    "mrn": "HASA-MRN-0042",
     "name": "Kamariah binti Yusof",
     "dob": "1947-06-15",
     "age": 77,
@@ -33938,7 +33938,7 @@
   },
   {
     "patient_id": "REAL-277",
-    "mrn": "CTC0038027",
+    "mrn": "HASA-MRN-0031",
     "name": "Noraziah binti Latif",
     "dob": "1962-06-15",
     "age": 62,
@@ -34053,7 +34053,7 @@
   },
   {
     "patient_id": "REAL-278",
-    "mrn": "CTC0022243",
+    "mrn": "HASA-MRN-0043",
     "name": "Soo Yoke Chin",
     "dob": "1958-06-15",
     "age": 66,
@@ -34186,7 +34186,7 @@
   },
   {
     "patient_id": "REAL-279",
-    "mrn": "CTC0013909",
+    "mrn": "HASA-MRN-0008",
     "name": "Khoo Chin Bee",
     "dob": "1950-06-15",
     "age": 74,
@@ -34307,7 +34307,7 @@
   },
   {
     "patient_id": "REAL-280",
-    "mrn": "CTC0008857",
+    "mrn": "HASA-MRN-0009",
     "name": "Salmiah binti Mansor",
     "dob": "1970-06-15",
     "age": 54,
@@ -34353,7 +34353,7 @@
     "vitals": {
       "bp_latest": "144/94",
       "bp_second": "144/94",
-      "weight": 108.0,
+      "weight": 108,
       "bp_readings": [
         {
           "value": "144/94",
@@ -34365,7 +34365,7 @@
         }
       ],
       "weight_record": {
-        "value": 108.0,
+        "value": 108,
         "date": "2024-04-15"
       }
     },
@@ -34774,7 +34774,7 @@
   },
   {
     "patient_id": "REAL-284",
-    "mrn": "CTC0022243",
+    "mrn": "HASA-MRN-0043",
     "name": "Goh Shook Wah",
     "dob": "1958-06-15",
     "age": 66,
@@ -34907,7 +34907,7 @@
   },
   {
     "patient_id": "REAL-285",
-    "mrn": "CTC0011659",
+    "mrn": "HASA-MRN-0013",
     "name": "Chia Siew Peng",
     "dob": "1956-06-15",
     "age": 68,
@@ -35034,7 +35034,7 @@
   },
   {
     "patient_id": "REAL-286",
-    "mrn": "CTC0022790",
+    "mrn": "HASA-MRN-0042",
     "name": "Rahmah binti Omar",
     "dob": "1947-06-15",
     "age": 77,
@@ -35155,7 +35155,7 @@
   },
   {
     "patient_id": "REAL-287",
-    "mrn": "CTC0004062",
+    "mrn": "HASA-MRN-0044",
     "name": "Rusnah binti Samad",
     "dob": "1961-06-15",
     "age": 63,
@@ -35283,7 +35283,7 @@
   },
   {
     "patient_id": "REAL-288",
-    "mrn": "CTC0053721",
+    "mrn": "HASA-MRN-0037",
     "name": "Teoh Ah Kiew",
     "dob": "1961-06-15",
     "age": 63,
@@ -35398,7 +35398,7 @@
   },
   {
     "patient_id": "REAL-289",
-    "mrn": "CTC0028085",
+    "mrn": "HASA-MRN-0045",
     "name": "Liew Gek Sim",
     "dob": "1936-06-15",
     "age": 88,
@@ -35526,7 +35526,7 @@
   },
   {
     "patient_id": "REAL-290",
-    "mrn": "CTC0026495",
+    "mrn": "HASA-MRN-0046",
     "name": "Tee Eng Neo",
     "dob": "1948-06-15",
     "age": 76,
@@ -35641,7 +35641,7 @@
   },
   {
     "patient_id": "REAL-291",
-    "mrn": "CTC0029390",
+    "mrn": "HASA-MRN-0036",
     "name": "Tan Geok Lan",
     "dob": "1970-06-15",
     "age": 54,
@@ -36126,7 +36126,7 @@
   },
   {
     "patient_id": "REAL-295",
-    "mrn": "CTC0000012",
+    "mrn": "HASA-MRN-0004",
     "name": "Leong Mei Ling",
     "dob": "1948-06-15",
     "age": 76,
@@ -36179,7 +36179,7 @@
     "vitals": {
       "bp_latest": "136/63",
       "bp_second": "136/63",
-      "weight": 81.0,
+      "weight": 81,
       "bp_readings": [
         {
           "value": "136/63",
@@ -36191,7 +36191,7 @@
         }
       ],
       "weight_record": {
-        "value": 81.0,
+        "value": 81,
         "date": "2024-04-15"
       }
     },
@@ -36381,7 +36381,7 @@
   },
   {
     "patient_id": "REAL-297",
-    "mrn": "CTC0028085",
+    "mrn": "HASA-MRN-0045",
     "name": "Yeoh Yoke Lan",
     "dob": "1936-06-15",
     "age": 88,
@@ -36509,7 +36509,7 @@
   },
   {
     "patient_id": "REAL-298",
-    "mrn": "CTC0016393",
+    "mrn": "HASA-MRN-0039",
     "name": "Zaharah binti Yahya",
     "dob": "1966-06-15",
     "age": 58,
@@ -36630,7 +36630,7 @@
   },
   {
     "patient_id": "REAL-299",
-    "mrn": "CTC0011659",
+    "mrn": "HASA-MRN-0013",
     "name": "Khor Bik Kuen",
     "dob": "1956-06-15",
     "age": 68,
@@ -36879,7 +36879,7 @@
   },
   {
     "patient_id": "REAL-301",
-    "mrn": "CTC0000012",
+    "mrn": "HASA-MRN-0004",
     "name": "Ooi Geok Hong",
     "dob": "1948-06-15",
     "age": 76,
@@ -36932,7 +36932,7 @@
     "vitals": {
       "bp_latest": "136/63",
       "bp_second": "136/63",
-      "weight": 81.0,
+      "weight": 81,
       "bp_readings": [
         {
           "value": "136/63",
@@ -36944,7 +36944,7 @@
         }
       ],
       "weight_record": {
-        "value": 81.0,
+        "value": 81,
         "date": "2024-04-15"
       }
     },
@@ -37007,7 +37007,7 @@
   },
   {
     "patient_id": "REAL-302",
-    "mrn": "CTC0020966",
+    "mrn": "HASA-MRN-0027",
     "name": "Mariam binti Adnan",
     "dob": "1975-06-15",
     "age": 49,
@@ -37123,7 +37123,7 @@
   },
   {
     "patient_id": "REAL-303",
-    "mrn": "CTC0043310",
+    "mrn": "HASA-MRN-0047",
     "name": "Chua Moy Lan",
     "dob": "1947-06-15",
     "age": 77,
@@ -37245,7 +37245,7 @@
   },
   {
     "patient_id": "REAL-304",
-    "mrn": "CTC0022790",
+    "mrn": "HASA-MRN-0042",
     "name": "Nurul binti Aziz",
     "dob": "1947-06-15",
     "age": 77,
@@ -37366,7 +37366,7 @@
   },
   {
     "patient_id": "REAL-305",
-    "mrn": "CTC0017769",
+    "mrn": "HASA-MRN-0041",
     "name": "Rafidah binti Bahari",
     "dob": "1946-06-15",
     "age": 78,
@@ -37681,7 +37681,7 @@
     "labs": {
       "creatinine": 79,
       "creatinine_unit": "umol/L",
-      "hba1c": 8.0,
+      "hba1c": 8,
       "inr_history": [
         2.1,
         2.4,
@@ -37695,7 +37695,7 @@
         "date": "2024-04-10"
       },
       "hba1c_record": {
-        "value": 8.0,
+        "value": 8,
         "date": "2024-04-10"
       },
       "inr_results": [
@@ -37737,7 +37737,7 @@
   },
   {
     "patient_id": "REAL-308",
-    "mrn": "CTC0048615",
+    "mrn": "HASA-MRN-0017",
     "name": "Aminah binti Hashim",
     "dob": "1954-06-15",
     "age": 70,
@@ -37859,7 +37859,7 @@
   },
   {
     "patient_id": "REAL-309",
-    "mrn": "CTC0029390",
+    "mrn": "HASA-MRN-0036",
     "name": "Khoo Sock Ping",
     "dob": "1970-06-15",
     "age": 54,
@@ -37993,7 +37993,7 @@
   },
   {
     "patient_id": "REAL-310",
-    "mrn": "CTC0000012",
+    "mrn": "HASA-MRN-0004",
     "name": "Lau Chai Hong",
     "dob": "1948-06-15",
     "age": 76,
@@ -38046,7 +38046,7 @@
     "vitals": {
       "bp_latest": "136/63",
       "bp_second": "136/63",
-      "weight": 81.0,
+      "weight": 81,
       "bp_readings": [
         {
           "value": "136/63",
@@ -38058,7 +38058,7 @@
         }
       ],
       "weight_record": {
-        "value": 81.0,
+        "value": 81,
         "date": "2024-04-15"
       }
     },
@@ -38254,7 +38254,7 @@
   },
   {
     "patient_id": "REAL-312",
-    "mrn": "CTC0028085",
+    "mrn": "HASA-MRN-0045",
     "name": "Loh Li Ching",
     "dob": "1936-06-15",
     "age": 88,
@@ -38382,7 +38382,7 @@
   },
   {
     "patient_id": "REAL-313",
-    "mrn": "CTC0033749",
+    "mrn": "HASA-MRN-0012",
     "name": "Rokiah binti Harun",
     "dob": "1941-06-15",
     "age": 83,
@@ -38497,7 +38497,7 @@
   },
   {
     "patient_id": "REAL-314",
-    "mrn": "CTC0033749",
+    "mrn": "HASA-MRN-0012",
     "name": "Sabariah binti Kadir",
     "dob": "1941-06-15",
     "age": 83,
@@ -38612,7 +38612,7 @@
   },
   {
     "patient_id": "REAL-315",
-    "mrn": "CTC0013909",
+    "mrn": "HASA-MRN-0008",
     "name": "Chia Siew Kuan",
     "dob": "1950-06-15",
     "age": 74,
@@ -38733,7 +38733,7 @@
   },
   {
     "patient_id": "REAL-316",
-    "mrn": "CTC0008857",
+    "mrn": "HASA-MRN-0009",
     "name": "Tijah binti Idris",
     "dob": "1970-06-15",
     "age": 54,
@@ -38779,7 +38779,7 @@
     "vitals": {
       "bp_latest": "144/94",
       "bp_second": "144/94",
-      "weight": 108.0,
+      "weight": 108,
       "bp_readings": [
         {
           "value": "144/94",
@@ -38791,7 +38791,7 @@
         }
       ],
       "weight_record": {
-        "value": 108.0,
+        "value": 108,
         "date": "2024-04-15"
       }
     },
@@ -38854,7 +38854,7 @@
   },
   {
     "patient_id": "REAL-317",
-    "mrn": "CTC0021962",
+    "mrn": "HASA-MRN-0019",
     "name": "Ummi binti Ahmad",
     "dob": "1960-06-15",
     "age": 64,
@@ -38994,7 +38994,7 @@
   },
   {
     "patient_id": "REAL-318",
-    "mrn": "CTC0037224",
+    "mrn": "HASA-MRN-0002",
     "name": "Hasnah binti Hamzah",
     "dob": "1965-06-15",
     "age": 59,
@@ -39060,7 +39060,7 @@
     "labs": {
       "creatinine": 102,
       "creatinine_unit": "umol/L",
-      "hba1c": 7.0,
+      "hba1c": 7,
       "inr_history": [
         2.1,
         2.4,
@@ -39074,7 +39074,7 @@
         "date": "2024-04-10"
       },
       "hba1c_record": {
-        "value": 7.0,
+        "value": 7,
         "date": "2024-04-10"
       },
       "inr_results": [
@@ -39238,7 +39238,7 @@
   },
   {
     "patient_id": "REAL-320",
-    "mrn": "CTC0022790",
+    "mrn": "HASA-MRN-0042",
     "name": "Mastura binti Abdullah",
     "dob": "1947-06-15",
     "age": 77,
@@ -39359,7 +39359,7 @@
   },
   {
     "patient_id": "REAL-321",
-    "mrn": "CTC0011659",
+    "mrn": "HASA-MRN-0013",
     "name": "Tan Kew Moy",
     "dob": "1956-06-15",
     "age": 68,
@@ -39486,7 +39486,7 @@
   },
   {
     "patient_id": "REAL-322",
-    "mrn": "CTC0017769",
+    "mrn": "HASA-MRN-0041",
     "name": "Munah binti Karim",
     "dob": "1946-06-15",
     "age": 78,
@@ -39613,7 +39613,7 @@
   },
   {
     "patient_id": "REAL-323",
-    "mrn": "CTC0029390",
+    "mrn": "HASA-MRN-0036",
     "name": "Chong Choo Eng",
     "dob": "1970-06-15",
     "age": 54,
@@ -39747,7 +39747,7 @@
   },
   {
     "patient_id": "REAL-324",
-    "mrn": "CTC0000012",
+    "mrn": "HASA-MRN-0004",
     "name": "Yap Pek Hoon",
     "dob": "1948-06-15",
     "age": 76,
@@ -39800,7 +39800,7 @@
     "vitals": {
       "bp_latest": "136/63",
       "bp_second": "136/63",
-      "weight": 81.0,
+      "weight": 81,
       "bp_readings": [
         {
           "value": "136/63",
@@ -39812,7 +39812,7 @@
         }
       ],
       "weight_record": {
-        "value": 81.0,
+        "value": 81,
         "date": "2024-04-15"
       }
     },
@@ -39984,7 +39984,7 @@
   },
   {
     "patient_id": "REAL-326",
-    "mrn": "CTC0038027",
+    "mrn": "HASA-MRN-0031",
     "name": "Azlina binti Yusof",
     "dob": "1962-06-15",
     "age": 62,
@@ -40099,7 +40099,7 @@
   },
   {
     "patient_id": "REAL-327",
-    "mrn": "CTC0043953",
+    "mrn": "HASA-MRN-0040",
     "name": "Aini binti Latif",
     "dob": "1938-06-15",
     "age": 86,
@@ -40157,7 +40157,7 @@
     "vitals": {
       "bp_latest": "/",
       "bp_second": "/",
-      "weight": 46.0,
+      "weight": 46,
       "bp_readings": [
         {
           "value": "/",
@@ -40169,7 +40169,7 @@
         }
       ],
       "weight_record": {
-        "value": 46.0,
+        "value": 46,
         "date": "2024-04-15"
       }
     },
@@ -40232,7 +40232,7 @@
   },
   {
     "patient_id": "REAL-328",
-    "mrn": "CTC0011659",
+    "mrn": "HASA-MRN-0013",
     "name": "Heng Yoke Chin",
     "dob": "1956-06-15",
     "age": 68,
@@ -40359,7 +40359,7 @@
   },
   {
     "patient_id": "REAL-329",
-    "mrn": "CTC0033749",
+    "mrn": "HASA-MRN-0012",
     "name": "Norlia binti Othman",
     "dob": "1941-06-15",
     "age": 83,
@@ -40607,7 +40607,7 @@
   },
   {
     "patient_id": "REAL-331",
-    "mrn": "CTC0028085",
+    "mrn": "HASA-MRN-0045",
     "name": "Ooi Hwee Lan",
     "dob": "1936-06-15",
     "age": 88,
@@ -40850,7 +40850,7 @@
   },
   {
     "patient_id": "REAL-333",
-    "mrn": "CTC0046174",
+    "mrn": "HASA-MRN-0033",
     "name": "Rukiah binti Nordin",
     "dob": "1965-06-15",
     "age": 59,
@@ -41092,7 +41092,7 @@
   },
   {
     "patient_id": "REAL-335",
-    "mrn": "CTC0005309",
+    "mrn": "HASA-MRN-0048",
     "name": "Low Siew Peng",
     "dob": "1963-06-15",
     "age": 61,
@@ -41163,7 +41163,7 @@
     "labs": {
       "creatinine": 142,
       "creatinine_unit": "umol/L",
-      "hba1c": 7.0,
+      "hba1c": 7,
       "inr_history": [
         2.1,
         2.4,
@@ -41177,7 +41177,7 @@
         "date": "2024-04-10"
       },
       "hba1c_record": {
-        "value": 7.0,
+        "value": 7,
         "date": "2024-04-10"
       },
       "inr_results": [
@@ -41219,7 +41219,7 @@
   },
   {
     "patient_id": "REAL-336",
-    "mrn": "CTC0000012",
+    "mrn": "HASA-MRN-0004",
     "name": "Choo Siew Hua",
     "dob": "1948-06-15",
     "age": 76,
@@ -41272,7 +41272,7 @@
     "vitals": {
       "bp_latest": "136/63",
       "bp_second": "136/63",
-      "weight": 81.0,
+      "weight": 81,
       "bp_readings": [
         {
           "value": "136/63",
@@ -41284,7 +41284,7 @@
         }
       ],
       "weight_record": {
-        "value": 81.0,
+        "value": 81,
         "date": "2024-04-15"
       }
     },
@@ -41462,7 +41462,7 @@
   },
   {
     "patient_id": "REAL-338",
-    "mrn": "CTC0022243",
+    "mrn": "HASA-MRN-0043",
     "name": "Soo Ah Kiew",
     "dob": "1958-06-15",
     "age": 66,
@@ -41595,7 +41595,7 @@
   },
   {
     "patient_id": "REAL-339",
-    "mrn": "CTC0028085",
+    "mrn": "HASA-MRN-0045",
     "name": "Khoo Gek Sim",
     "dob": "1936-06-15",
     "age": 88,
@@ -41723,7 +41723,7 @@
   },
   {
     "patient_id": "REAL-340",
-    "mrn": "CTC0015732",
+    "mrn": "HASA-MRN-0015",
     "name": "Rosnah binti Talib",
     "dob": "1953-06-15",
     "age": 71,
@@ -41850,7 +41850,7 @@
   },
   {
     "patient_id": "REAL-341",
-    "mrn": "CTC0005309",
+    "mrn": "HASA-MRN-0048",
     "name": "Tay Geok Lan",
     "dob": "1963-06-15",
     "age": 61,
@@ -41921,7 +41921,7 @@
     "labs": {
       "creatinine": 142,
       "creatinine_unit": "umol/L",
-      "hba1c": 7.0,
+      "hba1c": 7,
       "inr_history": [
         2.1,
         2.4,
@@ -41935,7 +41935,7 @@
         "date": "2024-04-10"
       },
       "hba1c_record": {
-        "value": 7.0,
+        "value": 7,
         "date": "2024-04-10"
       },
       "inr_results": [
@@ -41977,7 +41977,7 @@
   },
   {
     "patient_id": "REAL-342",
-    "mrn": "CTC0017769",
+    "mrn": "HASA-MRN-0041",
     "name": "Sufiah binti Sulaiman",
     "dob": "1946-06-15",
     "age": 78,
@@ -42104,7 +42104,7 @@
   },
   {
     "patient_id": "REAL-343",
-    "mrn": "CTC0016393",
+    "mrn": "HASA-MRN-0039",
     "name": "Wan Mariam binti Wahab",
     "dob": "1966-06-15",
     "age": 58,
@@ -42352,7 +42352,7 @@
   },
   {
     "patient_id": "REAL-345",
-    "mrn": "CTC0003513",
+    "mrn": "HASA-MRN-0007",
     "name": "Maimunah binti Taib",
     "dob": "1960-06-15",
     "age": 64,
@@ -42595,7 +42595,7 @@
   },
   {
     "patient_id": "REAL-347",
-    "mrn": "CTC0038027",
+    "mrn": "HASA-MRN-0031",
     "name": "Noraziah binti Mohamad",
     "dob": "1962-06-15",
     "age": 62,
@@ -42710,7 +42710,7 @@
   },
   {
     "patient_id": "REAL-348",
-    "mrn": "CTC0022790",
+    "mrn": "HASA-MRN-0042",
     "name": "Noriah binti Yahya",
     "dob": "1947-06-15",
     "age": 77,
@@ -42831,7 +42831,7 @@
   },
   {
     "patient_id": "REAL-349",
-    "mrn": "CTC0017769",
+    "mrn": "HASA-MRN-0041",
     "name": "Norlela binti Zubir",
     "dob": "1946-06-15",
     "age": 78,
@@ -42958,7 +42958,7 @@
   },
   {
     "patient_id": "REAL-350",
-    "mrn": "CTC0005309",
+    "mrn": "HASA-MRN-0048",
     "name": "Tee Poh Sim",
     "dob": "1963-06-15",
     "age": 61,
@@ -43029,7 +43029,7 @@
     "labs": {
       "creatinine": 142,
       "creatinine_unit": "umol/L",
-      "hba1c": 7.0,
+      "hba1c": 7,
       "inr_history": [
         2.1,
         2.4,
@@ -43043,7 +43043,7 @@
         "date": "2024-04-10"
       },
       "hba1c_record": {
-        "value": 7.0,
+        "value": 7,
         "date": "2024-04-10"
       },
       "inr_results": [
@@ -43200,7 +43200,7 @@
   },
   {
     "patient_id": "REAL-352",
-    "mrn": "CTC0028085",
+    "mrn": "HASA-MRN-0045",
     "name": "Chan Mei Keng",
     "dob": "1936-06-15",
     "age": 88,
@@ -43328,7 +43328,7 @@
   },
   {
     "patient_id": "REAL-353",
-    "mrn": "CTC0011659",
+    "mrn": "HASA-MRN-0013",
     "name": "Chong Moy Lan",
     "dob": "1956-06-15",
     "age": 68,
@@ -43455,7 +43455,7 @@
   },
   {
     "patient_id": "REAL-354",
-    "mrn": "CTC0029390",
+    "mrn": "HASA-MRN-0036",
     "name": "Yap Nget Ngo",
     "dob": "1970-06-15",
     "age": 54,
@@ -43589,7 +43589,7 @@
   },
   {
     "patient_id": "REAL-355",
-    "mrn": "CTC0033749",
+    "mrn": "HASA-MRN-0012",
     "name": "Zaiton binti Bahari",
     "dob": "1941-06-15",
     "age": 83,
@@ -43819,7 +43819,7 @@
   },
   {
     "patient_id": "REAL-357",
-    "mrn": "CTC0017769",
+    "mrn": "HASA-MRN-0041",
     "name": "Rusnah binti Basir",
     "dob": "1946-06-15",
     "age": 78,
@@ -43946,7 +43946,7 @@
   },
   {
     "patient_id": "REAL-358",
-    "mrn": "CTC0022790",
+    "mrn": "HASA-MRN-0042",
     "name": "Rosni binti Hashim",
     "dob": "1947-06-15",
     "age": 77,
@@ -44363,7 +44363,7 @@
     "labs": {
       "creatinine": 79,
       "creatinine_unit": "umol/L",
-      "hba1c": 8.0,
+      "hba1c": 8,
       "inr_history": [
         2.1,
         2.4,
@@ -44377,7 +44377,7 @@
         "date": "2024-04-10"
       },
       "hba1c_record": {
-        "value": 8.0,
+        "value": 8,
         "date": "2024-04-10"
       },
       "inr_results": [
@@ -44419,7 +44419,7 @@
   },
   {
     "patient_id": "REAL-362",
-    "mrn": "CTC0025977",
+    "mrn": "HASA-MRN-0024",
     "name": "Habibah binti Ariffin",
     "dob": "1947-06-15",
     "age": 77,
@@ -44472,7 +44472,7 @@
     "vitals": {
       "bp_latest": "145/66",
       "bp_second": "145/66",
-      "weight": 62.0,
+      "weight": 62,
       "bp_readings": [
         {
           "value": "145/66",
@@ -44484,7 +44484,7 @@
         }
       ],
       "weight_record": {
-        "value": 62.0,
+        "value": 62,
         "date": "2024-04-15"
       }
     },
@@ -44547,7 +44547,7 @@
   },
   {
     "patient_id": "REAL-363",
-    "mrn": "CTC0005309",
+    "mrn": "HASA-MRN-0048",
     "name": "Chua Li Kuan",
     "dob": "1963-06-15",
     "age": 61,
@@ -44618,7 +44618,7 @@
     "labs": {
       "creatinine": 142,
       "creatinine_unit": "umol/L",
-      "hba1c": 7.0,
+      "hba1c": 7,
       "inr_history": [
         2.1,
         2.4,
@@ -44632,7 +44632,7 @@
         "date": "2024-04-10"
       },
       "hba1c_record": {
-        "value": 7.0,
+        "value": 7,
         "date": "2024-04-10"
       },
       "inr_results": [
@@ -44674,7 +44674,7 @@
   },
   {
     "patient_id": "REAL-364",
-    "mrn": "CTC0021962",
+    "mrn": "HASA-MRN-0019",
     "name": "Laila binti Kadir",
     "dob": "1960-06-15",
     "age": 64,
@@ -45052,7 +45052,7 @@
   },
   {
     "patient_id": "REAL-367",
-    "mrn": "CTC0015732",
+    "mrn": "HASA-MRN-0015",
     "name": "Saodah binti Ahmad",
     "dob": "1953-06-15",
     "age": 71,
@@ -45179,7 +45179,7 @@
   },
   {
     "patient_id": "REAL-368",
-    "mrn": "CTC0029390",
+    "mrn": "HASA-MRN-0036",
     "name": "Soo Wai Yee",
     "dob": "1970-06-15",
     "age": 54,
@@ -45428,7 +45428,7 @@
   },
   {
     "patient_id": "REAL-370",
-    "mrn": "CTC0027922",
+    "mrn": "HASA-MRN-0049",
     "name": "Zabedah binti Abdullah",
     "dob": "1954-06-15",
     "age": 70,
@@ -45555,7 +45555,7 @@
   },
   {
     "patient_id": "REAL-371",
-    "mrn": "CTC0003513",
+    "mrn": "HASA-MRN-0007",
     "name": "Noraini binti Jaafar",
     "dob": "1960-06-15",
     "age": 64,
@@ -45810,7 +45810,7 @@
   },
   {
     "patient_id": "REAL-373",
-    "mrn": "CTC0038027",
+    "mrn": "HASA-MRN-0031",
     "name": "Maznah binti Ismail",
     "dob": "1962-06-15",
     "age": 62,
@@ -45991,7 +45991,7 @@
     "labs": {
       "creatinine": 79,
       "creatinine_unit": "umol/L",
-      "hba1c": 8.0,
+      "hba1c": 8,
       "inr_history": [
         2.1,
         2.4,
@@ -46005,7 +46005,7 @@
         "date": "2024-04-10"
       },
       "hba1c_record": {
-        "value": 8.0,
+        "value": 8,
         "date": "2024-04-10"
       },
       "inr_results": [
@@ -46047,7 +46047,7 @@
   },
   {
     "patient_id": "REAL-375",
-    "mrn": "CTC0040428",
+    "mrn": "HASA-MRN-0014",
     "name": "Rafidah binti Majid",
     "dob": "1965-06-15",
     "age": 59,
@@ -46163,7 +46163,7 @@
   },
   {
     "patient_id": "REAL-376",
-    "mrn": "CTC0020966",
+    "mrn": "HASA-MRN-0027",
     "name": "Ramlah binti Yusof",
     "dob": "1975-06-15",
     "age": 49,
@@ -46279,7 +46279,7 @@
   },
   {
     "patient_id": "REAL-377",
-    "mrn": "CTC0011659",
+    "mrn": "HASA-MRN-0013",
     "name": "Lee Ah Moy",
     "dob": "1956-06-15",
     "age": 68,
@@ -46406,7 +46406,7 @@
   },
   {
     "patient_id": "REAL-378",
-    "mrn": "CTC0005309",
+    "mrn": "HASA-MRN-0048",
     "name": "Teoh Yoke Chin",
     "dob": "1963-06-15",
     "age": 61,
@@ -46477,7 +46477,7 @@
     "labs": {
       "creatinine": 142,
       "creatinine_unit": "umol/L",
-      "hba1c": 7.0,
+      "hba1c": 7,
       "inr_history": [
         2.1,
         2.4,
@@ -46491,7 +46491,7 @@
         "date": "2024-04-10"
       },
       "hba1c_record": {
-        "value": 7.0,
+        "value": 7,
         "date": "2024-04-10"
       },
       "inr_results": [
@@ -46533,7 +46533,7 @@
   },
   {
     "patient_id": "REAL-379",
-    "mrn": "CTC0000012",
+    "mrn": "HASA-MRN-0004",
     "name": "Liew Chin Bee",
     "dob": "1948-06-15",
     "age": 76,
@@ -46586,7 +46586,7 @@
     "vitals": {
       "bp_latest": "136/63",
       "bp_second": "136/63",
-      "weight": 81.0,
+      "weight": 81,
       "bp_readings": [
         {
           "value": "136/63",
@@ -46598,7 +46598,7 @@
         }
       ],
       "weight_record": {
-        "value": 81.0,
+        "value": 81,
         "date": "2024-04-15"
       }
     },
@@ -46661,7 +46661,7 @@
   },
   {
     "patient_id": "REAL-380",
-    "mrn": "CTC0022790",
+    "mrn": "HASA-MRN-0042",
     "name": "Hamidah binti Mansor",
     "dob": "1947-06-15",
     "age": 77,
@@ -46782,7 +46782,7 @@
   },
   {
     "patient_id": "REAL-381",
-    "mrn": "CTC0046174",
+    "mrn": "HASA-MRN-0033",
     "name": "Haslinda binti Osman",
     "dob": "1965-06-15",
     "age": 59,
@@ -46909,7 +46909,7 @@
   },
   {
     "patient_id": "REAL-382",
-    "mrn": "CTC0003513",
+    "mrn": "HASA-MRN-0007",
     "name": "Rohana binti Zakaria",
     "dob": "1960-06-15",
     "age": 64,
@@ -47406,7 +47406,7 @@
   },
   {
     "patient_id": "REAL-386",
-    "mrn": "CTC0021962",
+    "mrn": "HASA-MRN-0019",
     "name": "Tijah binti Omar",
     "dob": "1960-06-15",
     "age": 64,
@@ -47546,7 +47546,7 @@
   },
   {
     "patient_id": "REAL-387",
-    "mrn": "CTC0033749",
+    "mrn": "HASA-MRN-0012",
     "name": "Ummi binti Samad",
     "dob": "1941-06-15",
     "age": 83,
@@ -47661,7 +47661,7 @@
   },
   {
     "patient_id": "REAL-388",
-    "mrn": "CTC0038027",
+    "mrn": "HASA-MRN-0031",
     "name": "Hasnah binti Ramli",
     "dob": "1962-06-15",
     "age": 62,
@@ -47892,7 +47892,7 @@
   },
   {
     "patient_id": "REAL-390",
-    "mrn": "CTC0020966",
+    "mrn": "HASA-MRN-0027",
     "name": "Mastura binti Talib",
     "dob": "1975-06-15",
     "age": 49,
@@ -48008,7 +48008,7 @@
   },
   {
     "patient_id": "REAL-391",
-    "mrn": "CTC0015732",
+    "mrn": "HASA-MRN-0015",
     "name": "Minah binti Ibrahim",
     "dob": "1953-06-15",
     "age": 71,
@@ -48365,7 +48365,7 @@
   },
   {
     "patient_id": "REAL-394",
-    "mrn": "CTC0003513",
+    "mrn": "HASA-MRN-0007",
     "name": "Sharifah binti Ali",
     "dob": "1960-06-15",
     "age": 64,
@@ -48626,7 +48626,7 @@
   },
   {
     "patient_id": "REAL-396",
-    "mrn": "CTC0038027",
+    "mrn": "HASA-MRN-0031",
     "name": "Azlina binti Yunus",
     "dob": "1962-06-15",
     "age": 62,
@@ -48794,7 +48794,7 @@
     "vitals": {
       "bp_latest": "149/76",
       "bp_second": "149/76",
-      "weight": 66.0,
+      "weight": 66,
       "bp_readings": [
         {
           "value": "149/76",
@@ -48806,14 +48806,14 @@
         }
       ],
       "weight_record": {
-        "value": 66.0,
+        "value": 66,
         "date": "2024-04-15"
       }
     },
     "labs": {
       "creatinine": 106,
       "creatinine_unit": "umol/L",
-      "hba1c": 6.0,
+      "hba1c": 6,
       "inr_history": [
         2.1,
         2.4,
@@ -48827,7 +48827,7 @@
         "date": "2024-04-10"
       },
       "hba1c_record": {
-        "value": 6.0,
+        "value": 6,
         "date": "2024-04-10"
       },
       "inr_results": [
@@ -48869,7 +48869,7 @@
   },
   {
     "patient_id": "REAL-398",
-    "mrn": "CTC0025977",
+    "mrn": "HASA-MRN-0024",
     "name": "Siti binti Yahya",
     "dob": "1947-06-15",
     "age": 77,
@@ -48922,7 +48922,7 @@
     "vitals": {
       "bp_latest": "145/66",
       "bp_second": "145/66",
-      "weight": 62.0,
+      "weight": 62,
       "bp_readings": [
         {
           "value": "145/66",
@@ -48934,7 +48934,7 @@
         }
       ],
       "weight_record": {
-        "value": 62.0,
+        "value": 62,
         "date": "2024-04-15"
       }
     },
@@ -49112,7 +49112,7 @@
   },
   {
     "patient_id": "REAL-400",
-    "mrn": "CTC0043310",
+    "mrn": "HASA-MRN-0047",
     "name": "Lau Poh Sim",
     "dob": "1947-06-15",
     "age": 77,
@@ -49234,7 +49234,7 @@
   },
   {
     "patient_id": "REAL-401",
-    "mrn": "CTC0022243",
+    "mrn": "HASA-MRN-0043",
     "name": "Tay Geok Hong",
     "dob": "1958-06-15",
     "age": 66,
@@ -49367,7 +49367,7 @@
   },
   {
     "patient_id": "REAL-402",
-    "mrn": "CTC0022755",
+    "mrn": "HASA-MRN-0011",
     "name": "Rubiah binti Adnan",
     "dob": "1957-06-15",
     "age": 67,
@@ -49439,7 +49439,7 @@
     "labs": {
       "creatinine": 170,
       "creatinine_unit": "umol/L",
-      "hba1c": 8.0,
+      "hba1c": 8,
       "inr_history": [
         2.1,
         2.4,
@@ -49453,7 +49453,7 @@
         "date": "2024-04-10"
       },
       "hba1c_record": {
-        "value": 8.0,
+        "value": 8,
         "date": "2024-04-10"
       },
       "inr_results": [
@@ -49495,7 +49495,7 @@
   },
   {
     "patient_id": "REAL-403",
-    "mrn": "CTC0022790",
+    "mrn": "HASA-MRN-0042",
     "name": "Rukiah binti Salleh",
     "dob": "1947-06-15",
     "age": 77,
@@ -49616,7 +49616,7 @@
   },
   {
     "patient_id": "REAL-404",
-    "mrn": "CTC0046174",
+    "mrn": "HASA-MRN-0033",
     "name": "Azizah binti Aziz",
     "dob": "1965-06-15",
     "age": 59,
@@ -49784,7 +49784,7 @@
     "vitals": {
       "bp_latest": "84/52",
       "bp_second": "84/52",
-      "weight": 61.0,
+      "weight": 61,
       "bp_readings": [
         {
           "value": "84/52",
@@ -49796,7 +49796,7 @@
         }
       ],
       "weight_record": {
-        "value": 61.0,
+        "value": 61,
         "date": "2024-04-15"
       }
     },
@@ -49859,7 +49859,7 @@
   },
   {
     "patient_id": "REAL-406",
-    "mrn": "CTC0015732",
+    "mrn": "HASA-MRN-0015",
     "name": "Jamilah binti Mahmud",
     "dob": "1953-06-15",
     "age": 71,
@@ -50108,7 +50108,7 @@
   },
   {
     "patient_id": "REAL-408",
-    "mrn": "CTC0022243",
+    "mrn": "HASA-MRN-0043",
     "name": "Teoh Yueh Wah",
     "dob": "1958-06-15",
     "age": 66,
@@ -50241,7 +50241,7 @@
   },
   {
     "patient_id": "REAL-409",
-    "mrn": "CTC0038027",
+    "mrn": "HASA-MRN-0031",
     "name": "Halimah binti Daud",
     "dob": "1962-06-15",
     "age": 62,
@@ -50598,7 +50598,7 @@
   },
   {
     "patient_id": "REAL-412",
-    "mrn": "CTC0003513",
+    "mrn": "HASA-MRN-0007",
     "name": "Sufiah binti Ariffin",
     "dob": "1960-06-15",
     "age": 64,
@@ -50779,7 +50779,7 @@
     "vitals": {
       "bp_latest": "149/76",
       "bp_second": "149/76",
-      "weight": 66.0,
+      "weight": 66,
       "bp_readings": [
         {
           "value": "149/76",
@@ -50791,14 +50791,14 @@
         }
       ],
       "weight_record": {
-        "value": 66.0,
+        "value": 66,
         "date": "2024-04-15"
       }
     },
     "labs": {
       "creatinine": 106,
       "creatinine_unit": "umol/L",
-      "hba1c": 6.0,
+      "hba1c": 6,
       "inr_history": [
         2.1,
         2.4,
@@ -50812,7 +50812,7 @@
         "date": "2024-04-10"
       },
       "hba1c_record": {
-        "value": 6.0,
+        "value": 6,
         "date": "2024-04-10"
       },
       "inr_results": [
@@ -50854,7 +50854,7 @@
   },
   {
     "patient_id": "REAL-414",
-    "mrn": "CTC0043310",
+    "mrn": "HASA-MRN-0047",
     "name": "Yap Kim Lian",
     "dob": "1947-06-15",
     "age": 77,
@@ -51315,7 +51315,7 @@
   },
   {
     "patient_id": "REAL-418",
-    "mrn": "CTC0038027",
+    "mrn": "HASA-MRN-0031",
     "name": "Noriah binti Hamzah",
     "dob": "1962-06-15",
     "age": 62,
@@ -51777,7 +51777,7 @@
   },
   {
     "patient_id": "REAL-422",
-    "mrn": "CTC0043310",
+    "mrn": "HASA-MRN-0047",
     "name": "Ong Kim Eng",
     "dob": "1947-06-15",
     "age": 77,
@@ -51899,7 +51899,7 @@
   },
   {
     "patient_id": "REAL-423",
-    "mrn": "CTC0017769",
+    "mrn": "HASA-MRN-0041",
     "name": "Che Som binti Ismail",
     "dob": "1946-06-15",
     "age": 78,
@@ -52026,7 +52026,7 @@
   },
   {
     "patient_id": "REAL-424",
-    "mrn": "CTC0005309",
+    "mrn": "HASA-MRN-0048",
     "name": "Lim Pek Hoon",
     "dob": "1963-06-15",
     "age": 61,
@@ -52097,7 +52097,7 @@
     "labs": {
       "creatinine": 142,
       "creatinine_unit": "umol/L",
-      "hba1c": 7.0,
+      "hba1c": 7,
       "inr_history": [
         2.1,
         2.4,
@@ -52111,7 +52111,7 @@
         "date": "2024-04-10"
       },
       "hba1c_record": {
-        "value": 7.0,
+        "value": 7,
         "date": "2024-04-10"
       },
       "inr_results": [
@@ -52153,7 +52153,7 @@
   },
   {
     "patient_id": "REAL-425",
-    "mrn": "CTC0003513",
+    "mrn": "HASA-MRN-0007",
     "name": "Zaiton binti Majid",
     "dob": "1960-06-15",
     "age": 64,
@@ -52779,7 +52779,7 @@
   },
   {
     "patient_id": "REAL-430",
-    "mrn": "CTC0029390",
+    "mrn": "HASA-MRN-0036",
     "name": "Lau Hui Min",
     "dob": "1970-06-15",
     "age": 54,
@@ -52913,7 +52913,7 @@
   },
   {
     "patient_id": "REAL-431",
-    "mrn": "CTC0026495",
+    "mrn": "HASA-MRN-0046",
     "name": "Tay Hwee Lan",
     "dob": "1948-06-15",
     "age": 76,
@@ -53258,7 +53258,7 @@
   },
   {
     "patient_id": "REAL-434",
-    "mrn": "CTC0038027",
+    "mrn": "HASA-MRN-0031",
     "name": "Laila binti Radzi",
     "dob": "1962-06-15",
     "age": 62,
@@ -53500,7 +53500,7 @@
   },
   {
     "patient_id": "REAL-436",
-    "mrn": "CTC0022790",
+    "mrn": "HASA-MRN-0042",
     "name": "Khadijah binti Omar",
     "dob": "1947-06-15",
     "age": 77,
@@ -53621,7 +53621,7 @@
   },
   {
     "patient_id": "REAL-437",
-    "mrn": "CTC0024484",
+    "mrn": "HASA-MRN-0050",
     "name": "Saodah binti Samad",
     "dob": "1973-06-15",
     "age": 51,
@@ -53743,7 +53743,7 @@
   },
   {
     "patient_id": "REAL-438",
-    "mrn": "CTC0040428",
+    "mrn": "HASA-MRN-0014",
     "name": "Zaharah binti Ramli",
     "dob": "1965-06-15",
     "age": 59,
@@ -53859,7 +53859,7 @@
   },
   {
     "patient_id": "REAL-439",
-    "mrn": "CTC0028085",
+    "mrn": "HASA-MRN-0045",
     "name": "Liew Gek Sim",
     "dob": "1936-06-15",
     "age": 88,
@@ -53987,7 +53987,7 @@
   },
   {
     "patient_id": "REAL-440",
-    "mrn": "CTC0021962",
+    "mrn": "HASA-MRN-0019",
     "name": "Zabedah binti Talib",
     "dob": "1960-06-15",
     "age": 64,
@@ -54249,7 +54249,7 @@
   },
   {
     "patient_id": "REAL-442",
-    "mrn": "CTC0000012",
+    "mrn": "HASA-MRN-0004",
     "name": "Chan Kwee Hwa",
     "dob": "1948-06-15",
     "age": 76,
@@ -54302,7 +54302,7 @@
     "vitals": {
       "bp_latest": "136/63",
       "bp_second": "136/63",
-      "weight": 81.0,
+      "weight": 81,
       "bp_readings": [
         {
           "value": "136/63",
@@ -54314,7 +54314,7 @@
         }
       ],
       "weight_record": {
-        "value": 81.0,
+        "value": 81,
         "date": "2024-04-15"
       }
     },
@@ -54608,7 +54608,7 @@
   },
   {
     "patient_id": "REAL-445",
-    "mrn": "CTC0003513",
+    "mrn": "HASA-MRN-0007",
     "name": "Rafidah binti Taib",
     "dob": "1960-06-15",
     "age": 64,
@@ -54736,7 +54736,7 @@
   },
   {
     "patient_id": "REAL-446",
-    "mrn": "CTC0043310",
+    "mrn": "HASA-MRN-0047",
     "name": "Cheah Mei Fong",
     "dob": "1947-06-15",
     "age": 77,
@@ -55106,7 +55106,7 @@
   },
   {
     "patient_id": "REAL-449",
-    "mrn": "CTC0011659",
+    "mrn": "HASA-MRN-0013",
     "name": "Khor Bik Kuen",
     "dob": "1956-06-15",
     "age": 68,
@@ -55233,7 +55233,7 @@
   },
   {
     "patient_id": "REAL-450",
-    "mrn": "CTC0029390",
+    "mrn": "HASA-MRN-0036",
     "name": "Wong Poh Sim",
     "dob": "1970-06-15",
     "age": 54,
@@ -55367,7 +55367,7 @@
   },
   {
     "patient_id": "REAL-451",
-    "mrn": "CTC0044190",
+    "mrn": "HASA-MRN-0051",
     "name": "Haslinda binti Zainal",
     "dob": "1982-06-15",
     "age": 42,
@@ -55495,7 +55495,7 @@
   },
   {
     "patient_id": "REAL-452",
-    "mrn": "CTC0022790",
+    "mrn": "HASA-MRN-0042",
     "name": "Rohana binti Adnan",
     "dob": "1947-06-15",
     "age": 77,
@@ -55731,7 +55731,7 @@
   },
   {
     "patient_id": "REAL-454",
-    "mrn": "CTC0005309",
+    "mrn": "HASA-MRN-0048",
     "name": "Lim Nget Ngo",
     "dob": "1963-06-15",
     "age": 61,
@@ -55802,7 +55802,7 @@
     "labs": {
       "creatinine": 142,
       "creatinine_unit": "umol/L",
-      "hba1c": 7.0,
+      "hba1c": 7,
       "inr_history": [
         2.1,
         2.4,
@@ -55816,7 +55816,7 @@
         "date": "2024-04-10"
       },
       "hba1c_record": {
-        "value": 7.0,
+        "value": 7,
         "date": "2024-04-10"
       },
       "inr_results": [
@@ -55858,7 +55858,7 @@
   },
   {
     "patient_id": "REAL-455",
-    "mrn": "CTC0022790",
+    "mrn": "HASA-MRN-0042",
     "name": "Sapiah binti Bahari",
     "dob": "1947-06-15",
     "age": 77,
@@ -55979,7 +55979,7 @@
   },
   {
     "patient_id": "REAL-456",
-    "mrn": "CTC0003513",
+    "mrn": "HASA-MRN-0007",
     "name": "Tijah binti Mahmud",
     "dob": "1960-06-15",
     "age": 64,
@@ -56107,7 +56107,7 @@
   },
   {
     "patient_id": "REAL-457",
-    "mrn": "CTC0022790",
+    "mrn": "HASA-MRN-0042",
     "name": "Ummi binti Basir",
     "dob": "1947-06-15",
     "age": 77,
@@ -56228,7 +56228,7 @@
   },
   {
     "patient_id": "REAL-458",
-    "mrn": "CTC0037224",
+    "mrn": "HASA-MRN-0002",
     "name": "Hasnah binti Hashim",
     "dob": "1965-06-15",
     "age": 59,
@@ -56294,7 +56294,7 @@
     "labs": {
       "creatinine": 102,
       "creatinine_unit": "umol/L",
-      "hba1c": 7.0,
+      "hba1c": 7,
       "inr_history": [
         2.1,
         2.4,
@@ -56308,7 +56308,7 @@
         "date": "2024-04-10"
       },
       "hba1c_record": {
-        "value": 7.0,
+        "value": 7,
         "date": "2024-04-10"
       },
       "inr_results": [
@@ -56350,7 +56350,7 @@
   },
   {
     "patient_id": "REAL-459",
-    "mrn": "CTC0017769",
+    "mrn": "HASA-MRN-0041",
     "name": "Jamaliah binti Daud",
     "dob": "1946-06-15",
     "age": 78,
@@ -56477,7 +56477,7 @@
   },
   {
     "patient_id": "REAL-460",
-    "mrn": "CTC0033749",
+    "mrn": "HASA-MRN-0012",
     "name": "Mastura binti Ghazali",
     "dob": "1941-06-15",
     "age": 83,
@@ -56592,7 +56592,7 @@
   },
   {
     "patient_id": "REAL-461",
-    "mrn": "CTC0040428",
+    "mrn": "HASA-MRN-0014",
     "name": "Minah binti Hussein",
     "dob": "1965-06-15",
     "age": 59,
@@ -56749,7 +56749,7 @@
     "vitals": {
       "bp_latest": "84/52",
       "bp_second": "84/52",
-      "weight": 61.0,
+      "weight": 61,
       "bp_readings": [
         {
           "value": "84/52",
@@ -56761,7 +56761,7 @@
         }
       ],
       "weight_record": {
-        "value": 61.0,
+        "value": 61,
         "date": "2024-04-15"
       }
     },
@@ -56957,7 +56957,7 @@
   },
   {
     "patient_id": "REAL-464",
-    "mrn": "CTC0028085",
+    "mrn": "HASA-MRN-0045",
     "name": "Goh Kim Lian",
     "dob": "1936-06-15",
     "age": 88,
@@ -57085,7 +57085,7 @@
   },
   {
     "patient_id": "REAL-465",
-    "mrn": "CTC0038027",
+    "mrn": "HASA-MRN-0031",
     "name": "Asmah binti Bakar",
     "dob": "1962-06-15",
     "age": 62,
@@ -57200,7 +57200,7 @@
   },
   {
     "patient_id": "REAL-466",
-    "mrn": "CTC0022243",
+    "mrn": "HASA-MRN-0043",
     "name": "Ang Ai Ling",
     "dob": "1958-06-15",
     "age": 66,
@@ -57333,7 +57333,7 @@
   },
   {
     "patient_id": "REAL-467",
-    "mrn": "CTC0017769",
+    "mrn": "HASA-MRN-0041",
     "name": "Aini binti Ahmad",
     "dob": "1946-06-15",
     "age": 78,
@@ -57460,7 +57460,7 @@
   },
   {
     "patient_id": "REAL-468",
-    "mrn": "CTC0005309",
+    "mrn": "HASA-MRN-0048",
     "name": "Teoh Wai Yee",
     "dob": "1963-06-15",
     "age": 61,
@@ -57531,7 +57531,7 @@
     "labs": {
       "creatinine": 142,
       "creatinine_unit": "umol/L",
-      "hba1c": 7.0,
+      "hba1c": 7,
       "inr_history": [
         2.1,
         2.4,
@@ -57545,7 +57545,7 @@
         "date": "2024-04-10"
       },
       "hba1c_record": {
-        "value": 7.0,
+        "value": 7,
         "date": "2024-04-10"
       },
       "inr_results": [
@@ -57628,7 +57628,7 @@
     "vitals": {
       "bp_latest": "84/52",
       "bp_second": "84/52",
-      "weight": 61.0,
+      "weight": 61,
       "bp_readings": [
         {
           "value": "84/52",
@@ -57640,7 +57640,7 @@
         }
       ],
       "weight_record": {
-        "value": 61.0,
+        "value": 61,
         "date": "2024-04-15"
       }
     },
@@ -57940,7 +57940,7 @@
   },
   {
     "patient_id": "REAL-472",
-    "mrn": "CTC0043310",
+    "mrn": "HASA-MRN-0047",
     "name": "Chan Kim Eng",
     "dob": "1947-06-15",
     "age": 77,
@@ -58183,7 +58183,7 @@
   },
   {
     "patient_id": "REAL-474",
-    "mrn": "CTC0003513",
+    "mrn": "HASA-MRN-0007",
     "name": "Azizah binti Kasim",
     "dob": "1960-06-15",
     "age": 64,
@@ -58427,7 +58427,7 @@
   },
   {
     "patient_id": "REAL-476",
-    "mrn": "CTC0011659",
+    "mrn": "HASA-MRN-0013",
     "name": "Cheah Suet Fong",
     "dob": "1956-06-15",
     "age": 68,
@@ -58676,7 +58676,7 @@
   },
   {
     "patient_id": "REAL-478",
-    "mrn": "CTC0041435",
+    "mrn": "HASA-MRN-0052",
     "name": "Meenachi a/p Arumugam",
     "dob": "1973-06-15",
     "age": 51,
@@ -58804,7 +58804,7 @@
   },
   {
     "patient_id": "REAL-479",
-    "mrn": "CTC0005309",
+    "mrn": "HASA-MRN-0048",
     "name": "Khor Chin Bee",
     "dob": "1963-06-15",
     "age": 61,
@@ -58875,7 +58875,7 @@
     "labs": {
       "creatinine": 142,
       "creatinine_unit": "umol/L",
-      "hba1c": 7.0,
+      "hba1c": 7,
       "inr_history": [
         2.1,
         2.4,
@@ -58889,7 +58889,7 @@
         "date": "2024-04-10"
       },
       "hba1c_record": {
-        "value": 7.0,
+        "value": 7,
         "date": "2024-04-10"
       },
       "inr_results": [
@@ -58931,7 +58931,7 @@
   },
   {
     "patient_id": "REAL-480",
-    "mrn": "CTC0039202",
+    "mrn": "HASA-MRN-0053",
     "name": "Rosnah binti Mansor",
     "dob": "1970-06-15",
     "age": 54,
@@ -59174,7 +59174,7 @@
   },
   {
     "patient_id": "REAL-482",
-    "mrn": "CTC0017769",
+    "mrn": "HASA-MRN-0041",
     "name": "Sufiah binti Zakaria",
     "dob": "1946-06-15",
     "age": 78,
@@ -59301,7 +59301,7 @@
   },
   {
     "patient_id": "REAL-483",
-    "mrn": "CTC0017769",
+    "mrn": "HASA-MRN-0041",
     "name": "Wan Mariam binti Nordin",
     "dob": "1946-06-15",
     "age": 78,
@@ -59555,7 +59555,7 @@
   },
   {
     "patient_id": "REAL-485",
-    "mrn": "CTC0022790",
+    "mrn": "HASA-MRN-0042",
     "name": "Maimunah binti Hassan",
     "dob": "1947-06-15",
     "age": 77,
@@ -59797,7 +59797,7 @@
   },
   {
     "patient_id": "REAL-487",
-    "mrn": "CTC0028085",
+    "mrn": "HASA-MRN-0045",
     "name": "Sim Swee Imm",
     "dob": "1936-06-15",
     "age": 88,
@@ -59925,7 +59925,7 @@
   },
   {
     "patient_id": "REAL-488",
-    "mrn": "CTC0011659",
+    "mrn": "HASA-MRN-0013",
     "name": "Soo Ah Kiew",
     "dob": "1956-06-15",
     "age": 68,
@@ -60052,7 +60052,7 @@
   },
   {
     "patient_id": "REAL-489",
-    "mrn": "CTC0017769",
+    "mrn": "HASA-MRN-0041",
     "name": "Norlela binti Razak",
     "dob": "1946-06-15",
     "age": 78,
@@ -60415,7 +60415,7 @@
   },
   {
     "patient_id": "REAL-492",
-    "mrn": "CTC0016393",
+    "mrn": "HASA-MRN-0039",
     "name": "Fatimah binti Sulaiman",
     "dob": "1966-06-15",
     "age": 58,
@@ -60536,7 +60536,7 @@
   },
   {
     "patient_id": "REAL-493",
-    "mrn": "CTC0046174",
+    "mrn": "HASA-MRN-0033",
     "name": "Che Som binti Wahab",
     "dob": "1965-06-15",
     "age": 59,

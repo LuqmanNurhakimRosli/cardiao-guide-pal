@@ -1,9 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
-import {
-  listPatients,
-  getPatientWithCdss,
-} from "@/shared/cdss/server.functions";
+import { listPatients, getPatientWithCdss } from "@/shared/cdss/server.functions";
 import { AlertOverridePage } from "@/pages/alerts/override";
 
 const searchSchema = z.object({ p: z.string().optional() });

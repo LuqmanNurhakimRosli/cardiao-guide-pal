@@ -35,18 +35,63 @@ const femaleScore2 = { age: 66, sex: "female", comorbidities: { hypertension: tr
 assert(cha2ds2va(femaleScore1).total === 1, "Female HTN Age 60 score = 1 (no sex points)");
 assert(cha2ds2va(femaleScore2).total === 2, "Female HTN Age 66 score = 2");
 
-const resScore1 = evaluate({ ...femaleScore1, patient_id: "T1", name: "Test", clinic_location: "Cardiology Clinic", diagnoses: ["I48.0"], ecg_results: ["AF"], medications: [], vitals: {}, labs: {} }, { afConfirmed: true });
-assert(resScore1.alerts.filter(a => a.id === "stroke-prevention").length === 0, "CHA2DS2-VA = 1 does NOT trigger stroke alert");
+const resScore1 = evaluate(
+  {
+    ...femaleScore1,
+    patient_id: "T1",
+    name: "Test",
+    clinic_location: "Cardiology Clinic",
+    diagnoses: ["I48.0"],
+    ecg_results: ["AF"],
+    medications: [],
+    vitals: {},
+    labs: {},
+  },
+  { afConfirmed: true },
+);
+assert(
+  resScore1.alerts.filter((a) => a.id === "stroke-prevention").length === 0,
+  "CHA2DS2-VA = 1 does NOT trigger stroke alert",
+);
 
-const resScore2 = evaluate({ ...femaleScore2, patient_id: "T2", name: "Test", clinic_location: "Cardiology Clinic", diagnoses: ["I48.0"], ecg_results: ["AF"], medications: [], vitals: {}, labs: {} }, { afConfirmed: true });
-assert(resScore2.alerts.filter(a => a.id === "stroke-prevention").length === 1, "CHA2DS2-VA = 2 triggers stroke alert for female (previously needed 3)");
+const resScore2 = evaluate(
+  {
+    ...femaleScore2,
+    patient_id: "T2",
+    name: "Test",
+    clinic_location: "Cardiology Clinic",
+    diagnoses: ["I48.0"],
+    ecg_results: ["AF"],
+    medications: [],
+    vitals: {},
+    labs: {},
+  },
+  { afConfirmed: true },
+);
+assert(
+  resScore2.alerts.filter((a) => a.id === "stroke-prevention").length === 1,
+  "CHA2DS2-VA = 2 triggers stroke alert for female (previously needed 3)",
+);
 
 // 2. HAS-BLED Informational Alert
 console.log("\n2. HAS-BLED Scoring & Informational Alert:");
-const hbHigh = hasBled({ hypertension: true, abnormalRenal: true, abnormalLiver: false, stroke: true, bleedingHistory: false, labileINR: false, elderly: true, drugs: false, alcohol: false });
+const hbHigh = hasBled({
+  hypertension: true,
+  abnormalRenal: true,
+  abnormalLiver: false,
+  stroke: true,
+  bleedingHistory: false,
+  labileINR: false,
+  elderly: true,
+  drugs: false,
+  alcohol: false,
+});
 assert(hbHigh.total === 4 && hbHigh.highRisk, "HAS-BLED total = 4 (high risk)");
 const hbAlert = evaluateHasBledAlert(hbHigh.total, hbHigh.breakdown);
-assert(hbAlert !== null && hbAlert.detail.includes("not contraindicated"), "HAS-BLED >= 3 emits informational alert ('not contraindicated solely by score')");
+assert(
+  hbAlert !== null && hbAlert.detail.includes("not contraindicated"),
+  "HAS-BLED >= 3 emits informational alert ('not contraindicated solely by score')",
+);
 
 // 3. Cockcroft-Gault CrCl
 console.log("\n3. Cockcroft-Gault CrCl Calculation:");
@@ -57,36 +102,81 @@ const crclPatient = {
   labs: { creatinine: 140, creatinine_unit: "umol/L" },
 };
 const crclResult = creatinineClearance(crclPatient);
-assert(crclResult.clcr !== undefined && crclResult.clcr > 20 && crclResult.clcr < 35, `CrCl calculated correctly: ${crclResult.clcr} mL/min`);
+assert(
+  crclResult.clcr !== undefined && crclResult.clcr > 20 && crclResult.clcr < 35,
+  `CrCl calculated correctly: ${crclResult.clcr} mL/min`,
+);
 
 // 4. Blood Pressure
 console.log("\n4. Blood Pressure Tests:");
 const bpHtnMissing = evaluateBP({ comorbidities: { hypertension: true }, vitals: {} });
-assert(bpHtnMissing.alerts.some(a => a.id === "bp-hypertension-missing"), "Hypertension + missing BP triggers actionable alert to monitor BP");
+assert(
+  bpHtnMissing.alerts.some((a) => a.id === "bp-hypertension-missing"),
+  "Hypertension + missing BP triggers actionable alert to monitor BP",
+);
 
 const bpNonHtnMissing = evaluateBP({ comorbidities: { hypertension: false }, vitals: {} });
-assert(bpNonHtnMissing.reminders.some(r => r.id === "bp-missing-all"), "Non-hypertension + missing BP triggers reminder");
+assert(
+  bpNonHtnMissing.reminders.some((r) => r.id === "bp-missing-all"),
+  "Non-hypertension + missing BP triggers reminder",
+);
 
 const bp1Only = evaluateBP({ vitals: { bp_readings: [{ value: "150/95", date: "2026-08-26" }] } });
-assert(bp1Only.reminders.some(r => r.id === "bp-missing-second"), "1 BP reading produces reminder to obtain second reading");
+assert(
+  bp1Only.reminders.some((r) => r.id === "bp-missing-second"),
+  "1 BP reading produces reminder to obtain second reading",
+);
 
-const bpUncontrolled = evaluateBP({ vitals: { bp_readings: [{ value: "150/95", date: "2026-08-26" }, { value: "148/92", date: "2026-08-26" }] } });
-assert(bpUncontrolled.alerts.some(a => a.id === "bp-uncontrolled"), "Both BP >140/90 triggers uncontrolled BP alert");
+const bpUncontrolled = evaluateBP({
+  vitals: {
+    bp_readings: [
+      { value: "150/95", date: "2026-08-26" },
+      { value: "148/92", date: "2026-08-26" },
+    ],
+  },
+});
+assert(
+  bpUncontrolled.alerts.some((a) => a.id === "bp-uncontrolled"),
+  "Both BP >140/90 triggers uncontrolled BP alert",
+);
 
 // 5. HbA1c
 console.log("\n5. HbA1c Evaluation:");
 const hbMissingDiabetic = evaluateHbA1c({ comorbidities: { diabetes: true }, labs: {} });
-assert(hbMissingDiabetic.alerts.some(a => a.id === "hba1c-missing"), "Diabetic patient without HbA1c triggers actionable alert to order/monitor HbA1c");
+assert(
+  hbMissingDiabetic.alerts.some((a) => a.id === "hba1c-missing"),
+  "Diabetic patient without HbA1c triggers actionable alert to order/monitor HbA1c",
+);
 
 const hb70 = evaluateHbA1c({ labs: { hba1c: 7.0 } });
 const hb71 = evaluateHbA1c({ labs: { hba1c: 7.1 } });
 assert(hb70.alerts.length === 0, "HbA1c = 7.0% -> No alert");
-assert(hb71.alerts.some(a => a.id === "hba1c-high"), "HbA1c = 7.1% -> Alert triggered");
+assert(
+  hb71.alerts.some((a) => a.id === "hba1c-high"),
+  "HbA1c = 7.1% -> Alert triggered",
+);
 
 // 6. Routine AF Reevaluation & Reassessment Alert
 console.log("\n6. Routine AF Reevaluation & Reassessment Alert:");
-const afPatient = evaluate({ patient_id: "AF1", name: "AF Patient", age: 65, sex: "male", clinic_location: "Cardiology Clinic", diagnoses: ["I48.0"], ecg_results: ["AF"], medications: [], vitals: {}, labs: {} }, { afConfirmed: true });
-assert(afPatient.alerts.some(a => a.id === "af-reevaluation-reassessment"), "Confirmed positive AF triggers Reevaluation and Reassessment alert");
+const afPatient = evaluate(
+  {
+    patient_id: "AF1",
+    name: "AF Patient",
+    age: 65,
+    sex: "male",
+    clinic_location: "Cardiology Clinic",
+    diagnoses: ["I48.0"],
+    ecg_results: ["AF"],
+    medications: [],
+    vitals: {},
+    labs: {},
+  },
+  { afConfirmed: true },
+);
+assert(
+  afPatient.alerts.some((a) => a.id === "af-reevaluation-reassessment"),
+  "Confirmed positive AF triggers Reevaluation and Reassessment alert",
+);
 
 // 7. PINRR (< 56% over 12 months, min 2 readings)
 console.log("\n7. PINRR Calculation (12 months lookback):");
@@ -101,34 +191,90 @@ assert(pinrrRes.percentage === 25, `PINRR computed = ${pinrrRes.percentage}%`);
 
 // 8. Dabigatran Age Bands & Precedence
 console.log("\n8. Dabigatran Age Bands & Dose Guard:");
-const dabi81 = evaluateAnticoagulants({ age: 81, medications: [{ name: "Dabigatran", dose: "150 mg BD" }] }, { clcr: 65 });
-assert(dabi81.alerts.some(a => a.id === "dabigatran-age-80" && a.title.includes("Recommend")), "Age 81 on 150 mg BD -> 'Recommend' 110 mg BD alert");
+const dabi81 = evaluateAnticoagulants(
+  { age: 81, medications: [{ name: "Dabigatran", dose: "150 mg BD" }] },
+  { clcr: 65 },
+);
+assert(
+  dabi81.alerts.some((a) => a.id === "dabigatran-age-80" && a.title.includes("Recommend")),
+  "Age 81 on 150 mg BD -> 'Recommend' 110 mg BD alert",
+);
 
-const dabi76 = evaluateAnticoagulants({ age: 76, medications: [{ name: "Dabigatran", dose: "150 mg BD" }] }, { clcr: 65 });
-assert(dabi76.alerts.some(a => a.id === "dabigatran-age-75-79" && a.title.includes("Consider")), "Age 76 on 150 mg BD -> 'Consider' 110 mg BD alert (separate card)");
+const dabi76 = evaluateAnticoagulants(
+  { age: 76, medications: [{ name: "Dabigatran", dose: "150 mg BD" }] },
+  { clcr: 65 },
+);
+assert(
+  dabi76.alerts.some((a) => a.id === "dabigatran-age-75-79" && a.title.includes("Consider")),
+  "Age 76 on 150 mg BD -> 'Consider' 110 mg BD alert (separate card)",
+);
 
-const dabi74 = evaluateAnticoagulants({ age: 74, medications: [{ name: "Dabigatran", dose: "150 mg BD" }] }, { clcr: 65 });
-assert(!dabi74.alerts.some(a => a.id.includes("dabigatran-age")), "Age 74 on 150 mg BD -> No age reduction alert");
+const dabi74 = evaluateAnticoagulants(
+  { age: 74, medications: [{ name: "Dabigatran", dose: "150 mg BD" }] },
+  { clcr: 65 },
+);
+assert(
+  !dabi74.alerts.some((a) => a.id.includes("dabigatran-age")),
+  "Age 74 on 150 mg BD -> No age reduction alert",
+);
 
-const dabiAlready110 = evaluateAnticoagulants({ age: 82, medications: [{ name: "Dabigatran", dose: "110 mg BD" }] }, { clcr: 65 });
-assert(dabiAlready110.alerts.length === 0, "Dabigatran already on 110 mg BD -> Alert suppressed (Dose Guard)");
+const dabiAlready110 = evaluateAnticoagulants(
+  { age: 82, medications: [{ name: "Dabigatran", dose: "110 mg BD" }] },
+  { clcr: 65 },
+);
+assert(
+  dabiAlready110.alerts.length === 0,
+  "Dabigatran already on 110 mg BD -> Alert suppressed (Dose Guard)",
+);
 
 // 9. Precedence Resolver (Avoid suppresses dose reduction)
 console.log("\n9. Precedence Resolver (Avoid suppresses Dose Review):");
-const rivaSevereRenal = evaluateAnticoagulants({ medications: [{ name: "Rivaroxaban", dose: "20 mg OD" }] }, { clcr: 12 });
-assert(rivaSevereRenal.alerts.length === 1 && rivaSevereRenal.alerts[0].id === "rivaroxaban-avoid", "Rivaroxaban CrCl 12 -> Only 'Avoid' alert emitted; dose reduction suppressed");
+const rivaSevereRenal = evaluateAnticoagulants(
+  { medications: [{ name: "Rivaroxaban", dose: "20 mg OD" }] },
+  { clcr: 12 },
+);
+assert(
+  rivaSevereRenal.alerts.length === 1 && rivaSevereRenal.alerts[0].id === "rivaroxaban-avoid",
+  "Rivaroxaban CrCl 12 -> Only 'Avoid' alert emitted; dose reduction suppressed",
+);
 
-const apixSevereRenal = evaluateAnticoagulants({ age: 82, vitals: { weight: 50 }, labs: { creatinine: 150 }, medications: [{ name: "Apixaban", dose: "5 mg BD" }] }, { clcr: 12 });
-assert(apixSevereRenal.alerts.length === 1 && apixSevereRenal.alerts[0].id === "apixaban-avoid", "Apixaban CrCl 12 -> Only 'Avoid' alert emitted; 2-of-3 reduction suppressed");
+const apixSevereRenal = evaluateAnticoagulants(
+  {
+    age: 82,
+    vitals: { weight: 50 },
+    labs: { creatinine: 150 },
+    medications: [{ name: "Apixaban", dose: "5 mg BD" }],
+  },
+  { clcr: 12 },
+);
+assert(
+  apixSevereRenal.alerts.length === 1 && apixSevereRenal.alerts[0].id === "apixaban-avoid",
+  "Apixaban CrCl 12 -> Only 'Avoid' alert emitted; 2-of-3 reduction suppressed",
+);
 
 // 10. Research Timeline Classification
 console.log("\n10. Research Timeline Windows (-12m, Index Date, +3m):");
-assert(classifyDateWindow("2026-02-15", "2026-08-26") === "pre-alert", "Date 6 months before index -> pre-alert");
-assert(classifyDateWindow("2026-08-25", "2026-08-26") === "pre-alert", "Date 1 day before index -> pre-alert");
+assert(
+  classifyDateWindow("2026-02-15", "2026-08-26") === "pre-alert",
+  "Date 6 months before index -> pre-alert",
+);
+assert(
+  classifyDateWindow("2026-08-25", "2026-08-26") === "pre-alert",
+  "Date 1 day before index -> pre-alert",
+);
 assert(classifyDateWindow("2026-08-26", "2026-08-26") === "index", "Date of encounter -> index");
-assert(classifyDateWindow("2026-08-27", "2026-08-26") === "post-alert", "Date 1 day after index -> post-alert");
-assert(classifyDateWindow("2026-10-15", "2026-08-26") === "post-alert", "Date 2 months after index -> post-alert");
-assert(classifyDateWindow("2027-02-01", "2026-08-26") === "outside", "Date > 3 months after index -> outside");
+assert(
+  classifyDateWindow("2026-08-27", "2026-08-26") === "post-alert",
+  "Date 1 day after index -> post-alert",
+);
+assert(
+  classifyDateWindow("2026-10-15", "2026-08-26") === "post-alert",
+  "Date 2 months after index -> post-alert",
+);
+assert(
+  classifyDateWindow("2027-02-01", "2026-08-26") === "outside",
+  "Date > 3 months after index -> outside",
+);
 
 console.log("\n========================================================");
 console.log(`SUMMARY: ${passed} PASSED, ${failed} FAILED`);

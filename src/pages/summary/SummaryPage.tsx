@@ -40,14 +40,16 @@ export function SummaryPage({ current, actions }: SummaryPageProps) {
 
   const initialPlan = patient.clinician_plan ?? {};
   const [doctorPlan, setDoctorPlan] = useState(
-    initialPlan.doctor_plan ?? "Patient assessed for AF management. CDSS alerts reviewed and acted upon.",
+    initialPlan.doctor_plan ??
+      "Patient assessed for AF management. CDSS alerts reviewed and acted upon.",
   );
   const [medPlan, setMedPlan] = useState(
     initialPlan.medication_plan ??
       patient.medications.map((m) => `${m.name} ${m.dose ?? ""}`).join(", "),
   );
   const [monitoringPlan, setMonitoringPlan] = useState(
-    initialPlan.monitoring_plan ?? "Monitor BP, renal profile (CrCl), and stroke/bleeding symptoms.",
+    initialPlan.monitoring_plan ??
+      "Monitor BP, renal profile (CrCl), and stroke/bleeding symptoms.",
   );
   const [nextAppointment, setNextAppointment] = useState(
     initialPlan.next_appointment_date ?? "2026-11-26",
@@ -97,11 +99,19 @@ export function SummaryPage({ current, actions }: SummaryPageProps) {
                 </h1>
               </div>
               <p className="mt-0.5 text-xs text-muted-foreground">
-                Patient: <span className="font-semibold text-foreground">{patient.name}</span> (<span className="font-mono">{patient.patient_id}</span>) · MRN: <span className="font-mono">{patient.mrn ?? "—"}</span> · {new Date().toLocaleString()}
+                Patient: <span className="font-semibold text-foreground">{patient.name}</span> (
+                <span className="font-mono">{patient.patient_id}</span>) · MRN:{" "}
+                <span className="font-mono">{patient.mrn ?? "—"}</span> ·{" "}
+                {new Date().toLocaleString()}
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <Button onClick={() => window.print()} variant="outline" size="sm" className="gap-1.5 text-xs h-8">
+              <Button
+                onClick={() => window.print()}
+                variant="outline"
+                size="sm"
+                className="gap-1.5 text-xs h-8"
+              >
                 <Printer className="size-3.5" /> Print Summary
               </Button>
             </div>
@@ -133,15 +143,15 @@ export function SummaryPage({ current, actions }: SummaryPageProps) {
                               a.action === "accept"
                                 ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20"
                                 : a.action === "override"
-                                ? "bg-rose-500/10 text-rose-600 border-rose-500/20"
-                                : "bg-amber-500/10 text-amber-600 border-amber-500/20"
+                                  ? "bg-rose-500/10 text-rose-600 border-rose-500/20"
+                                  : "bg-amber-500/10 text-amber-600 border-amber-500/20"
                             }`}
                           >
                             {a.action === "accept"
                               ? "Accepted & Acted"
                               : a.action === "defer"
-                              ? "Deferred"
-                              : "Overridden"}
+                                ? "Deferred"
+                                : "Overridden"}
                           </span>
                         </td>
                         <td className="px-4 py-3 text-muted-foreground space-y-1">
@@ -170,15 +180,18 @@ export function SummaryPage({ current, actions }: SummaryPageProps) {
                             </div>
                           ) : a.snapshot?.recommendation ? (
                             <div className="text-[11px] text-foreground/90 leading-relaxed">
-                              <span className="font-semibold text-foreground">Recommendation:</span> {a.snapshot.recommendation}
+                              <span className="font-semibold text-foreground">Recommendation:</span>{" "}
+                              {a.snapshot.recommendation}
                             </div>
                           ) : a.alert_id === "af-reevaluation-reassessment" ? (
                             <div className="text-[11px] text-foreground/90 leading-relaxed">
-                              AF clinical reevaluation completed: risk factors, stroke/bleeding risks, and management plan reviewed.
+                              AF clinical reevaluation completed: risk factors, stroke/bleeding
+                              risks, and management plan reviewed.
                             </div>
                           ) : a.alert_id === "stroke-prevention" ? (
                             <div className="text-[11px] text-foreground/90 leading-relaxed">
-                              Anticoagulation indicated for stroke prevention. Guideline therapy confirmed.
+                              Anticoagulation indicated for stroke prevention. Guideline therapy
+                              confirmed.
                             </div>
                           ) : (
                             <div className="text-[11px] text-foreground/80 leading-relaxed">
@@ -230,8 +243,12 @@ export function SummaryPage({ current, actions }: SummaryPageProps) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
             {/* Clinical Impression & Consultation Notes */}
             <div className="space-y-1.5 md:col-span-2">
-              <Label htmlFor="doctor-plan" className="text-xs font-bold text-foreground flex items-center gap-1.5">
-                <ClipboardList className="size-3.5 text-primary" /> Clinical Impression & Doctor's Consultation Notes
+              <Label
+                htmlFor="doctor-plan"
+                className="text-xs font-bold text-foreground flex items-center gap-1.5"
+              >
+                <ClipboardList className="size-3.5 text-primary" /> Clinical Impression & Doctor's
+                Consultation Notes
               </Label>
               <Textarea
                 id="doctor-plan"
@@ -244,7 +261,10 @@ export function SummaryPage({ current, actions }: SummaryPageProps) {
 
             {/* Medication & Prescription Plan */}
             <div className="space-y-1.5">
-              <Label htmlFor="med-plan" className="text-xs font-bold text-foreground flex items-center gap-1.5">
+              <Label
+                htmlFor="med-plan"
+                className="text-xs font-bold text-foreground flex items-center gap-1.5"
+              >
                 <Pill className="size-3.5 text-emerald-600" /> Medication & Prescription Plan
               </Label>
               <Textarea
@@ -258,7 +278,10 @@ export function SummaryPage({ current, actions }: SummaryPageProps) {
 
             {/* Follow-up & Monitoring Plan */}
             <div className="space-y-1.5">
-              <Label htmlFor="monitoring-plan" className="text-xs font-bold text-foreground flex items-center gap-1.5">
+              <Label
+                htmlFor="monitoring-plan"
+                className="text-xs font-bold text-foreground flex items-center gap-1.5"
+              >
                 <Clock className="size-3.5 text-amber-600" /> Monitoring & Lab Orders Plan
               </Label>
               <Textarea
@@ -272,7 +295,10 @@ export function SummaryPage({ current, actions }: SummaryPageProps) {
 
             {/* Next Appointment Date */}
             <div className="space-y-1.5">
-              <Label htmlFor="next-app" className="text-xs font-bold text-foreground flex items-center gap-1.5">
+              <Label
+                htmlFor="next-app"
+                className="text-xs font-bold text-foreground flex items-center gap-1.5"
+              >
                 <Calendar className="size-3.5 text-primary" /> Next Appointment Review Date
               </Label>
               <Input
@@ -295,18 +321,23 @@ export function SummaryPage({ current, actions }: SummaryPageProps) {
             </span>
           </div>
           <p className="text-xs text-muted-foreground">
-            The CDSS background engine continues surveillance for clinical parameter changes across encounters.
+            The CDSS background engine continues surveillance for clinical parameter changes across
+            encounters.
           </p>
 
           <div className="rounded-xl border border-border bg-background p-3.5 space-y-2">
             <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
               <span>Outstanding Alerts Status</span>
-              <span>{remainingAlerts.length} alert(s) remaining · {remainingReminders.length} reminder(s)</span>
+              <span>
+                {remainingAlerts.length} alert(s) remaining · {remainingReminders.length}{" "}
+                reminder(s)
+              </span>
             </div>
 
             {remainingAlerts.length === 0 && remainingReminders.length === 0 ? (
               <div className="flex items-center gap-2 text-xs font-semibold text-emerald-600 pt-1">
-                <CheckCircle2 className="size-4" /> All encounter alerts have been addressed and documented.
+                <CheckCircle2 className="size-4" /> All encounter alerts have been addressed and
+                documented.
               </div>
             ) : (
               <ul className="space-y-1.5 pt-1">
@@ -339,7 +370,10 @@ export function SummaryPage({ current, actions }: SummaryPageProps) {
               </Button>
             </Link>
             <Link to="/audit" search={{ p: patient.patient_id }}>
-              <Button size="sm" className="w-full sm:w-auto text-xs h-8 bg-primary text-primary-foreground font-semibold shadow-xs">
+              <Button
+                size="sm"
+                className="w-full sm:w-auto text-xs h-8 bg-primary text-primary-foreground font-semibold shadow-xs"
+              >
                 Inspect Complete Audit Trail <ArrowRight className="ml-1.5 size-3.5" />
               </Button>
             </Link>

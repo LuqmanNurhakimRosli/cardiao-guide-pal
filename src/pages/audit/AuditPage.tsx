@@ -13,10 +13,10 @@ import {
   User,
   ShieldCheck,
 } from "lucide-react";
-import type { Patient, AuditEntry } from "@/shared/cdss/types";
+import type { PatientSummary, AuditEntry } from "@/shared/cdss/types";
 
 interface AuditPageProps {
-  patients: Patient[];
+  patients: PatientSummary[];
   audit: AuditEntry[];
   selectedId?: string;
 }
@@ -92,11 +92,16 @@ export function AuditPage({ patients, audit, selectedId }: AuditPageProps) {
       `"${a.rule_version ?? ""}"`,
     ]);
 
-    const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `cdss_audit_dataset_${new Date().toISOString().slice(0, 10)}.csv`);
+    link.setAttribute(
+      "download",
+      `cdss_audit_dataset_${new Date().toISOString().slice(0, 10)}.csv`,
+    );
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -113,10 +118,16 @@ export function AuditPage({ patients, audit, selectedId }: AuditPageProps) {
               Clinical Audit Trail & Decision Log
             </h1>
             <p className="mt-0.5 text-xs text-muted-foreground">
-              Traceable, immutable record of CDSS evaluations, clinician decisions, and research snapshots.
+              Traceable, immutable record of CDSS evaluations, clinician decisions, and research
+              snapshots.
             </p>
           </div>
-          <Button onClick={exportCSV} size="sm" variant="outline" className="gap-1.5 text-xs h-8 shadow-2xs self-start sm:self-auto">
+          <Button
+            onClick={exportCSV}
+            size="sm"
+            variant="outline"
+            className="gap-1.5 text-xs h-8 shadow-2xs self-start sm:self-auto"
+          >
             <FileSpreadsheet className="size-3.5 text-emerald-600" /> Export Research CSV
           </Button>
         </div>
@@ -196,13 +207,16 @@ export function AuditPage({ patients, audit, selectedId }: AuditPageProps) {
                       </td>
                       <td className="px-3 py-3 whitespace-nowrap">
                         <div className="font-bold text-primary font-mono">{a.patient_id}</div>
-                        <div className="text-[10px] font-mono text-muted-foreground">{a.mrn ?? "—"}</div>
+                        <div className="text-[10px] font-mono text-muted-foreground">
+                          {a.mrn ?? "—"}
+                        </div>
                       </td>
                       <td className="px-3 py-3 min-w-[200px]">
                         <div className="font-semibold text-foreground">{a.alert_title}</div>
                         {a.snapshot?.cha2ds2va != null && (
                           <div className="text-[10px] text-muted-foreground font-mono mt-0.5">
-                            CHA₂DS₂-VA: {a.snapshot.cha2ds2va} · CrCl: {a.snapshot.clcr ?? "—"} mL/min
+                            CHA₂DS₂-VA: {a.snapshot.cha2ds2va} · CrCl: {a.snapshot.clcr ?? "—"}{" "}
+                            mL/min
                           </div>
                         )}
                       </td>
@@ -212,8 +226,8 @@ export function AuditPage({ patients, audit, selectedId }: AuditPageProps) {
                             a.action === "accept"
                               ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20"
                               : a.action === "override"
-                              ? "bg-rose-500/10 text-rose-600 border-rose-500/20"
-                              : "bg-amber-500/10 text-amber-600 border-amber-500/20"
+                                ? "bg-rose-500/10 text-rose-600 border-rose-500/20"
+                                : "bg-amber-500/10 text-amber-600 border-amber-500/20"
                           }`}
                         >
                           {a.action}
@@ -240,7 +254,11 @@ export function AuditPage({ patients, audit, selectedId }: AuditPageProps) {
                             Prescription: {a.med_change.name} → {a.med_change.new_dose}
                           </div>
                         )}
-                        {!a.override_reason && !a.override_notes && !a.defer_until && !a.med_change && "—"}
+                        {!a.override_reason &&
+                          !a.override_notes &&
+                          !a.defer_until &&
+                          !a.med_change &&
+                          "—"}
                       </td>
                       <td className="px-3 py-3 whitespace-nowrap">
                         <span className="rounded-md bg-muted px-2 py-0.5 text-[10px] font-mono uppercase font-bold text-muted-foreground">

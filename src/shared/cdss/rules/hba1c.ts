@@ -7,11 +7,7 @@ export function isDiabeticPatient(p: Patient): boolean {
 
   // Check ICD-10 diagnosis codes
   const hasDiabetesDx = (p.diagnoses || []).some(
-    (d) =>
-      d.startsWith("E10") ||
-      d.startsWith("E11") ||
-      d.startsWith("E13") ||
-      d.startsWith("E14"),
+    (d) => d.startsWith("E10") || d.startsWith("E11") || d.startsWith("E13") || d.startsWith("E14"),
   );
   if (hasDiabetesDx) return true;
 
@@ -58,7 +54,8 @@ export function evaluateHbA1c(p: Patient): {
           category: "glycaemic",
           group: "HbA1c",
           title: "Diabetes documented with missing HbA1c — order/monitor HbA1c",
-          detail: "Patient has diagnosed Diabetes Mellitus but no recent HbA1c is recorded. Regular monitoring (every 3–6 months) is recommended per CPG T2DM to evaluate glycaemic control in AF.",
+          detail:
+            "Patient has diagnosed Diabetes Mellitus but no recent HbA1c is recorded. Regular monitoring (every 3–6 months) is recommended per CPG T2DM to evaluate glycaemic control in AF.",
           rationale: [
             "Patient has a documented history or pharmacotherapy for Diabetes Mellitus.",
             "No dated HbA1c result on record.",
@@ -86,7 +83,8 @@ export function evaluateHbA1c(p: Patient): {
           "Threshold: >7.0% indicates suboptimal glycaemic control in AF patients.",
         ],
         guideline: "MOH Malaysia CPG Management of Type 2 Diabetes Mellitus",
-        recommendation: "Optimise anti-diabetic medications, review dietary compliance and lifestyle.",
+        recommendation:
+          "Optimise anti-diabetic medications, review dietary compliance and lifestyle.",
         supporting_values: {
           hba1c: hba1cVal,
           hba1c_date: hba1cDate ?? "",

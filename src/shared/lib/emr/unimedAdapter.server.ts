@@ -12,9 +12,7 @@ import type { EmrAdapter } from "./types";
 export const unimedAdapter: EmrAdapter = {
   name: "unimed",
   async getPatient(_id) {
-    throw new Error(
-      "UNIMED adapter not yet implemented. See docs/unimed-integration.md.",
-    );
+    throw new Error("UNIMED adapter not yet implemented. See docs/unimed-integration.md.");
   },
   async listPatients() {
     throw new Error("UNIMED adapter not yet implemented.");

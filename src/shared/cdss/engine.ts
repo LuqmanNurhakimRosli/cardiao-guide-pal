@@ -44,10 +44,7 @@ export interface EvaluateOptions {
   indexDate?: string;
 }
 
-export function evaluate(
-  p: Patient,
-  opts: EvaluateOptions = {},
-): CdssResult {
+export function evaluate(p: Patient, opts: EvaluateOptions = {}): CdssResult {
   const afConfirmed = opts.afConfirmed ?? null;
   const indexDate = opts.indexDate ?? p.encounter?.clinic_date ?? "2026-08-26";
 
@@ -139,7 +136,8 @@ export function evaluate(
           .filter(([, v]) => v > 0)
           .map(([k, v]) => `${k}: +${v}`),
         guideline: "ESC 2020 / AHA Atrial Fibrillation Guidelines",
-        recommendation: "Initiate oral anticoagulation (DOAC preferred over Warfarin unless contraindicated).",
+        recommendation:
+          "Initiate oral anticoagulation (DOAC preferred over Warfarin unless contraindicated).",
         supporting_values: { cha2ds2va: chads.total },
         priority: CLINICAL_RULES.precedence.doseAdjustment,
         action: {
@@ -158,9 +156,10 @@ export function evaluate(
     bleedingHistory: false,
     labileINR: false,
     elderly: (p.age_at_encounter ?? p.age) > 65,
-    drugs: p.medications?.some((m) =>
-      ["aspirin", "clopidogrel", "nsaid"].some((n) => m.name.toLowerCase().includes(n)),
-    ) ?? false,
+    drugs:
+      p.medications?.some((m) =>
+        ["aspirin", "clopidogrel", "nsaid"].some((n) => m.name.toLowerCase().includes(n)),
+      ) ?? false,
     alcohol: false,
   };
 

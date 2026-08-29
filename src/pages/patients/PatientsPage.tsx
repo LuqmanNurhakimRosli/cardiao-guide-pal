@@ -26,7 +26,13 @@ import {
 import { Input } from "@/shared/components/ui/input";
 
 type CohortFilter = "all" | "benchmark" | "hospital";
-type ClinicalFilter = "all" | "stroke-risk" | "bleeding-risk" | "dose-alert" | "valvular" | "no-alerts";
+type ClinicalFilter =
+  | "all"
+  | "stroke-risk"
+  | "bleeding-risk"
+  | "dose-alert"
+  | "valvular"
+  | "no-alerts";
 type SortOption = "latest-visit" | "highest-alerts" | "highest-stroke" | "highest-bleed" | "id";
 
 export interface PatientRow {
@@ -178,7 +184,8 @@ export function PatientsPage({ patients }: PatientsPageProps) {
               )}
             </div>
             <p className="mt-0.5 text-xs text-muted-foreground">
-              Select a patient record to execute CDSS clinical analysis and review guideline recommendations.
+              Select a patient record to execute CDSS clinical analysis and review guideline
+              recommendations.
             </p>
           </div>
 
@@ -197,7 +204,10 @@ export function PatientsPage({ patients }: PatientsPageProps) {
         {/* Cohort Selector Tabs */}
         <div className="flex items-center gap-1 border-b border-border pb-1 overflow-x-auto">
           <button
-            onClick={() => { setCohortFilter("benchmark"); setCurrentPage(1); }}
+            onClick={() => {
+              setCohortFilter("benchmark");
+              setCurrentPage(1);
+            }}
             className={`inline-flex items-center gap-2 whitespace-nowrap rounded-t-lg px-4 py-2 text-xs font-semibold transition border-b-2 ${
               cohortFilter === "benchmark"
                 ? "border-primary text-primary bg-primary/5"
@@ -205,10 +215,21 @@ export function PatientsPage({ patients }: PatientsPageProps) {
             }`}
           >
             <BookmarkCheck className="size-4 text-blue-600" />
-            Benchmark Cases ({patients.filter((p: PatientRow) => (p.cohort ?? (p.patient_id.startsWith("REAL-") ? "hospital" : "benchmark")) === "benchmark").length})
+            Benchmark Cases (
+            {
+              patients.filter(
+                (p: PatientRow) =>
+                  (p.cohort ?? (p.patient_id.startsWith("REAL-") ? "hospital" : "benchmark")) ===
+                  "benchmark",
+              ).length
+            }
+            )
           </button>
           <button
-            onClick={() => { setCohortFilter("hospital"); setCurrentPage(1); }}
+            onClick={() => {
+              setCohortFilter("hospital");
+              setCurrentPage(1);
+            }}
             className={`inline-flex items-center gap-2 whitespace-nowrap rounded-t-lg px-4 py-2 text-xs font-semibold transition border-b-2 ${
               cohortFilter === "hospital"
                 ? "border-primary text-primary bg-primary/5"
@@ -216,10 +237,21 @@ export function PatientsPage({ patients }: PatientsPageProps) {
             }`}
           >
             <Database className="size-4 text-emerald-600" />
-            HASA UiTM Real Cohort ({patients.filter((p: PatientRow) => (p.cohort ?? (p.patient_id.startsWith("REAL-") ? "hospital" : "benchmark")) === "hospital").length})
+            HASA UiTM Real Cohort (
+            {
+              patients.filter(
+                (p: PatientRow) =>
+                  (p.cohort ?? (p.patient_id.startsWith("REAL-") ? "hospital" : "benchmark")) ===
+                  "hospital",
+              ).length
+            }
+            )
           </button>
           <button
-            onClick={() => { setCohortFilter("all"); setCurrentPage(1); }}
+            onClick={() => {
+              setCohortFilter("all");
+              setCurrentPage(1);
+            }}
             className={`inline-flex items-center gap-2 whitespace-nowrap rounded-t-lg px-4 py-2 text-xs font-semibold transition border-b-2 ${
               cohortFilter === "all"
                 ? "border-primary text-primary bg-primary/5"
@@ -302,7 +334,10 @@ export function PatientsPage({ patients }: PatientsPageProps) {
               <Input
                 placeholder="Search by Patient Name, MRN (e.g. CTC0050673), or ID…"
                 value={query}
-                onChange={(e) => { setQuery(e.target.value); setCurrentPage(1); }}
+                onChange={(e) => {
+                  setQuery(e.target.value);
+                  setCurrentPage(1);
+                }}
                 className="pl-9 pr-8 text-xs h-9"
               />
               {query && (
@@ -320,7 +355,10 @@ export function PatientsPage({ patients }: PatientsPageProps) {
               <ArrowUpDown className="size-3.5 text-muted-foreground shrink-0" />
               <select
                 value={sortBy}
-                onChange={(e) => { setSortBy(e.target.value as SortOption); setCurrentPage(1); }}
+                onChange={(e) => {
+                  setSortBy(e.target.value as SortOption);
+                  setCurrentPage(1);
+                }}
                 className="h-9 rounded-lg border border-border bg-card px-2.5 text-xs font-medium text-foreground outline-none shadow-2xs focus:ring-1 focus:ring-primary"
               >
                 <option value="latest-visit">Sort: Latest Encounter Date</option>
@@ -336,7 +374,10 @@ export function PatientsPage({ patients }: PatientsPageProps) {
               <Pill className="size-3.5 text-muted-foreground shrink-0" />
               <select
                 value={drugFilter}
-                onChange={(e) => { setDrugFilter(e.target.value); setCurrentPage(1); }}
+                onChange={(e) => {
+                  setDrugFilter(e.target.value);
+                  setCurrentPage(1);
+                }}
                 className="h-9 rounded-lg border border-border bg-card px-2.5 text-xs font-medium text-foreground outline-none shadow-2xs focus:ring-1 focus:ring-primary"
               >
                 <option value="all">All Anticoagulants</option>
@@ -350,36 +391,57 @@ export function PatientsPage({ patients }: PatientsPageProps) {
 
           {/* Quick-Filter Buttons */}
           <div className="flex flex-wrap items-center gap-1.5 pt-1 border-t border-border/60">
-            <FilterBtn active={clinicalFilter === "all"} onClick={() => { setClinicalFilter("all"); setCurrentPage(1); }}>
+            <FilterBtn
+              active={clinicalFilter === "all"}
+              onClick={() => {
+                setClinicalFilter("all");
+                setCurrentPage(1);
+              }}
+            >
               All ({filtered.length})
             </FilterBtn>
             <FilterBtn
               active={clinicalFilter === "stroke-risk"}
-              onClick={() => { setClinicalFilter("stroke-risk"); setCurrentPage(1); }}
+              onClick={() => {
+                setClinicalFilter("stroke-risk");
+                setCurrentPage(1);
+              }}
             >
               🔴 High Stroke Risk (≥2)
             </FilterBtn>
             <FilterBtn
               active={clinicalFilter === "bleeding-risk"}
-              onClick={() => { setClinicalFilter("bleeding-risk"); setCurrentPage(1); }}
+              onClick={() => {
+                setClinicalFilter("bleeding-risk");
+                setCurrentPage(1);
+              }}
             >
               ⚠️ High Bleed Risk (≥3)
             </FilterBtn>
             <FilterBtn
               active={clinicalFilter === "dose-alert"}
-              onClick={() => { setClinicalFilter("dose-alert"); setCurrentPage(1); }}
+              onClick={() => {
+                setClinicalFilter("dose-alert");
+                setCurrentPage(1);
+              }}
             >
               💊 Dose / Safety Alert
             </FilterBtn>
             <FilterBtn
               active={clinicalFilter === "valvular"}
-              onClick={() => { setClinicalFilter("valvular"); setCurrentPage(1); }}
+              onClick={() => {
+                setClinicalFilter("valvular");
+                setCurrentPage(1);
+              }}
             >
               🫀 Valvular AF
             </FilterBtn>
             <FilterBtn
               active={clinicalFilter === "no-alerts"}
-              onClick={() => { setClinicalFilter("no-alerts"); setCurrentPage(1); }}
+              onClick={() => {
+                setClinicalFilter("no-alerts");
+                setCurrentPage(1);
+              }}
             >
               ✓ No Alerts
             </FilterBtn>
@@ -401,10 +463,16 @@ export function PatientsPage({ patients }: PatientsPageProps) {
                 <div className="flex items-start justify-between gap-2">
                   <div>
                     <div className="flex items-center gap-1.5">
-                      <span className="font-mono text-xs font-bold text-primary">{p.patient_id}</span>
-                      <span className={`rounded px-1.5 py-0.2 text-[9px] font-semibold ${
-                        isReal ? "bg-emerald-500/10 text-emerald-600" : "bg-blue-500/10 text-blue-600"
-                      }`}>
+                      <span className="font-mono text-xs font-bold text-primary">
+                        {p.patient_id}
+                      </span>
+                      <span
+                        className={`rounded px-1.5 py-0.2 text-[9px] font-semibold ${
+                          isReal
+                            ? "bg-emerald-500/10 text-emerald-600"
+                            : "bg-blue-500/10 text-blue-600"
+                        }`}
+                      >
                         {isReal ? "HASA" : "Benchmark"}
                       </span>
                     </div>
@@ -417,12 +485,14 @@ export function PatientsPage({ patients }: PatientsPageProps) {
                   <div className="flex flex-col items-end gap-1">
                     {p.alerts_count > 0 && (
                       <span className="inline-flex items-center gap-1 rounded-full bg-rose-500/10 px-2 py-0.5 text-[10px] font-bold text-rose-600 border border-rose-500/20">
-                        <AlertTriangle className="size-3" /> {p.alerts_count} Alert{p.alerts_count > 1 ? "s" : ""}
+                        <AlertTriangle className="size-3" /> {p.alerts_count} Alert
+                        {p.alerts_count > 1 ? "s" : ""}
                       </span>
                     )}
                     {p.reminders_count > 0 && (
                       <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-2 py-0.5 text-[10px] font-bold text-amber-600 border border-amber-500/20">
-                        <Bell className="size-3" /> {p.reminders_count} Reminder{p.reminders_count > 1 ? "s" : ""}
+                        <Bell className="size-3" /> {p.reminders_count} Reminder
+                        {p.reminders_count > 1 ? "s" : ""}
                       </span>
                     )}
                   </div>
@@ -430,14 +500,22 @@ export function PatientsPage({ patients }: PatientsPageProps) {
 
                 <div className="mt-3 grid grid-cols-2 gap-2 border-t border-border/60 pt-2 text-xs">
                   <div>
-                    <span className="text-[10px] text-muted-foreground uppercase font-semibold">CHA₂DS₂-VA</span>
-                    <p className={`font-bold font-mono ${(p.cha2ds2va_score ?? 0) >= 2 ? "text-amber-600" : "text-foreground"}`}>
+                    <span className="text-[10px] text-muted-foreground uppercase font-semibold">
+                      CHA₂DS₂-VA
+                    </span>
+                    <p
+                      className={`font-bold font-mono ${(p.cha2ds2va_score ?? 0) >= 2 ? "text-amber-600" : "text-foreground"}`}
+                    >
                       Score: {p.cha2ds2va_score ?? 0}
                     </p>
                   </div>
                   <div>
-                    <span className="text-[10px] text-muted-foreground uppercase font-semibold">HAS-BLED</span>
-                    <p className={`font-bold font-mono ${(p.has_bled_score ?? 0) >= 3 ? "text-rose-600" : "text-foreground"}`}>
+                    <span className="text-[10px] text-muted-foreground uppercase font-semibold">
+                      HAS-BLED
+                    </span>
+                    <p
+                      className={`font-bold font-mono ${(p.has_bled_score ?? 0) >= 3 ? "text-rose-600" : "text-foreground"}`}
+                    >
                       Score: {p.has_bled_score ?? 0}
                     </p>
                   </div>
@@ -492,10 +570,16 @@ export function PatientsPage({ patients }: PatientsPageProps) {
                         <div className="flex items-start gap-2">
                           <div>
                             <div className="flex items-center gap-1.5">
-                              <span className="font-mono font-bold text-primary">{p.patient_id}</span>
-                              <span className={`inline-flex items-center rounded-md px-1.5 py-0.2 text-[9px] font-semibold ${
-                                isReal ? "bg-emerald-500/10 text-emerald-700" : "bg-blue-500/10 text-blue-700"
-                              }`}>
+                              <span className="font-mono font-bold text-primary">
+                                {p.patient_id}
+                              </span>
+                              <span
+                                className={`inline-flex items-center rounded-md px-1.5 py-0.2 text-[9px] font-semibold ${
+                                  isReal
+                                    ? "bg-emerald-500/10 text-emerald-700"
+                                    : "bg-blue-500/10 text-blue-700"
+                                }`}
+                              >
                                 {isReal ? "HASA" : "Benchmark"}
                               </span>
                             </div>
@@ -503,13 +587,17 @@ export function PatientsPage({ patients }: PatientsPageProps) {
                             <p className="text-[11px] text-muted-foreground">
                               Age: {p.age} · {p.sex}
                               {p.is_valvular && (
-                                <span className="ml-1.5 inline-block font-semibold text-blue-600">🫀 Valvular</span>
+                                <span className="ml-1.5 inline-block font-semibold text-blue-600">
+                                  🫀 Valvular
+                                </span>
                               )}
                             </p>
                           </div>
                         </div>
                       </td>
-                      <td className="px-3 py-3 font-mono text-muted-foreground font-medium">{p.mrn ?? "—"}</td>
+                      <td className="px-3 py-3 font-mono text-muted-foreground font-medium">
+                        {p.mrn ?? "—"}
+                      </td>
                       <td className="px-3 py-3 font-mono text-muted-foreground">
                         <div className="flex items-center gap-1.5">
                           <Calendar className="size-3 text-muted-foreground/70" />
@@ -523,20 +611,24 @@ export function PatientsPage({ patients }: PatientsPageProps) {
                         </span>
                       </td>
                       <td className="px-3 py-3">
-                        <span className={`inline-flex items-center rounded-lg px-2 py-1 font-bold font-mono ${
-                          (p.cha2ds2va_score ?? 0) >= 2
-                            ? "bg-amber-500/10 text-amber-700 border border-amber-500/20"
-                            : "bg-muted/40 text-muted-foreground border border-border"
-                        }`}>
+                        <span
+                          className={`inline-flex items-center rounded-lg px-2 py-1 font-bold font-mono ${
+                            (p.cha2ds2va_score ?? 0) >= 2
+                              ? "bg-amber-500/10 text-amber-700 border border-amber-500/20"
+                              : "bg-muted/40 text-muted-foreground border border-border"
+                          }`}
+                        >
                           Score: {p.cha2ds2va_score ?? 0}
                         </span>
                       </td>
                       <td className="px-3 py-3">
-                        <span className={`inline-flex items-center rounded-lg px-2 py-1 font-bold font-mono ${
-                          (p.has_bled_score ?? 0) >= 3
-                            ? "bg-rose-500/10 text-rose-700 border border-rose-500/20"
-                            : "bg-muted/40 text-muted-foreground border border-border"
-                        }`}>
+                        <span
+                          className={`inline-flex items-center rounded-lg px-2 py-1 font-bold font-mono ${
+                            (p.has_bled_score ?? 0) >= 3
+                              ? "bg-rose-500/10 text-rose-700 border border-rose-500/20"
+                              : "bg-muted/40 text-muted-foreground border border-border"
+                          }`}
+                        >
                           Score: {p.has_bled_score ?? 0}
                         </span>
                       </td>
@@ -573,7 +665,10 @@ export function PatientsPage({ patients }: PatientsPageProps) {
                 })}
                 {filtered.length === 0 && (
                   <tr>
-                    <td colSpan={8} className="px-4 py-12 text-center text-sm text-muted-foreground">
+                    <td
+                      colSpan={8}
+                      className="px-4 py-12 text-center text-sm text-muted-foreground"
+                    >
                       No patients match your selected clinical criteria.
                     </td>
                   </tr>
@@ -587,9 +682,15 @@ export function PatientsPage({ patients }: PatientsPageProps) {
         {totalPages > 1 && (
           <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-muted-foreground pt-2">
             <div>
-              Showing <span className="font-semibold text-foreground">{(currentPage - 1) * PAGE_SIZE + 1}</span> to{" "}
-              <span className="font-semibold text-foreground">{Math.min(currentPage * PAGE_SIZE, filtered.length)}</span> of{" "}
-              <span className="font-semibold text-foreground">{filtered.length}</span> patients
+              Showing{" "}
+              <span className="font-semibold text-foreground">
+                {(currentPage - 1) * PAGE_SIZE + 1}
+              </span>{" "}
+              to{" "}
+              <span className="font-semibold text-foreground">
+                {Math.min(currentPage * PAGE_SIZE, filtered.length)}
+              </span>{" "}
+              of <span className="font-semibold text-foreground">{filtered.length}</span> patients
             </div>
             <div className="flex items-center gap-1">
               <button

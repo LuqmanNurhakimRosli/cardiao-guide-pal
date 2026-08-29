@@ -61,9 +61,7 @@ export interface AnalyzeResponse {
   };
 }
 
-export async function analyzePatient(
-  body: AnalyzeRequest,
-): Promise<AnalyzeResponse> {
+export async function analyzePatient(body: AnalyzeRequest): Promise<AnalyzeResponse> {
   const res = await fetch(`${BASE_URL}/api/cdss/analyze`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
