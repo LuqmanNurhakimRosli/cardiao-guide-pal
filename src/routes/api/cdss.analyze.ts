@@ -1,10 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
-import { evaluate } from "@/cdss/engine";
-import { mergePatient, type ClinicianInputs } from "@/cdss/usePatientState";
-import { analyzeRequestSchema } from "@/cdss/schemas";
-import { CDSS_ENGINE_VERSION } from "@/cdss/config";
-import type { Patient } from "@/cdss/types";
+import { evaluate } from "@/shared/cdss/engine";
+import { mergePatient, type ClinicianInputs } from "@/pages/assessment/hooks/usePatientState";
+import { analyzeRequestSchema } from "@/shared/cdss/schemas";
+import { CDSS_ENGINE_VERSION } from "@/shared/cdss/config";
+import type { Patient } from "@/shared/cdss/types";
 
 const MAX_BODY_BYTES = 64 * 1024;
 
@@ -80,7 +80,7 @@ export const Route = createFileRoute("/api/cdss/analyze")({
         // Resolve patient via EMR adapter (unless full patient supplied).
         let patient: Patient | undefined = parsed.patient as Patient | undefined;
         if (!patient && parsed.patient_id) {
-          const { getEmrAdapter } = await import("@/lib/emr/index.server");
+          const { getEmrAdapter } = await import("@/shared/lib/emr/index.server");
           patient = await getEmrAdapter().getPatient(parsed.patient_id);
         }
         if (!patient) {

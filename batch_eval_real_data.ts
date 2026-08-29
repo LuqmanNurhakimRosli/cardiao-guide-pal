@@ -1,9 +1,9 @@
 import fs from 'fs';
 import path from 'path';
-import { evaluateCdssRules } from './src/cdss/engine.js';
+import { evaluateCdssRules } from './src/shared/cdss/engine.js';
 
 const rootDir = process.cwd();
-const realPatients = JSON.parse(fs.readFileSync(path.join(rootDir, 'src/data/real_patients_2024.json'), 'utf8'));
+const realPatients = JSON.parse(fs.readFileSync(path.join(rootDir, 'src/shared/data/real_patients_2024.json'), 'utf8'));
 
 console.log(`\n========================================================`);
 console.log(`🏥 EVALUATING CDSS ENGINE ON ${realPatients.length} REAL HASA UITM AF PATIENTS`);

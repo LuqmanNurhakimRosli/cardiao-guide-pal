@@ -1,11 +1,11 @@
 import fs from 'fs';
 import path from 'path';
 
-const benchmarkPath = path.resolve('src/data/benchmark_patients.json');
-const targetPath = path.resolve('src/data/patients.json');
+const benchmarkPath = path.resolve('src/shared/data/benchmark_patients.json');
+const targetPath = path.resolve('src/shared/data/patients.json');
 
 if (!fs.existsSync(benchmarkPath)) {
-  console.error("❌ Benchmark backup file not found at src/data/benchmark_patients.json");
+  console.error("❌ Benchmark backup file not found at src/shared/data/benchmark_patients.json");
   process.exit(1);
 }
 

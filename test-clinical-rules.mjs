@@ -1,15 +1,15 @@
 /**
  * Automated Hands-On Test Suite for AF-CArE CDSS
  */
-import { cha2ds2va } from "./src/cdss/rules/cha2ds2vasc.ts";
-import { hasBled, evaluateHasBledAlert } from "./src/cdss/rules/hasBled.ts";
-import { creatinineClearance } from "./src/cdss/rules/cockcroftGault.ts";
-import { evaluateBP } from "./src/cdss/rules/bloodPressure.ts";
-import { evaluateHbA1c } from "./src/cdss/rules/hba1c.ts";
-import { evaluateAnticoagulants } from "./src/cdss/rules/anticoagulants.ts";
-import { calculatePinrr } from "./src/cdss/pinrr.ts";
-import { classifyDateWindow } from "./src/cdss/researchTimeline.ts";
-import { evaluate } from "./src/cdss/engine.ts";
+import { cha2ds2va } from "./src/shared/cdss/rules/cha2ds2vasc.ts";
+import { hasBled, evaluateHasBledAlert } from "./src/shared/cdss/rules/hasBled.ts";
+import { creatinineClearance } from "./src/shared/cdss/rules/cockcroftGault.ts";
+import { evaluateBP } from "./src/shared/cdss/rules/bloodPressure.ts";
+import { evaluateHbA1c } from "./src/shared/cdss/rules/hba1c.ts";
+import { evaluateAnticoagulants } from "./src/shared/cdss/rules/anticoagulants.ts";
+import { calculatePinrr } from "./src/shared/cdss/pinrr.ts";
+import { classifyDateWindow } from "./src/shared/cdss/researchTimeline.ts";
+import { evaluate } from "./src/shared/cdss/engine.ts";
 
 let passed = 0;
 let failed = 0;

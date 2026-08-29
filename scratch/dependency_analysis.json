@@ -1,0 +1,1588 @@
+{
+  "allFiles": [
+    "src/api/cdssApi.ts",
+    "src/cdss/afDetection.ts",
+    "src/cdss/config.ts",
+    "src/cdss/engine.ts",
+    "src/cdss/pinrr.ts",
+    "src/cdss/researchTimeline.ts",
+    "src/cdss/ruleManifest.ts",
+    "src/cdss/rules/afDetection.ts",
+    "src/cdss/rules/alertBuilder.ts",
+    "src/cdss/rules/anticoagulants.ts",
+    "src/cdss/rules/bloodPressure.ts",
+    "src/cdss/rules/cha2ds2vasc.ts",
+    "src/cdss/rules/clinicGating.ts",
+    "src/cdss/rules/cockcroftGault.ts",
+    "src/cdss/rules/hasBled.ts",
+    "src/cdss/rules/hba1c.ts",
+    "src/cdss/rules/missingData.ts",
+    "src/cdss/rules/pinrr.ts",
+    "src/cdss/ruleTraceability.ts",
+    "src/cdss/schemas.ts",
+    "src/cdss/server.functions.ts",
+    "src/cdss/types.ts",
+    "src/cdss/usePatientState.ts",
+    "src/components/cdss/AfConfirmationModal.tsx",
+    "src/components/cdss/AfEvidenceCard.tsx",
+    "src/components/cdss/AlertCard.tsx",
+    "src/components/cdss/AppShell.tsx",
+    "src/components/cdss/Cha2ds2VascHybrid.tsx",
+    "src/components/cdss/ClinicGateBanner.tsx",
+    "src/components/cdss/HasBledCalculator.tsx",
+    "src/components/cdss/MissingDataCard.tsx",
+    "src/components/cdss/ScoreEvidenceModal.tsx",
+    "src/components/ui/accordion.tsx",
+    "src/components/ui/alert-dialog.tsx",
+    "src/components/ui/alert.tsx",
+    "src/components/ui/aspect-ratio.tsx",
+    "src/components/ui/avatar.tsx",
+    "src/components/ui/badge.tsx",
+    "src/components/ui/breadcrumb.tsx",
+    "src/components/ui/button.tsx",
+    "src/components/ui/calendar.tsx",
+    "src/components/ui/card.tsx",
+    "src/components/ui/carousel.tsx",
+    "src/components/ui/chart.tsx",
+    "src/components/ui/checkbox.tsx",
+    "src/components/ui/collapsible.tsx",
+    "src/components/ui/command.tsx",
+    "src/components/ui/context-menu.tsx",
+    "src/components/ui/dialog.tsx",
+    "src/components/ui/drawer.tsx",
+    "src/components/ui/dropdown-menu.tsx",
+    "src/components/ui/form.tsx",
+    "src/components/ui/hover-card.tsx",
+    "src/components/ui/input-otp.tsx",
+    "src/components/ui/input.tsx",
+    "src/components/ui/label.tsx",
+    "src/components/ui/menubar.tsx",
+    "src/components/ui/navigation-menu.tsx",
+    "src/components/ui/pagination.tsx",
+    "src/components/ui/popover.tsx",
+    "src/components/ui/progress.tsx",
+    "src/components/ui/radio-group.tsx",
+    "src/components/ui/resizable.tsx",
+    "src/components/ui/scroll-area.tsx",
+    "src/components/ui/select.tsx",
+    "src/components/ui/separator.tsx",
+    "src/components/ui/sheet.tsx",
+    "src/components/ui/sidebar.tsx",
+    "src/components/ui/skeleton.tsx",
+    "src/components/ui/slider.tsx",
+    "src/components/ui/sonner.tsx",
+    "src/components/ui/switch.tsx",
+    "src/components/ui/table.tsx",
+    "src/components/ui/tabs.tsx",
+    "src/components/ui/textarea.tsx",
+    "src/components/ui/toggle-group.tsx",
+    "src/components/ui/toggle.tsx",
+    "src/components/ui/tooltip.tsx",
+    "src/data/benchmark_patients.json",
+    "src/data/hospital_patients_2024.json",
+    "src/data/patients.json",
+    "src/data/real_patients_2024.json",
+    "src/hooks/use-mobile.tsx",
+    "src/integrations/supabase/auth-attacher.ts",
+    "src/integrations/supabase/auth-middleware.ts",
+    "src/integrations/supabase/client.server.ts",
+    "src/integrations/supabase/client.ts",
+    "src/integrations/supabase/cron-auth.ts",
+    "src/integrations/supabase/previewAuthStorage.ts",
+    "src/integrations/supabase/types.ts",
+    "src/lib/emr/fhirAdapter.server.ts",
+    "src/lib/emr/index.server.ts",
+    "src/lib/emr/mockAdapter.server.ts",
+    "src/lib/emr/types.ts",
+    "src/lib/emr/unimedAdapter.server.ts",
+    "src/lib/utils.ts",
+    "src/router.tsx",
+    "src/routes/alerts.$alertId.accept.tsx",
+    "src/routes/alerts.$alertId.defer.tsx",
+    "src/routes/alerts.$alertId.override.tsx",
+    "src/routes/alerts.index.tsx",
+    "src/routes/analytics.tsx",
+    "src/routes/api/cdss.analyze.ts",
+    "src/routes/audit.tsx",
+    "src/routes/index.tsx",
+    "src/routes/patients.tsx",
+    "src/routes/summary.tsx",
+    "src/routes/timeline.tsx",
+    "src/routes/__root.tsx",
+    "src/routeTree.gen.ts",
+    "src/services/cdssService.ts"
+  ],
+  "importGraph": {
+    "src/api/cdssApi.ts": [
+      {
+        "raw": "@/cdss/types",
+        "resolved": "src/cdss/types.ts"
+      },
+      {
+        "raw": "@/cdss/usePatientState",
+        "resolved": "src/cdss/usePatientState.ts"
+      },
+      {
+        "raw": "@/cdss/config",
+        "resolved": "src/cdss/config.ts"
+      }
+    ],
+    "src/cdss/afDetection.ts": [
+      {
+        "raw": "./types",
+        "resolved": "src/cdss/types.ts"
+      }
+    ],
+    "src/cdss/config.ts": [],
+    "src/cdss/engine.ts": [
+      {
+        "raw": "./types",
+        "resolved": "src/cdss/types.ts"
+      },
+      {
+        "raw": "./rules/clinicGating",
+        "resolved": "src/cdss/rules/clinicGating.ts"
+      },
+      {
+        "raw": "./rules/afDetection",
+        "resolved": "src/cdss/rules/afDetection.ts"
+      },
+      {
+        "raw": "./rules/cha2ds2vasc",
+        "resolved": "src/cdss/rules/cha2ds2vasc.ts"
+      },
+      {
+        "raw": "./rules/cockcroftGault",
+        "resolved": "src/cdss/rules/cockcroftGault.ts"
+      },
+      {
+        "raw": "./rules/bloodPressure",
+        "resolved": "src/cdss/rules/bloodPressure.ts"
+      },
+      {
+        "raw": "./rules/hba1c",
+        "resolved": "src/cdss/rules/hba1c.ts"
+      },
+      {
+        "raw": "./rules/anticoagulants",
+        "resolved": "src/cdss/rules/anticoagulants.ts"
+      },
+      {
+        "raw": "./rules/missingData",
+        "resolved": "src/cdss/rules/missingData.ts"
+      },
+      {
+        "raw": "./rules/alertBuilder",
+        "resolved": "src/cdss/rules/alertBuilder.ts"
+      },
+      {
+        "raw": "./rules/hasBled",
+        "resolved": "src/cdss/rules/hasBled.ts"
+      },
+      {
+        "raw": "./ruleManifest",
+        "resolved": "src/cdss/ruleManifest.ts"
+      }
+    ],
+    "src/cdss/pinrr.ts": [
+      {
+        "raw": "./types",
+        "resolved": "src/cdss/types.ts"
+      },
+      {
+        "raw": "./ruleManifest",
+        "resolved": "src/cdss/ruleManifest.ts"
+      }
+    ],
+    "src/cdss/researchTimeline.ts": [
+      {
+        "raw": "./types",
+        "resolved": "src/cdss/types.ts"
+      }
+    ],
+    "src/cdss/ruleManifest.ts": [],
+    "src/cdss/rules/afDetection.ts": [
+      {
+        "raw": "../afDetection",
+        "resolved": "src/cdss/afDetection.ts"
+      }
+    ],
+    "src/cdss/rules/alertBuilder.ts": [
+      {
+        "raw": "../types",
+        "resolved": "src/cdss/types.ts"
+      }
+    ],
+    "src/cdss/rules/anticoagulants.ts": [
+      {
+        "raw": "../types",
+        "resolved": "src/cdss/types.ts"
+      },
+      {
+        "raw": "./alertBuilder",
+        "resolved": "src/cdss/rules/alertBuilder.ts"
+      },
+      {
+        "raw": "../pinrr",
+        "resolved": "src/cdss/pinrr.ts"
+      },
+      {
+        "raw": "../ruleManifest",
+        "resolved": "src/cdss/ruleManifest.ts"
+      }
+    ],
+    "src/cdss/rules/bloodPressure.ts": [
+      {
+        "raw": "../types",
+        "resolved": "src/cdss/types.ts"
+      },
+      {
+        "raw": "./alertBuilder",
+        "resolved": "src/cdss/rules/alertBuilder.ts"
+      }
+    ],
+    "src/cdss/rules/cha2ds2vasc.ts": [
+      {
+        "raw": "../types",
+        "resolved": "src/cdss/types.ts"
+      }
+    ],
+    "src/cdss/rules/clinicGating.ts": [
+      {
+        "raw": "../types",
+        "resolved": "src/cdss/types.ts"
+      }
+    ],
+    "src/cdss/rules/cockcroftGault.ts": [
+      {
+        "raw": "../types",
+        "resolved": "src/cdss/types.ts"
+      }
+    ],
+    "src/cdss/rules/hasBled.ts": [
+      {
+        "raw": "../types",
+        "resolved": "src/cdss/types.ts"
+      },
+      {
+        "raw": "./alertBuilder",
+        "resolved": "src/cdss/rules/alertBuilder.ts"
+      },
+      {
+        "raw": "../ruleManifest",
+        "resolved": "src/cdss/ruleManifest.ts"
+      }
+    ],
+    "src/cdss/rules/hba1c.ts": [
+      {
+        "raw": "../types",
+        "resolved": "src/cdss/types.ts"
+      },
+      {
+        "raw": "./alertBuilder",
+        "resolved": "src/cdss/rules/alertBuilder.ts"
+      },
+      {
+        "raw": "../ruleManifest",
+        "resolved": "src/cdss/ruleManifest.ts"
+      }
+    ],
+    "src/cdss/rules/missingData.ts": [
+      {
+        "raw": "../types",
+        "resolved": "src/cdss/types.ts"
+      },
+      {
+        "raw": "./alertBuilder",
+        "resolved": "src/cdss/rules/alertBuilder.ts"
+      }
+    ],
+    "src/cdss/rules/pinrr.ts": [
+      {
+        "raw": "../pinrr",
+        "resolved": "src/cdss/pinrr.ts"
+      }
+    ],
+    "src/cdss/ruleTraceability.ts": [],
+    "src/cdss/schemas.ts": [],
+    "src/cdss/server.functions.ts": [
+      {
+        "raw": "@/cdss/engine",
+        "resolved": "src/cdss/engine.ts"
+      },
+      {
+        "raw": "@/cdss/config",
+        "resolved": "src/cdss/config.ts"
+      },
+      {
+        "raw": "@/cdss/ruleManifest",
+        "resolved": "src/cdss/ruleManifest.ts"
+      },
+      {
+        "raw": "@/cdss/researchTimeline",
+        "resolved": "src/cdss/researchTimeline.ts"
+      },
+      {
+        "raw": "@/cdss/types",
+        "resolved": "src/cdss/types.ts"
+      }
+    ],
+    "src/cdss/types.ts": [],
+    "src/cdss/usePatientState.ts": [
+      {
+        "raw": "./types",
+        "resolved": "src/cdss/types.ts"
+      },
+      {
+        "raw": "./engine",
+        "resolved": "src/cdss/engine.ts"
+      },
+      {
+        "raw": "@/services/cdssService",
+        "resolved": "src/services/cdssService.ts"
+      },
+      {
+        "raw": "./config",
+        "resolved": "src/cdss/config.ts"
+      }
+    ],
+    "src/components/cdss/AfConfirmationModal.tsx": [
+      {
+        "raw": "@/components/ui/button",
+        "resolved": "src/components/ui/button.tsx"
+      },
+      {
+        "raw": "@/cdss/types",
+        "resolved": "src/cdss/types.ts"
+      }
+    ],
+    "src/components/cdss/AfEvidenceCard.tsx": [
+      {
+        "raw": "@/cdss/types",
+        "resolved": "src/cdss/types.ts"
+      }
+    ],
+    "src/components/cdss/AlertCard.tsx": [
+      {
+        "raw": "@/cdss/types",
+        "resolved": "src/cdss/types.ts"
+      },
+      {
+        "raw": "@/components/ui/button",
+        "resolved": "src/components/ui/button.tsx"
+      },
+      {
+        "raw": "@/components/ui/select",
+        "resolved": "src/components/ui/select.tsx"
+      },
+      {
+        "raw": "@/components/ui/textarea",
+        "resolved": "src/components/ui/textarea.tsx"
+      },
+      {
+        "raw": "@/components/ui/collapsible",
+        "resolved": "src/components/ui/collapsible.tsx"
+      }
+    ],
+    "src/components/cdss/AppShell.tsx": [],
+    "src/components/cdss/Cha2ds2VascHybrid.tsx": [
+      {
+        "raw": "@/cdss/types",
+        "resolved": "src/cdss/types.ts"
+      },
+      {
+        "raw": "@/cdss/usePatientState",
+        "resolved": "src/cdss/usePatientState.ts"
+      },
+      {
+        "raw": "@/components/ui/input",
+        "resolved": "src/components/ui/input.tsx"
+      },
+      {
+        "raw": "@/cdss/ruleManifest",
+        "resolved": "src/cdss/ruleManifest.ts"
+      }
+    ],
+    "src/components/cdss/ClinicGateBanner.tsx": [],
+    "src/components/cdss/HasBledCalculator.tsx": [
+      {
+        "raw": "@/cdss/engine",
+        "resolved": "src/cdss/engine.ts"
+      },
+      {
+        "raw": "@/cdss/types",
+        "resolved": "src/cdss/types.ts"
+      },
+      {
+        "raw": "@/cdss/usePatientState",
+        "resolved": "src/cdss/usePatientState.ts"
+      }
+    ],
+    "src/components/cdss/MissingDataCard.tsx": [
+      {
+        "raw": "@/cdss/types",
+        "resolved": "src/cdss/types.ts"
+      }
+    ],
+    "src/components/cdss/ScoreEvidenceModal.tsx": [
+      {
+        "raw": "@/components/ui/button",
+        "resolved": "src/components/ui/button.tsx"
+      },
+      {
+        "raw": "@/cdss/types",
+        "resolved": "src/cdss/types.ts"
+      },
+      {
+        "raw": "@/cdss/usePatientState",
+        "resolved": "src/cdss/usePatientState.ts"
+      }
+    ],
+    "src/components/ui/accordion.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      }
+    ],
+    "src/components/ui/alert-dialog.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      },
+      {
+        "raw": "@/components/ui/button",
+        "resolved": "src/components/ui/button.tsx"
+      }
+    ],
+    "src/components/ui/alert.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      }
+    ],
+    "src/components/ui/aspect-ratio.tsx": [],
+    "src/components/ui/avatar.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      }
+    ],
+    "src/components/ui/badge.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      }
+    ],
+    "src/components/ui/breadcrumb.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      }
+    ],
+    "src/components/ui/button.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      }
+    ],
+    "src/components/ui/calendar.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      },
+      {
+        "raw": "@/components/ui/button",
+        "resolved": "src/components/ui/button.tsx"
+      }
+    ],
+    "src/components/ui/card.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      }
+    ],
+    "src/components/ui/carousel.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      },
+      {
+        "raw": "@/components/ui/button",
+        "resolved": "src/components/ui/button.tsx"
+      }
+    ],
+    "src/components/ui/chart.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      }
+    ],
+    "src/components/ui/checkbox.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      }
+    ],
+    "src/components/ui/collapsible.tsx": [],
+    "src/components/ui/command.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      },
+      {
+        "raw": "@/components/ui/dialog",
+        "resolved": "src/components/ui/dialog.tsx"
+      }
+    ],
+    "src/components/ui/context-menu.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      }
+    ],
+    "src/components/ui/dialog.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      }
+    ],
+    "src/components/ui/drawer.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      }
+    ],
+    "src/components/ui/dropdown-menu.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      }
+    ],
+    "src/components/ui/form.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      },
+      {
+        "raw": "@/components/ui/label",
+        "resolved": "src/components/ui/label.tsx"
+      }
+    ],
+    "src/components/ui/hover-card.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      }
+    ],
+    "src/components/ui/input-otp.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      }
+    ],
+    "src/components/ui/input.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      }
+    ],
+    "src/components/ui/label.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      }
+    ],
+    "src/components/ui/menubar.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      }
+    ],
+    "src/components/ui/navigation-menu.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      }
+    ],
+    "src/components/ui/pagination.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      },
+      {
+        "raw": "@/components/ui/button",
+        "resolved": "src/components/ui/button.tsx"
+      }
+    ],
+    "src/components/ui/popover.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      }
+    ],
+    "src/components/ui/progress.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      }
+    ],
+    "src/components/ui/radio-group.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      }
+    ],
+    "src/components/ui/resizable.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      }
+    ],
+    "src/components/ui/scroll-area.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      }
+    ],
+    "src/components/ui/select.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      }
+    ],
+    "src/components/ui/separator.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      }
+    ],
+    "src/components/ui/sheet.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      }
+    ],
+    "src/components/ui/sidebar.tsx": [
+      {
+        "raw": "@/hooks/use-mobile",
+        "resolved": "src/hooks/use-mobile.tsx"
+      },
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      },
+      {
+        "raw": "@/components/ui/button",
+        "resolved": "src/components/ui/button.tsx"
+      },
+      {
+        "raw": "@/components/ui/input",
+        "resolved": "src/components/ui/input.tsx"
+      },
+      {
+        "raw": "@/components/ui/separator",
+        "resolved": "src/components/ui/separator.tsx"
+      },
+      {
+        "raw": "@/components/ui/sheet",
+        "resolved": "src/components/ui/sheet.tsx"
+      },
+      {
+        "raw": "@/components/ui/skeleton",
+        "resolved": "src/components/ui/skeleton.tsx"
+      },
+      {
+        "raw": "@/components/ui/tooltip",
+        "resolved": "src/components/ui/tooltip.tsx"
+      }
+    ],
+    "src/components/ui/skeleton.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      }
+    ],
+    "src/components/ui/slider.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      }
+    ],
+    "src/components/ui/sonner.tsx": [],
+    "src/components/ui/switch.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      }
+    ],
+    "src/components/ui/table.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      }
+    ],
+    "src/components/ui/tabs.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      }
+    ],
+    "src/components/ui/textarea.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      }
+    ],
+    "src/components/ui/toggle-group.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      },
+      {
+        "raw": "@/components/ui/toggle",
+        "resolved": "src/components/ui/toggle.tsx"
+      }
+    ],
+    "src/components/ui/toggle.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      }
+    ],
+    "src/components/ui/tooltip.tsx": [
+      {
+        "raw": "@/lib/utils",
+        "resolved": "src/lib/utils.ts"
+      }
+    ],
+    "src/data/benchmark_patients.json": [],
+    "src/data/hospital_patients_2024.json": [],
+    "src/data/patients.json": [],
+    "src/data/real_patients_2024.json": [],
+    "src/hooks/use-mobile.tsx": [],
+    "src/integrations/supabase/auth-attacher.ts": [
+      {
+        "raw": "./client",
+        "resolved": "src/integrations/supabase/client.ts"
+      }
+    ],
+    "src/integrations/supabase/auth-middleware.ts": [
+      {
+        "raw": "./types",
+        "resolved": "src/integrations/supabase/types.ts"
+      }
+    ],
+    "src/integrations/supabase/client.server.ts": [
+      {
+        "raw": "./types",
+        "resolved": "src/integrations/supabase/types.ts"
+      }
+    ],
+    "src/integrations/supabase/client.ts": [
+      {
+        "raw": "./types",
+        "resolved": "src/integrations/supabase/types.ts"
+      },
+      {
+        "raw": "./previewAuthStorage",
+        "resolved": "src/integrations/supabase/previewAuthStorage.ts"
+      },
+      {
+        "raw": "@/integrations/supabase/client",
+        "resolved": "src/integrations/supabase/client.ts"
+      }
+    ],
+    "src/integrations/supabase/cron-auth.ts": [],
+    "src/integrations/supabase/previewAuthStorage.ts": [],
+    "src/integrations/supabase/types.ts": [],
+    "src/lib/emr/fhirAdapter.server.ts": [
+      {
+        "raw": "./types",
+        "resolved": "src/lib/emr/types.ts"
+      }
+    ],
+    "src/lib/emr/index.server.ts": [
+      {
+        "raw": "./types",
+        "resolved": "src/lib/emr/types.ts"
+      },
+      {
+        "raw": "./mockAdapter.server",
+        "resolved": "src/lib/emr/mockAdapter.server.ts"
+      },
+      {
+        "raw": "./unimedAdapter.server",
+        "resolved": "src/lib/emr/unimedAdapter.server.ts"
+      },
+      {
+        "raw": "./fhirAdapter.server",
+        "resolved": "src/lib/emr/fhirAdapter.server.ts"
+      }
+    ],
+    "src/lib/emr/mockAdapter.server.ts": [
+      {
+        "raw": "@/data/patients.json",
+        "resolved": "src/data/patients.json"
+      },
+      {
+        "raw": "@/cdss/types",
+        "resolved": "src/cdss/types.ts"
+      },
+      {
+        "raw": "./types",
+        "resolved": "src/lib/emr/types.ts"
+      }
+    ],
+    "src/lib/emr/types.ts": [
+      {
+        "raw": "@/cdss/types",
+        "resolved": "src/cdss/types.ts"
+      }
+    ],
+    "src/lib/emr/unimedAdapter.server.ts": [
+      {
+        "raw": "./types",
+        "resolved": "src/lib/emr/types.ts"
+      }
+    ],
+    "src/lib/utils.ts": [],
+    "src/router.tsx": [
+      {
+        "raw": "./routeTree.gen",
+        "resolved": "src/routeTree.gen.ts"
+      }
+    ],
+    "src/routes/alerts.$alertId.accept.tsx": [
+      {
+        "raw": "@/cdss/server.functions",
+        "resolved": "src/cdss/server.functions.ts"
+      },
+      {
+        "raw": "@/components/cdss/AppShell",
+        "resolved": "src/components/cdss/AppShell.tsx"
+      },
+      {
+        "raw": "@/components/ui/button",
+        "resolved": "src/components/ui/button.tsx"
+      },
+      {
+        "raw": "@/components/ui/input",
+        "resolved": "src/components/ui/input.tsx"
+      },
+      {
+        "raw": "@/components/ui/label",
+        "resolved": "src/components/ui/label.tsx"
+      },
+      {
+        "raw": "@/cdss/types",
+        "resolved": "src/cdss/types.ts"
+      }
+    ],
+    "src/routes/alerts.$alertId.defer.tsx": [
+      {
+        "raw": "@/cdss/server.functions",
+        "resolved": "src/cdss/server.functions.ts"
+      },
+      {
+        "raw": "@/components/cdss/AppShell",
+        "resolved": "src/components/cdss/AppShell.tsx"
+      },
+      {
+        "raw": "@/components/ui/button",
+        "resolved": "src/components/ui/button.tsx"
+      },
+      {
+        "raw": "@/components/ui/input",
+        "resolved": "src/components/ui/input.tsx"
+      },
+      {
+        "raw": "@/components/ui/textarea",
+        "resolved": "src/components/ui/textarea.tsx"
+      },
+      {
+        "raw": "@/components/ui/label",
+        "resolved": "src/components/ui/label.tsx"
+      }
+    ],
+    "src/routes/alerts.$alertId.override.tsx": [
+      {
+        "raw": "@/cdss/server.functions",
+        "resolved": "src/cdss/server.functions.ts"
+      },
+      {
+        "raw": "@/cdss/ruleManifest",
+        "resolved": "src/cdss/ruleManifest.ts"
+      },
+      {
+        "raw": "@/components/cdss/AppShell",
+        "resolved": "src/components/cdss/AppShell.tsx"
+      },
+      {
+        "raw": "@/components/ui/button",
+        "resolved": "src/components/ui/button.tsx"
+      },
+      {
+        "raw": "@/components/ui/textarea",
+        "resolved": "src/components/ui/textarea.tsx"
+      },
+      {
+        "raw": "@/components/ui/label",
+        "resolved": "src/components/ui/label.tsx"
+      },
+      {
+        "raw": "@/components/ui/select",
+        "resolved": "src/components/ui/select.tsx"
+      }
+    ],
+    "src/routes/alerts.index.tsx": [
+      {
+        "raw": "@/cdss/server.functions",
+        "resolved": "src/cdss/server.functions.ts"
+      },
+      {
+        "raw": "@/components/cdss/AppShell",
+        "resolved": "src/components/cdss/AppShell.tsx"
+      },
+      {
+        "raw": "@/components/ui/button",
+        "resolved": "src/components/ui/button.tsx"
+      },
+      {
+        "raw": "@/components/ui/collapsible",
+        "resolved": "src/components/ui/collapsible.tsx"
+      },
+      {
+        "raw": "@/cdss/types",
+        "resolved": "src/cdss/types.ts"
+      }
+    ],
+    "src/routes/analytics.tsx": [
+      {
+        "raw": "@/cdss/server.functions",
+        "resolved": "src/cdss/server.functions.ts"
+      },
+      {
+        "raw": "@/components/cdss/AppShell",
+        "resolved": "src/components/cdss/AppShell.tsx"
+      }
+    ],
+    "src/routes/api/cdss.analyze.ts": [
+      {
+        "raw": "@/cdss/engine",
+        "resolved": "src/cdss/engine.ts"
+      },
+      {
+        "raw": "@/cdss/usePatientState",
+        "resolved": "src/cdss/usePatientState.ts"
+      },
+      {
+        "raw": "@/cdss/schemas",
+        "resolved": "src/cdss/schemas.ts"
+      },
+      {
+        "raw": "@/cdss/config",
+        "resolved": "src/cdss/config.ts"
+      },
+      {
+        "raw": "@/cdss/types",
+        "resolved": "src/cdss/types.ts"
+      }
+    ],
+    "src/routes/audit.tsx": [
+      {
+        "raw": "@/cdss/server.functions",
+        "resolved": "src/cdss/server.functions.ts"
+      },
+      {
+        "raw": "@/components/cdss/AppShell",
+        "resolved": "src/components/cdss/AppShell.tsx"
+      },
+      {
+        "raw": "@/components/ui/button",
+        "resolved": "src/components/ui/button.tsx"
+      },
+      {
+        "raw": "@/components/ui/input",
+        "resolved": "src/components/ui/input.tsx"
+      },
+      {
+        "raw": "@/cdss/types",
+        "resolved": "src/cdss/types.ts"
+      }
+    ],
+    "src/routes/index.tsx": [
+      {
+        "raw": "@/cdss/server.functions",
+        "resolved": "src/cdss/server.functions.ts"
+      },
+      {
+        "raw": "@/cdss/usePatientState",
+        "resolved": "src/cdss/usePatientState.ts"
+      },
+      {
+        "raw": "@/components/cdss/AppShell",
+        "resolved": "src/components/cdss/AppShell.tsx"
+      },
+      {
+        "raw": "@/components/cdss/HasBledCalculator",
+        "resolved": "src/components/cdss/HasBledCalculator.tsx"
+      },
+      {
+        "raw": "@/components/cdss/Cha2ds2VascHybrid",
+        "resolved": "src/components/cdss/Cha2ds2VascHybrid.tsx"
+      },
+      {
+        "raw": "@/components/cdss/AfEvidenceCard",
+        "resolved": "src/components/cdss/AfEvidenceCard.tsx"
+      },
+      {
+        "raw": "@/components/cdss/AfConfirmationModal",
+        "resolved": "src/components/cdss/AfConfirmationModal.tsx"
+      },
+      {
+        "raw": "@/components/cdss/ScoreEvidenceModal",
+        "resolved": "src/components/cdss/ScoreEvidenceModal.tsx"
+      },
+      {
+        "raw": "@/components/cdss/MissingDataCard",
+        "resolved": "src/components/cdss/MissingDataCard.tsx"
+      },
+      {
+        "raw": "@/components/cdss/ClinicGateBanner",
+        "resolved": "src/components/cdss/ClinicGateBanner.tsx"
+      },
+      {
+        "raw": "@/components/ui/button",
+        "resolved": "src/components/ui/button.tsx"
+      }
+    ],
+    "src/routes/patients.tsx": [
+      {
+        "raw": "@/cdss/server.functions",
+        "resolved": "src/cdss/server.functions.ts"
+      },
+      {
+        "raw": "@/components/cdss/AppShell",
+        "resolved": "src/components/cdss/AppShell.tsx"
+      },
+      {
+        "raw": "@/components/ui/input",
+        "resolved": "src/components/ui/input.tsx"
+      }
+    ],
+    "src/routes/summary.tsx": [
+      {
+        "raw": "@/cdss/server.functions",
+        "resolved": "src/cdss/server.functions.ts"
+      },
+      {
+        "raw": "@/components/cdss/AppShell",
+        "resolved": "src/components/cdss/AppShell.tsx"
+      },
+      {
+        "raw": "@/components/ui/button",
+        "resolved": "src/components/ui/button.tsx"
+      },
+      {
+        "raw": "@/components/ui/input",
+        "resolved": "src/components/ui/input.tsx"
+      },
+      {
+        "raw": "@/components/ui/textarea",
+        "resolved": "src/components/ui/textarea.tsx"
+      },
+      {
+        "raw": "@/components/ui/label",
+        "resolved": "src/components/ui/label.tsx"
+      }
+    ],
+    "src/routes/timeline.tsx": [
+      {
+        "raw": "@/cdss/server.functions",
+        "resolved": "src/cdss/server.functions.ts"
+      },
+      {
+        "raw": "@/cdss/researchTimeline",
+        "resolved": "src/cdss/researchTimeline.ts"
+      },
+      {
+        "raw": "@/components/cdss/AppShell",
+        "resolved": "src/components/cdss/AppShell.tsx"
+      },
+      {
+        "raw": "@/components/ui/button",
+        "resolved": "src/components/ui/button.tsx"
+      },
+      {
+        "raw": "@/cdss/types",
+        "resolved": "src/cdss/types.ts"
+      }
+    ],
+    "src/routes/__root.tsx": [],
+    "src/routeTree.gen.ts": [
+      {
+        "raw": "./routes/__root",
+        "resolved": "src/routes/__root.tsx"
+      },
+      {
+        "raw": "./routes/timeline",
+        "resolved": "src/routes/timeline.tsx"
+      },
+      {
+        "raw": "./routes/summary",
+        "resolved": "src/routes/summary.tsx"
+      },
+      {
+        "raw": "./routes/patients",
+        "resolved": "src/routes/patients.tsx"
+      },
+      {
+        "raw": "./routes/audit",
+        "resolved": "src/routes/audit.tsx"
+      },
+      {
+        "raw": "./routes/analytics",
+        "resolved": "src/routes/analytics.tsx"
+      },
+      {
+        "raw": "./routes/index",
+        "resolved": "src/routes/index.tsx"
+      },
+      {
+        "raw": "./routes/alerts.index",
+        "resolved": "src/routes/alerts.index.tsx"
+      },
+      {
+        "raw": "./routes/api/cdss.analyze",
+        "resolved": "src/routes/api/cdss.analyze.ts"
+      },
+      {
+        "raw": "./routes/alerts.$alertId.override",
+        "resolved": "src/routes/alerts.$alertId.override.tsx"
+      },
+      {
+        "raw": "./routes/alerts.$alertId.defer",
+        "resolved": "src/routes/alerts.$alertId.defer.tsx"
+      },
+      {
+        "raw": "./routes/alerts.$alertId.accept",
+        "resolved": "src/routes/alerts.$alertId.accept.tsx"
+      },
+      {
+        "raw": "./router.tsx",
+        "resolved": "src/router.tsx"
+      }
+    ],
+    "src/services/cdssService.ts": [
+      {
+        "raw": "@/api/cdssApi",
+        "resolved": "src/api/cdssApi.ts"
+      },
+      {
+        "raw": "@/cdss/types",
+        "resolved": "src/cdss/types.ts"
+      },
+      {
+        "raw": "@/cdss/usePatientState",
+        "resolved": "src/cdss/usePatientState.ts"
+      }
+    ]
+  },
+  "reverseGraph": {
+    "src/api/cdssApi.ts": [
+      "src/services/cdssService.ts"
+    ],
+    "src/cdss/afDetection.ts": [
+      "src/cdss/rules/afDetection.ts"
+    ],
+    "src/cdss/config.ts": [
+      "src/api/cdssApi.ts",
+      "src/cdss/server.functions.ts",
+      "src/cdss/usePatientState.ts",
+      "src/routes/api/cdss.analyze.ts"
+    ],
+    "src/cdss/engine.ts": [
+      "src/cdss/server.functions.ts",
+      "src/cdss/usePatientState.ts",
+      "src/components/cdss/HasBledCalculator.tsx",
+      "src/routes/api/cdss.analyze.ts"
+    ],
+    "src/cdss/pinrr.ts": [
+      "src/cdss/rules/anticoagulants.ts",
+      "src/cdss/rules/pinrr.ts"
+    ],
+    "src/cdss/researchTimeline.ts": [
+      "src/cdss/server.functions.ts",
+      "src/routes/timeline.tsx"
+    ],
+    "src/cdss/ruleManifest.ts": [
+      "src/cdss/engine.ts",
+      "src/cdss/pinrr.ts",
+      "src/cdss/rules/anticoagulants.ts",
+      "src/cdss/rules/hasBled.ts",
+      "src/cdss/rules/hba1c.ts",
+      "src/cdss/server.functions.ts",
+      "src/components/cdss/Cha2ds2VascHybrid.tsx",
+      "src/routes/alerts.$alertId.override.tsx"
+    ],
+    "src/cdss/rules/afDetection.ts": [
+      "src/cdss/engine.ts"
+    ],
+    "src/cdss/rules/alertBuilder.ts": [
+      "src/cdss/engine.ts",
+      "src/cdss/rules/anticoagulants.ts",
+      "src/cdss/rules/bloodPressure.ts",
+      "src/cdss/rules/hasBled.ts",
+      "src/cdss/rules/hba1c.ts",
+      "src/cdss/rules/missingData.ts"
+    ],
+    "src/cdss/rules/anticoagulants.ts": [
+      "src/cdss/engine.ts"
+    ],
+    "src/cdss/rules/bloodPressure.ts": [
+      "src/cdss/engine.ts"
+    ],
+    "src/cdss/rules/cha2ds2vasc.ts": [
+      "src/cdss/engine.ts"
+    ],
+    "src/cdss/rules/clinicGating.ts": [
+      "src/cdss/engine.ts"
+    ],
+    "src/cdss/rules/cockcroftGault.ts": [
+      "src/cdss/engine.ts"
+    ],
+    "src/cdss/rules/hasBled.ts": [
+      "src/cdss/engine.ts"
+    ],
+    "src/cdss/rules/hba1c.ts": [
+      "src/cdss/engine.ts"
+    ],
+    "src/cdss/rules/missingData.ts": [
+      "src/cdss/engine.ts"
+    ],
+    "src/cdss/rules/pinrr.ts": [],
+    "src/cdss/ruleTraceability.ts": [],
+    "src/cdss/schemas.ts": [
+      "src/routes/api/cdss.analyze.ts"
+    ],
+    "src/cdss/server.functions.ts": [
+      "src/routes/alerts.$alertId.accept.tsx",
+      "src/routes/alerts.$alertId.defer.tsx",
+      "src/routes/alerts.$alertId.override.tsx",
+      "src/routes/alerts.index.tsx",
+      "src/routes/analytics.tsx",
+      "src/routes/audit.tsx",
+      "src/routes/index.tsx",
+      "src/routes/patients.tsx",
+      "src/routes/summary.tsx",
+      "src/routes/timeline.tsx"
+    ],
+    "src/cdss/types.ts": [
+      "src/api/cdssApi.ts",
+      "src/cdss/afDetection.ts",
+      "src/cdss/engine.ts",
+      "src/cdss/pinrr.ts",
+      "src/cdss/researchTimeline.ts",
+      "src/cdss/rules/alertBuilder.ts",
+      "src/cdss/rules/anticoagulants.ts",
+      "src/cdss/rules/bloodPressure.ts",
+      "src/cdss/rules/cha2ds2vasc.ts",
+      "src/cdss/rules/clinicGating.ts",
+      "src/cdss/rules/cockcroftGault.ts",
+      "src/cdss/rules/hasBled.ts",
+      "src/cdss/rules/hba1c.ts",
+      "src/cdss/rules/missingData.ts",
+      "src/cdss/server.functions.ts",
+      "src/cdss/usePatientState.ts",
+      "src/components/cdss/AfConfirmationModal.tsx",
+      "src/components/cdss/AfEvidenceCard.tsx",
+      "src/components/cdss/AlertCard.tsx",
+      "src/components/cdss/Cha2ds2VascHybrid.tsx",
+      "src/components/cdss/HasBledCalculator.tsx",
+      "src/components/cdss/MissingDataCard.tsx",
+      "src/components/cdss/ScoreEvidenceModal.tsx",
+      "src/lib/emr/mockAdapter.server.ts",
+      "src/lib/emr/types.ts",
+      "src/routes/alerts.$alertId.accept.tsx",
+      "src/routes/alerts.index.tsx",
+      "src/routes/api/cdss.analyze.ts",
+      "src/routes/audit.tsx",
+      "src/routes/timeline.tsx",
+      "src/services/cdssService.ts"
+    ],
+    "src/cdss/usePatientState.ts": [
+      "src/api/cdssApi.ts",
+      "src/components/cdss/Cha2ds2VascHybrid.tsx",
+      "src/components/cdss/HasBledCalculator.tsx",
+      "src/components/cdss/ScoreEvidenceModal.tsx",
+      "src/routes/api/cdss.analyze.ts",
+      "src/routes/index.tsx",
+      "src/services/cdssService.ts"
+    ],
+    "src/components/cdss/AfConfirmationModal.tsx": [
+      "src/routes/index.tsx"
+    ],
+    "src/components/cdss/AfEvidenceCard.tsx": [
+      "src/routes/index.tsx"
+    ],
+    "src/components/cdss/AlertCard.tsx": [],
+    "src/components/cdss/AppShell.tsx": [
+      "src/routes/alerts.$alertId.accept.tsx",
+      "src/routes/alerts.$alertId.defer.tsx",
+      "src/routes/alerts.$alertId.override.tsx",
+      "src/routes/alerts.index.tsx",
+      "src/routes/analytics.tsx",
+      "src/routes/audit.tsx",
+      "src/routes/index.tsx",
+      "src/routes/patients.tsx",
+      "src/routes/summary.tsx",
+      "src/routes/timeline.tsx"
+    ],
+    "src/components/cdss/Cha2ds2VascHybrid.tsx": [
+      "src/routes/index.tsx"
+    ],
+    "src/components/cdss/ClinicGateBanner.tsx": [
+      "src/routes/index.tsx"
+    ],
+    "src/components/cdss/HasBledCalculator.tsx": [
+      "src/routes/index.tsx"
+    ],
+    "src/components/cdss/MissingDataCard.tsx": [
+      "src/routes/index.tsx"
+    ],
+    "src/components/cdss/ScoreEvidenceModal.tsx": [
+      "src/routes/index.tsx"
+    ],
+    "src/components/ui/accordion.tsx": [],
+    "src/components/ui/alert-dialog.tsx": [],
+    "src/components/ui/alert.tsx": [],
+    "src/components/ui/aspect-ratio.tsx": [],
+    "src/components/ui/avatar.tsx": [],
+    "src/components/ui/badge.tsx": [],
+    "src/components/ui/breadcrumb.tsx": [],
+    "src/components/ui/button.tsx": [
+      "src/components/cdss/AfConfirmationModal.tsx",
+      "src/components/cdss/AlertCard.tsx",
+      "src/components/cdss/ScoreEvidenceModal.tsx",
+      "src/components/ui/alert-dialog.tsx",
+      "src/components/ui/calendar.tsx",
+      "src/components/ui/carousel.tsx",
+      "src/components/ui/pagination.tsx",
+      "src/components/ui/sidebar.tsx",
+      "src/routes/alerts.$alertId.accept.tsx",
+      "src/routes/alerts.$alertId.defer.tsx",
+      "src/routes/alerts.$alertId.override.tsx",
+      "src/routes/alerts.index.tsx",
+      "src/routes/audit.tsx",
+      "src/routes/index.tsx",
+      "src/routes/summary.tsx",
+      "src/routes/timeline.tsx"
+    ],
+    "src/components/ui/calendar.tsx": [],
+    "src/components/ui/card.tsx": [],
+    "src/components/ui/carousel.tsx": [],
+    "src/components/ui/chart.tsx": [],
+    "src/components/ui/checkbox.tsx": [],
+    "src/components/ui/collapsible.tsx": [
+      "src/components/cdss/AlertCard.tsx",
+      "src/routes/alerts.index.tsx"
+    ],
+    "src/components/ui/command.tsx": [],
+    "src/components/ui/context-menu.tsx": [],
+    "src/components/ui/dialog.tsx": [
+      "src/components/ui/command.tsx"
+    ],
+    "src/components/ui/drawer.tsx": [],
+    "src/components/ui/dropdown-menu.tsx": [],
+    "src/components/ui/form.tsx": [],
+    "src/components/ui/hover-card.tsx": [],
+    "src/components/ui/input-otp.tsx": [],
+    "src/components/ui/input.tsx": [
+      "src/components/cdss/Cha2ds2VascHybrid.tsx",
+      "src/components/ui/sidebar.tsx",
+      "src/routes/alerts.$alertId.accept.tsx",
+      "src/routes/alerts.$alertId.defer.tsx",
+      "src/routes/audit.tsx",
+      "src/routes/patients.tsx",
+      "src/routes/summary.tsx"
+    ],
+    "src/components/ui/label.tsx": [
+      "src/components/ui/form.tsx",
+      "src/routes/alerts.$alertId.accept.tsx",
+      "src/routes/alerts.$alertId.defer.tsx",
+      "src/routes/alerts.$alertId.override.tsx",
+      "src/routes/summary.tsx"
+    ],
+    "src/components/ui/menubar.tsx": [],
+    "src/components/ui/navigation-menu.tsx": [],
+    "src/components/ui/pagination.tsx": [],
+    "src/components/ui/popover.tsx": [],
+    "src/components/ui/progress.tsx": [],
+    "src/components/ui/radio-group.tsx": [],
+    "src/components/ui/resizable.tsx": [],
+    "src/components/ui/scroll-area.tsx": [],
+    "src/components/ui/select.tsx": [
+      "src/components/cdss/AlertCard.tsx",
+      "src/routes/alerts.$alertId.override.tsx"
+    ],
+    "src/components/ui/separator.tsx": [
+      "src/components/ui/sidebar.tsx"
+    ],
+    "src/components/ui/sheet.tsx": [
+      "src/components/ui/sidebar.tsx"
+    ],
+    "src/components/ui/sidebar.tsx": [],
+    "src/components/ui/skeleton.tsx": [
+      "src/components/ui/sidebar.tsx"
+    ],
+    "src/components/ui/slider.tsx": [],
+    "src/components/ui/sonner.tsx": [],
+    "src/components/ui/switch.tsx": [],
+    "src/components/ui/table.tsx": [],
+    "src/components/ui/tabs.tsx": [],
+    "src/components/ui/textarea.tsx": [
+      "src/components/cdss/AlertCard.tsx",
+      "src/routes/alerts.$alertId.defer.tsx",
+      "src/routes/alerts.$alertId.override.tsx",
+      "src/routes/summary.tsx"
+    ],
+    "src/components/ui/toggle-group.tsx": [],
+    "src/components/ui/toggle.tsx": [
+      "src/components/ui/toggle-group.tsx"
+    ],
+    "src/components/ui/tooltip.tsx": [
+      "src/components/ui/sidebar.tsx"
+    ],
+    "src/data/benchmark_patients.json": [],
+    "src/data/hospital_patients_2024.json": [],
+    "src/data/patients.json": [
+      "src/lib/emr/mockAdapter.server.ts"
+    ],
+    "src/data/real_patients_2024.json": [],
+    "src/hooks/use-mobile.tsx": [
+      "src/components/ui/sidebar.tsx"
+    ],
+    "src/integrations/supabase/auth-attacher.ts": [],
+    "src/integrations/supabase/auth-middleware.ts": [],
+    "src/integrations/supabase/client.server.ts": [],
+    "src/integrations/supabase/client.ts": [
+      "src/integrations/supabase/auth-attacher.ts",
+      "src/integrations/supabase/client.ts"
+    ],
+    "src/integrations/supabase/cron-auth.ts": [],
+    "src/integrations/supabase/previewAuthStorage.ts": [
+      "src/integrations/supabase/client.ts"
+    ],
+    "src/integrations/supabase/types.ts": [
+      "src/integrations/supabase/auth-middleware.ts",
+      "src/integrations/supabase/client.server.ts",
+      "src/integrations/supabase/client.ts"
+    ],
+    "src/lib/emr/fhirAdapter.server.ts": [
+      "src/lib/emr/index.server.ts"
+    ],
+    "src/lib/emr/index.server.ts": [],
+    "src/lib/emr/mockAdapter.server.ts": [
+      "src/lib/emr/index.server.ts"
+    ],
+    "src/lib/emr/types.ts": [
+      "src/lib/emr/fhirAdapter.server.ts",
+      "src/lib/emr/index.server.ts",
+      "src/lib/emr/mockAdapter.server.ts",
+      "src/lib/emr/unimedAdapter.server.ts"
+    ],
+    "src/lib/emr/unimedAdapter.server.ts": [
+      "src/lib/emr/index.server.ts"
+    ],
+    "src/lib/utils.ts": [
+      "src/components/ui/accordion.tsx",
+      "src/components/ui/alert-dialog.tsx",
+      "src/components/ui/alert.tsx",
+      "src/components/ui/avatar.tsx",
+      "src/components/ui/badge.tsx",
+      "src/components/ui/breadcrumb.tsx",
+      "src/components/ui/button.tsx",
+      "src/components/ui/calendar.tsx",
+      "src/components/ui/card.tsx",
+      "src/components/ui/carousel.tsx",
+      "src/components/ui/chart.tsx",
+      "src/components/ui/checkbox.tsx",
+      "src/components/ui/command.tsx",
+      "src/components/ui/context-menu.tsx",
+      "src/components/ui/dialog.tsx",
+      "src/components/ui/drawer.tsx",
+      "src/components/ui/dropdown-menu.tsx",
+      "src/components/ui/form.tsx",
+      "src/components/ui/hover-card.tsx",
+      "src/components/ui/input-otp.tsx",
+      "src/components/ui/input.tsx",
+      "src/components/ui/label.tsx",
+      "src/components/ui/menubar.tsx",
+      "src/components/ui/navigation-menu.tsx",
+      "src/components/ui/pagination.tsx",
+      "src/components/ui/popover.tsx",
+      "src/components/ui/progress.tsx",
+      "src/components/ui/radio-group.tsx",
+      "src/components/ui/resizable.tsx",
+      "src/components/ui/scroll-area.tsx",
+      "src/components/ui/select.tsx",
+      "src/components/ui/separator.tsx",
+      "src/components/ui/sheet.tsx",
+      "src/components/ui/sidebar.tsx",
+      "src/components/ui/skeleton.tsx",
+      "src/components/ui/slider.tsx",
+      "src/components/ui/switch.tsx",
+      "src/components/ui/table.tsx",
+      "src/components/ui/tabs.tsx",
+      "src/components/ui/textarea.tsx",
+      "src/components/ui/toggle-group.tsx",
+      "src/components/ui/toggle.tsx",
+      "src/components/ui/tooltip.tsx"
+    ],
+    "src/router.tsx": [
+      "src/routeTree.gen.ts"
+    ],
+    "src/routes/alerts.$alertId.accept.tsx": [
+      "src/routeTree.gen.ts"
+    ],
+    "src/routes/alerts.$alertId.defer.tsx": [
+      "src/routeTree.gen.ts"
+    ],
+    "src/routes/alerts.$alertId.override.tsx": [
+      "src/routeTree.gen.ts"
+    ],
+    "src/routes/alerts.index.tsx": [
+      "src/routeTree.gen.ts"
+    ],
+    "src/routes/analytics.tsx": [
+      "src/routeTree.gen.ts"
+    ],
+    "src/routes/api/cdss.analyze.ts": [
+      "src/routeTree.gen.ts"
+    ],
+    "src/routes/audit.tsx": [
+      "src/routeTree.gen.ts"
+    ],
+    "src/routes/index.tsx": [
+      "src/routeTree.gen.ts"
+    ],
+    "src/routes/patients.tsx": [
+      "src/routeTree.gen.ts"
+    ],
+    "src/routes/summary.tsx": [
+      "src/routeTree.gen.ts"
+    ],
+    "src/routes/timeline.tsx": [
+      "src/routeTree.gen.ts"
+    ],
+    "src/routes/__root.tsx": [
+      "src/routeTree.gen.ts"
+    ],
+    "src/routeTree.gen.ts": [
+      "src/router.tsx"
+    ],
+    "src/services/cdssService.ts": [
+      "src/cdss/usePatientState.ts"
+    ]
+  }
+}

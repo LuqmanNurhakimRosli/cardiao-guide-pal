@@ -1,8 +1,8 @@
 import fs from 'fs';
 import path from 'path';
-import { evaluate } from './src/cdss/engine.js';
+import { evaluate } from './src/shared/cdss/engine.js';
 
-const realPatients = JSON.parse(fs.readFileSync('./src/data/real_patients_2024.json', 'utf8'));
+const realPatients = JSON.parse(fs.readFileSync('./src/shared/data/real_patients_2024.json', 'utf8'));
 
 console.log(`\n========================================================`);
 console.log(`🏥 CDSS BATCH EVALUATION: ${realPatients.length} REAL HASA UITM AF PATIENTS`);
