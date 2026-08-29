@@ -102,6 +102,18 @@ function AcceptFlow() {
 
     try {
       const isMedChange = Boolean(suggestedMedName && dose);
+      const isStrokeAlert = alert.id === "stroke-prevention";
+      const isReevalAlert = alert.id === "af-reevaluation-reassessment";
+
+      const acceptRationale = isReevalAlert
+        ? "AF clinical reevaluation completed: risk factors, stroke/bleeding risks, AF symptoms, and ongoing management plan reviewed."
+        : isStrokeAlert
+        ? `Oral anticoagulation indicated (CHA₂DS₂-VA = ${current.cdss.scores.cha2ds2va?.total ?? current.cdss.scores.cha2ds2vasc?.total ?? "≥2"}). Guideline anticoagulation therapy confirmed.`
+        : isMedChange
+        ? `Prescription updated to ${suggestedMedName} ${dose}.`
+        : alert.recommendation
+        ? `Advisory recommendation accepted: ${alert.recommendation}`
+        : "Clinical recommendation accepted and incorporated into management plan.";
 
       await logAction({
         data: {
@@ -109,6 +121,7 @@ function AcceptFlow() {
           alert_id: alert.id,
           alert_title: alert.title,
           action: "accept",
+          override_notes: acceptRationale,
           med_change: isMedChange
             ? { name: suggestedMedName!, new_dose: dose }
             : undefined,

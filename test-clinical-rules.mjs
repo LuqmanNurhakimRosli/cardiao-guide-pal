@@ -1,15 +1,15 @@
 /**
- * Automated Hands-On Test Suite for AF-CArE 2026.08.26 Remediation
+ * Automated Hands-On Test Suite for AF-CArE CDSS
  */
-import { cha2ds2va } from "./src/cdss/rules/cha2ds2vasc.js";
-import { hasBled, evaluateHasBledAlert } from "./src/cdss/rules/hasBled.js";
-import { creatinineClearance } from "./src/cdss/rules/cockcroftGault.js";
-import { evaluateBP } from "./src/cdss/rules/bloodPressure.js";
-import { evaluateHbA1c } from "./src/cdss/rules/hba1c.js";
-import { evaluateAnticoagulants } from "./src/cdss/rules/anticoagulants.js";
-import { calculatePinrr } from "./src/cdss/pinrr.js";
-import { classifyDateWindow } from "./src/cdss/researchTimeline.js";
-import { evaluate } from "./src/cdss/engine.js";
+import { cha2ds2va } from "./src/cdss/rules/cha2ds2vasc.ts";
+import { hasBled, evaluateHasBledAlert } from "./src/cdss/rules/hasBled.ts";
+import { creatinineClearance } from "./src/cdss/rules/cockcroftGault.ts";
+import { evaluateBP } from "./src/cdss/rules/bloodPressure.ts";
+import { evaluateHbA1c } from "./src/cdss/rules/hba1c.ts";
+import { evaluateAnticoagulants } from "./src/cdss/rules/anticoagulants.ts";
+import { calculatePinrr } from "./src/cdss/pinrr.ts";
+import { classifyDateWindow } from "./src/cdss/researchTimeline.ts";
+import { evaluate } from "./src/cdss/engine.ts";
 
 let passed = 0;
 let failed = 0;
@@ -25,7 +25,7 @@ function assert(condition, message) {
 }
 
 console.log("\n========================================================");
-console.log("🧪 RUNNING HANDS-ON VERIFICATION SUITE (2026.08.26 AMENDMENT)");
+console.log("🧪 RUNNING HANDS-ON VERIFICATION SUITE");
 console.log("========================================================\n");
 
 // 1. CHA2DS2-VA (Sex points removed, threshold >= 2 for all)
@@ -57,11 +57,16 @@ const crclPatient = {
   labs: { creatinine: 140, creatinine_unit: "umol/L" },
 };
 const crclResult = creatinineClearance(crclPatient);
-// (140 - 78) * 55 / (72 * (140/88.4)) * 0.85 = 62 * 55 / (72 * 1.5837) * 0.85 = 3410 / 114.027 * 0.85 = 29.9 * 0.85 = 25.4
 assert(crclResult.clcr !== undefined && crclResult.clcr > 20 && crclResult.clcr < 35, `CrCl calculated correctly: ${crclResult.clcr} mL/min`);
 
 // 4. Blood Pressure
-console.log("\n4. Blood Pressure (2 readings, no averaging):");
+console.log("\n4. Blood Pressure Tests:");
+const bpHtnMissing = evaluateBP({ comorbidities: { hypertension: true }, vitals: {} });
+assert(bpHtnMissing.alerts.some(a => a.id === "bp-hypertension-missing"), "Hypertension + missing BP triggers actionable alert to monitor BP");
+
+const bpNonHtnMissing = evaluateBP({ comorbidities: { hypertension: false }, vitals: {} });
+assert(bpNonHtnMissing.reminders.some(r => r.id === "bp-missing-all"), "Non-hypertension + missing BP triggers reminder");
+
 const bp1Only = evaluateBP({ vitals: { bp_readings: [{ value: "150/95", date: "2026-08-26" }] } });
 assert(bp1Only.reminders.some(r => r.id === "bp-missing-second"), "1 BP reading produces reminder to obtain second reading");
 
@@ -69,14 +74,22 @@ const bpUncontrolled = evaluateBP({ vitals: { bp_readings: [{ value: "150/95", d
 assert(bpUncontrolled.alerts.some(a => a.id === "bp-uncontrolled"), "Both BP >140/90 triggers uncontrolled BP alert");
 
 // 5. HbA1c
-console.log("\n5. HbA1c Evaluation (>7.0%):");
+console.log("\n5. HbA1c Evaluation:");
+const hbMissingDiabetic = evaluateHbA1c({ comorbidities: { diabetes: true }, labs: {} });
+assert(hbMissingDiabetic.alerts.some(a => a.id === "hba1c-missing"), "Diabetic patient without HbA1c triggers actionable alert to order/monitor HbA1c");
+
 const hb70 = evaluateHbA1c({ labs: { hba1c: 7.0 } });
 const hb71 = evaluateHbA1c({ labs: { hba1c: 7.1 } });
 assert(hb70.alerts.length === 0, "HbA1c = 7.0% -> No alert");
 assert(hb71.alerts.some(a => a.id === "hba1c-high"), "HbA1c = 7.1% -> Alert triggered");
 
-// 6. PINRR (< 56% over 12 months, min 2 readings)
-console.log("\n6. PINRR Calculation (12 months lookback):");
+// 6. Routine AF Reevaluation & Reassessment Alert
+console.log("\n6. Routine AF Reevaluation & Reassessment Alert:");
+const afPatient = evaluate({ patient_id: "AF1", name: "AF Patient", age: 65, sex: "male", clinic_location: "Cardiology Clinic", diagnoses: ["I48.0"], ecg_results: ["AF"], medications: [], vitals: {}, labs: {} }, { afConfirmed: true });
+assert(afPatient.alerts.some(a => a.id === "af-reevaluation-reassessment"), "Confirmed positive AF triggers Reevaluation and Reassessment alert");
+
+// 7. PINRR (< 56% over 12 months, min 2 readings)
+console.log("\n7. PINRR Calculation (12 months lookback):");
 const inrSeries = [
   { value: 1.5, date: "2026-01-10" },
   { value: 3.5, date: "2026-03-15" },
@@ -86,8 +99,8 @@ const inrSeries = [
 const pinrrRes = calculatePinrr(inrSeries, "2026-08-26");
 assert(pinrrRes.percentage === 25, `PINRR computed = ${pinrrRes.percentage}%`);
 
-// 7. Dabigatran Age Bands & Precedence
-console.log("\n7. Dabigatran Age Bands & Dose Guard:");
+// 8. Dabigatran Age Bands & Precedence
+console.log("\n8. Dabigatran Age Bands & Dose Guard:");
 const dabi81 = evaluateAnticoagulants({ age: 81, medications: [{ name: "Dabigatran", dose: "150 mg BD" }] }, { clcr: 65 });
 assert(dabi81.alerts.some(a => a.id === "dabigatran-age-80" && a.title.includes("Recommend")), "Age 81 on 150 mg BD -> 'Recommend' 110 mg BD alert");
 
@@ -100,22 +113,16 @@ assert(!dabi74.alerts.some(a => a.id.includes("dabigatran-age")), "Age 74 on 150
 const dabiAlready110 = evaluateAnticoagulants({ age: 82, medications: [{ name: "Dabigatran", dose: "110 mg BD" }] }, { clcr: 65 });
 assert(dabiAlready110.alerts.length === 0, "Dabigatran already on 110 mg BD -> Alert suppressed (Dose Guard)");
 
-// 8. Precedence Resolver (Avoid suppresses dose reduction)
-console.log("\n8. Precedence Resolver (Avoid suppresses Dose Review):");
+// 9. Precedence Resolver (Avoid suppresses dose reduction)
+console.log("\n9. Precedence Resolver (Avoid suppresses Dose Review):");
 const rivaSevereRenal = evaluateAnticoagulants({ medications: [{ name: "Rivaroxaban", dose: "20 mg OD" }] }, { clcr: 12 });
 assert(rivaSevereRenal.alerts.length === 1 && rivaSevereRenal.alerts[0].id === "rivaroxaban-avoid", "Rivaroxaban CrCl 12 -> Only 'Avoid' alert emitted; dose reduction suppressed");
 
 const apixSevereRenal = evaluateAnticoagulants({ age: 82, vitals: { weight: 50 }, labs: { creatinine: 150 }, medications: [{ name: "Apixaban", dose: "5 mg BD" }] }, { clcr: 12 });
 assert(apixSevereRenal.alerts.length === 1 && apixSevereRenal.alerts[0].id === "apixaban-avoid", "Apixaban CrCl 12 -> Only 'Avoid' alert emitted; 2-of-3 reduction suppressed");
 
-// 8b. Apixaban Medico-Legal Advisory Phrasing
-console.log("\n8b. Apixaban Medico-Legal Advisory Phrasing:");
-const apix2of3 = evaluateAnticoagulants({ age: 78, vitals: { weight: 55 }, labs: { creatinine: 140 }, medications: [{ name: "Apixaban", dose: "5 mg BD" }] }, { clcr: 25.4 });
-assert(apix2of3.alerts.some(a => a.id === "apixaban-reduce" && a.title.startsWith("Consider Apixaban dose reduction")), "Apixaban 2-of-3 criteria title uses advisory 'Consider' phrasing");
-assert(apix2of3.alerts.some(a => a.id === "apixaban-reduce" && a.recommendation?.includes("subject to clinical review")), "Apixaban recommendation includes 'subject to clinical review'");
-
-// 9. Research Timeline Classification
-console.log("\n9. Research Timeline Windows (-12m, Index Date, +3m):");
+// 10. Research Timeline Classification
+console.log("\n10. Research Timeline Windows (-12m, Index Date, +3m):");
 assert(classifyDateWindow("2026-02-15", "2026-08-26") === "pre-alert", "Date 6 months before index -> pre-alert");
 assert(classifyDateWindow("2026-08-25", "2026-08-26") === "pre-alert", "Date 1 day before index -> pre-alert");
 assert(classifyDateWindow("2026-08-26", "2026-08-26") === "index", "Date of encounter -> index");

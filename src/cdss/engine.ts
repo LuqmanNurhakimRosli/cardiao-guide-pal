@@ -92,6 +92,29 @@ export function evaluate(
   }
   result.executed = true;
 
+  // Routine Reevaluation & Reassessment alert for all positive AF patients
+  result.alerts.push(
+    buildAlert({
+      id: "af-reevaluation-reassessment",
+      severity: "alert",
+      category: "stroke-risk",
+      group: "Stroke Prevention",
+      title: "Reevaluation and Reassessment",
+      detail:
+        "Please reassess the patient’s risk factors and comorbidities, stroke and bleeding risks, AF symptoms, rate/rhythm control, and current management at the next appointment.",
+      rationale: [
+        "Patient has confirmed Atrial Fibrillation.",
+        "Routine dynamic reassessment is required to detect evolving stroke/bleeding risks and optimize therapy.",
+      ],
+      guideline: "ESC 2020 / CPG AF Management Guidelines",
+      recommendation:
+        "Reassess risk factors, stroke/bleeding risks, AF rate/rhythm control, and update ongoing management plan.",
+      action: {
+        kind: "review",
+      },
+    }),
+  );
+
   // 4. CHA2DS2-VA Calculation (Threshold >= 2 for all)
   const chads = cha2ds2va(p);
   const calculatedAt = new Date().toISOString();

@@ -1,12 +1,18 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { useState } from "react";
 import { z } from "zod";
 import {
   listPatients,
   getPatientWithCdss,
   getPatientActions,
+  saveConsultationNotes,
 } from "@/cdss/server.functions";
 import { AppShell } from "@/components/cdss/AppShell";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import {
   CheckCircle2,
   Info,
@@ -18,6 +24,10 @@ import {
   User,
   ShieldCheck,
   RotateCcw,
+  FileEdit,
+  Save,
+  Pill,
+  Clock,
 } from "lucide-react";
 
 const searchSchema = z.object({ p: z.string().optional() });
@@ -40,6 +50,47 @@ export const Route = createFileRoute("/summary")({
 function SummaryPage() {
   const { patients, current, actions } = Route.useLoaderData();
   const { patient, cdss } = current;
+
+  const saveNotesFn = useServerFn(saveConsultationNotes);
+
+  const initialPlan = patient.clinician_plan ?? {};
+  const [doctorPlan, setDoctorPlan] = useState(
+    initialPlan.doctor_plan ?? "Patient assessed for AF management. CDSS alerts reviewed and acted upon.",
+  );
+  const [medPlan, setMedPlan] = useState(
+    initialPlan.medication_plan ??
+      patient.medications.map((m) => `${m.name} ${m.dose ?? ""}`).join(", "),
+  );
+  const [monitoringPlan, setMonitoringPlan] = useState(
+    initialPlan.monitoring_plan ?? "Monitor BP, renal profile (CrCl), and stroke/bleeding symptoms.",
+  );
+  const [nextAppointment, setNextAppointment] = useState(
+    initialPlan.next_appointment_date ?? "2026-11-26",
+  );
+  const [savingNotes, setSavingNotes] = useState(false);
+  const [savedFlash, setSavedFlash] = useState(false);
+
+  const handleSaveNotes = async () => {
+    setSavingNotes(true);
+    try {
+      await saveNotesFn({
+        data: {
+          patient_id: patient.patient_id,
+          doctor_plan: doctorPlan,
+          medication_plan: medPlan,
+          monitoring_plan: monitoringPlan,
+          next_appointment_date: nextAppointment,
+        },
+      });
+      setSavedFlash(true);
+      setTimeout(() => setSavedFlash(false), 3000);
+    } catch (err) {
+      console.error("Failed to save consultation notes:", err);
+    } finally {
+      setSavingNotes(false);
+    }
+  };
+
   const remainingAlerts = cdss.alerts.filter(
     (a: import("@/cdss/types").CdssAlert) =>
       !actions.some((act: import("@/cdss/types").AuditEntry) => act.alert_id === a.id),
@@ -73,6 +124,7 @@ function SummaryPage() {
             </div>
           </div>
 
+          {/* CDSS Actions Table */}
           {actions.length === 0 ? (
             <div className="rounded-xl border border-dashed border-border p-8 text-center text-xs text-muted-foreground">
               No actions have been executed for this patient yet in this session.
@@ -109,7 +161,7 @@ function SummaryPage() {
                               : "Overridden"}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-muted-foreground">
+                        <td className="px-4 py-3 text-muted-foreground space-y-1">
                           {a.med_change && (
                             <div className="font-bold text-primary font-mono text-xs">
                               Prescription Updated: {a.med_change.name} → {a.med_change.new_dose}
@@ -117,7 +169,7 @@ function SummaryPage() {
                           )}
                           {a.override_reason && (
                             <div className="font-semibold text-foreground">
-                              Reason: {a.override_reason}
+                              Override Reason: {a.override_reason}
                             </div>
                           )}
                           {a.defer_until && (
@@ -125,16 +177,36 @@ function SummaryPage() {
                               Deferred Follow-up Date: {a.defer_until}
                             </div>
                           )}
-                          {a.override_notes && (
-                            <div className="text-[11px] mt-0.5 text-foreground/80 leading-relaxed">
-                              Notes: {a.override_notes}
+                          {a.override_notes ? (
+                            <div className="text-[11px] text-foreground/90 leading-relaxed font-medium">
+                              {a.action === "accept" && !a.override_notes.startsWith("Notes:") ? (
+                                <span>{a.override_notes}</span>
+                              ) : (
+                                <span>Notes: {a.override_notes}</span>
+                              )}
+                            </div>
+                          ) : a.snapshot?.recommendation ? (
+                            <div className="text-[11px] text-foreground/90 leading-relaxed">
+                              <span className="font-semibold text-foreground">Recommendation:</span> {a.snapshot.recommendation}
+                            </div>
+                          ) : a.alert_id === "af-reevaluation-reassessment" ? (
+                            <div className="text-[11px] text-foreground/90 leading-relaxed">
+                              AF clinical reevaluation completed: risk factors, stroke/bleeding risks, and management plan reviewed.
+                            </div>
+                          ) : a.alert_id === "stroke-prevention" ? (
+                            <div className="text-[11px] text-foreground/90 leading-relaxed">
+                              Anticoagulation indicated for stroke prevention. Guideline therapy confirmed.
+                            </div>
+                          ) : (
+                            <div className="text-[11px] text-foreground/80 leading-relaxed">
+                              Clinician action documented during consultation.
                             </div>
                           )}
-                          {!a.med_change &&
-                            !a.override_reason &&
-                            !a.defer_until &&
-                            !a.override_notes &&
-                            "—"}
+                          {a.snapshot?.alert_evidence && a.snapshot.alert_evidence.length > 0 && (
+                            <div className="text-[10.5px] text-muted-foreground font-mono">
+                              Evidence: {a.snapshot.alert_evidence.slice(0, 2).join("; ")}
+                            </div>
+                          )}
                         </td>
                       </tr>
                     ))}
@@ -143,6 +215,92 @@ function SummaryPage() {
               </div>
             </div>
           )}
+        </div>
+
+        {/* Doctor's Consultation Notes & Discharge Plan */}
+        <div className="rounded-xl border border-border bg-card p-4 sm:p-5 shadow-2xs space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-border pb-3">
+            <div className="flex items-center gap-2">
+              <FileEdit className="size-4 text-primary" />
+              <h2 className="text-sm font-bold text-foreground">
+                Doctor's Clinical Notes & Consultation Plan (EMR Live)
+              </h2>
+            </div>
+            <div className="flex items-center gap-2">
+              {savedFlash && (
+                <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
+                  <CheckCircle2 className="size-3.5" /> Notes Saved!
+                </span>
+              )}
+              <Button
+                onClick={handleSaveNotes}
+                disabled={savingNotes}
+                size="sm"
+                className="text-xs h-8 bg-primary text-primary-foreground font-semibold shadow-xs"
+              >
+                <Save className="mr-1.5 size-3.5" />
+                {savingNotes ? "Saving..." : "Save Consultation Notes"}
+              </Button>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+            {/* Clinical Impression & Consultation Notes */}
+            <div className="space-y-1.5 md:col-span-2">
+              <Label htmlFor="doctor-plan" className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                <ClipboardList className="size-3.5 text-primary" /> Clinical Impression & Doctor's Consultation Notes
+              </Label>
+              <Textarea
+                id="doctor-plan"
+                value={doctorPlan}
+                onChange={(e) => setDoctorPlan(e.target.value)}
+                placeholder="Type doctor's consultation notes, patient symptoms, clinical reasoning..."
+                className="text-xs min-h-[85px] leading-relaxed bg-background"
+              />
+            </div>
+
+            {/* Medication & Prescription Plan */}
+            <div className="space-y-1.5">
+              <Label htmlFor="med-plan" className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                <Pill className="size-3.5 text-emerald-600" /> Medication & Prescription Plan
+              </Label>
+              <Textarea
+                id="med-plan"
+                value={medPlan}
+                onChange={(e) => setMedPlan(e.target.value)}
+                placeholder="Active prescriptions, dose adjustments, newly initiated drugs..."
+                className="text-xs min-h-[75px] leading-relaxed bg-background"
+              />
+            </div>
+
+            {/* Follow-up & Monitoring Plan */}
+            <div className="space-y-1.5">
+              <Label htmlFor="monitoring-plan" className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                <Clock className="size-3.5 text-amber-600" /> Monitoring & Lab Orders Plan
+              </Label>
+              <Textarea
+                id="monitoring-plan"
+                value={monitoringPlan}
+                onChange={(e) => setMonitoringPlan(e.target.value)}
+                placeholder="Repeat labs (CrCl, HbA1c, INR), BP home monitoring, follow-up instructions..."
+                className="text-xs min-h-[75px] leading-relaxed bg-background"
+              />
+            </div>
+
+            {/* Next Appointment Date */}
+            <div className="space-y-1.5">
+              <Label htmlFor="next-app" className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                <Calendar className="size-3.5 text-primary" /> Next Appointment Review Date
+              </Label>
+              <Input
+                id="next-app"
+                type="date"
+                value={nextAppointment}
+                onChange={(e) => setNextAppointment(e.target.value)}
+                className="text-xs bg-background"
+              />
+            </div>
+          </div>
         </div>
 
         {/* Loop back to continuous monitoring */}

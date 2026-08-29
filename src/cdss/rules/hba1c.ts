@@ -49,22 +49,22 @@ export function evaluateHbA1c(p: Patient): {
   const isDiabetic = isDiabeticPatient(p);
 
   if (hba1cVal == null) {
-    // Only remind to order HbA1c if the patient is diabetic or has metabolic indication
+    // Alert Dr to monitor HbA1c if the patient is diabetic or has metabolic indication
     if (isDiabetic) {
-      reminders.push(
+      alerts.push(
         buildAlert({
           id: "hba1c-missing",
-          severity: "reminder",
-          category: "data",
-          group: "Missing Data",
-          title: "Missing HbA1c in Diabetic AF Patient",
-          detail: "Patient has diagnosed Diabetes Mellitus but no recent HbA1c is recorded. Regular monitoring (every 3–6 months) is recommended per CPG T2DM.",
+          severity: "alert",
+          category: "glycaemic",
+          group: "HbA1c",
+          title: "Diabetes documented with missing HbA1c — order/monitor HbA1c",
+          detail: "Patient has diagnosed Diabetes Mellitus but no recent HbA1c is recorded. Regular monitoring (every 3–6 months) is recommended per CPG T2DM to evaluate glycaemic control in AF.",
           rationale: [
             "Patient has a documented history or pharmacotherapy for Diabetes Mellitus.",
             "No dated HbA1c result on record.",
           ],
           guideline: "MOH Malaysia CPG Management of Type 2 Diabetes Mellitus",
-          recommendation: "Order Glycated Haemoglobin (HbA1c) to evaluate glycaemic control.",
+          recommendation: "Order Glycated Haemoglobin (HbA1c) test to monitor glycaemic control.",
           action: {
             kind: "monitoring",
             prompt_order: "Order Glycated Haemoglobin (HbA1c)",

@@ -8,12 +8,54 @@ export function parseBP(s?: string): { sys: number; dia: number } | null {
   return { sys: Number(m[1]), dia: Number(m[2]) };
 }
 
+export function isHypertensivePatient(p: Patient): boolean {
+  if (p.comorbidities?.hypertension === true) return true;
+
+  const hasHtnDx = (p.diagnoses || []).some(
+    (d) =>
+      d.startsWith("I10") ||
+      d.startsWith("I11") ||
+      d.startsWith("I12") ||
+      d.startsWith("I13") ||
+      d.startsWith("I15"),
+  );
+  if (hasHtnDx) return true;
+
+  const antiHtnDrugs = [
+    "amlodipine",
+    "perindopril",
+    "losartan",
+    "valsartan",
+    "telmisartan",
+    "candesartan",
+    "enalapril",
+    "ramipril",
+    "lisinopril",
+    "bisoprolol",
+    "carvedilol",
+    "metoprolol",
+    "nebivolol",
+    "atenolol",
+    "indapamide",
+    "hydrochlorothiazide",
+    "spironolactone",
+    "felodipine",
+    "nifedipine",
+    "diltiazem",
+    "verapamil",
+  ];
+  return (p.medications || []).some((m) =>
+    antiHtnDrugs.some((drug) => m.name.toLowerCase().includes(drug)),
+  );
+}
+
 export function evaluateBP(p: Patient): {
   alerts: CdssAlert[];
   reminders: CdssAlert[];
 } {
   const alerts: CdssAlert[] = [];
   const reminders: CdssAlert[] = [];
+  const isHypertensive = isHypertensivePatient(p);
 
   // Extract dated readings or fallback to bp_latest / bp_second
   const readings = p.vitals?.bp_readings && p.vitals.bp_readings.length > 0
@@ -24,21 +66,44 @@ export function evaluateBP(p: Patient): {
       ].filter(Boolean) as import("../types").DatedValue<string>[];
 
   if (readings.length === 0) {
-    reminders.push(
-      buildAlert({
-        id: "bp-missing-all",
-        severity: "reminder",
-        category: "data",
-        group: "Missing Data",
-        title: "No blood pressure reading recorded",
-        detail: "Blood pressure is required to assess control and bleeding risk.",
-        rationale: ["No dated BP readings found."],
-        action: {
-          kind: "monitoring",
-          prompt_order: "Measure Blood Pressure (2 readings required)",
-        },
-      }),
-    );
+    if (isHypertensive) {
+      alerts.push(
+        buildAlert({
+          id: "bp-hypertension-missing",
+          severity: "alert",
+          category: "bp",
+          group: "BP",
+          title: "Hypertension documented with missing blood pressure — monitor BP",
+          detail: "Patient has diagnosed Hypertension, but no blood pressure reading is recorded for this encounter. Active blood pressure monitoring is required to assess control and stroke/bleeding risk.",
+          rationale: [
+            "Patient has a documented history or pharmacotherapy for Hypertension.",
+            "No dated BP readings found for this encounter.",
+          ],
+          guideline: "MOH Malaysia CPG Hypertension 5th Ed.",
+          recommendation: "Measure blood pressure (obtain 2 seated readings) and monitor BP control.",
+          action: {
+            kind: "monitoring",
+            prompt_order: "Measure Blood Pressure (2 readings required)",
+          },
+        }),
+      );
+    } else {
+      reminders.push(
+        buildAlert({
+          id: "bp-missing-all",
+          severity: "reminder",
+          category: "data",
+          group: "Missing Data",
+          title: "No blood pressure reading recorded",
+          detail: "Blood pressure is required to assess control and bleeding risk.",
+          rationale: ["No dated BP readings found."],
+          action: {
+            kind: "monitoring",
+            prompt_order: "Measure Blood Pressure (2 readings required)",
+          },
+        }),
+      );
+    }
     return { alerts, reminders };
   }
 

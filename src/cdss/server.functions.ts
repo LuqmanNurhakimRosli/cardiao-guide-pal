@@ -9,6 +9,7 @@ import type { Patient, AuditEntry, ClinicianAction } from "@/cdss/types";
 const auditLog: AuditEntry[] = [];
 const actionsByPatient: Record<string, Record<string, AuditEntry>> = {};
 const medOrders: Record<string, Record<string, string>> = {};
+const consultationNotesByPatient: Record<string, NonNullable<Patient["clinician_plan"]>> = {};
 
 async function loadPatient(id: string): Promise<Patient | undefined> {
   const { getEmrAdapter } = await import("@/lib/emr/index.server");
@@ -39,11 +40,16 @@ export const listPatientsWithAlerts = createServerFn({ method: "GET" }).handler(
     const patients = await loadAllPatients();
     return patients.map((p) => {
       const orders = medOrders[p.patient_id] ?? {};
+      const notes = consultationNotesByPatient[p.patient_id];
       const patched: Patient = {
         ...p,
         medications: p.medications.map((m) =>
           orders[m.name] ? { ...m, dose: orders[m.name] } : m,
         ),
+        clinician_plan: {
+          ...p.clinician_plan,
+          ...notes,
+        },
       };
       const cdss = evaluate(patched, { afConfirmed: true });
       let af_status = "No AF";
@@ -97,11 +103,16 @@ export const getPatientWithCdss = createServerFn({ method: "POST" })
     const patient = await loadPatient(data.patient_id);
     if (!patient) throw new Error("Patient not found");
     const orders = medOrders[patient.patient_id] ?? {};
+    const notes = consultationNotesByPatient[patient.patient_id];
     const patched: Patient = {
       ...patient,
       medications: patient.medications.map((m) =>
         orders[m.name] ? { ...m, dose: orders[m.name] } : m,
       ),
+      clinician_plan: {
+        ...patient.clinician_plan,
+        ...notes,
+      },
     };
     const cdss = evaluate(patched, { afConfirmed: true });
     return { patient: patched, cdss };
@@ -164,6 +175,44 @@ export const logAction = createServerFn({ method: "POST" })
     }
 
     return { ok: true, entry };
+  });
+
+export const saveConsultationNotes = createServerFn({ method: "POST" })
+  .inputValidator(
+    (d: {
+      patient_id: string;
+      doctor_plan?: string;
+      medication_plan?: string;
+      monitoring_plan?: string;
+      next_appointment_date?: string;
+    }) => d,
+  )
+  .handler(async ({ data }) => {
+    const patient = await loadPatient(data.patient_id);
+    const now = new Date().toISOString();
+    consultationNotesByPatient[data.patient_id] = {
+      doctor_plan: data.doctor_plan,
+      medication_plan: data.medication_plan,
+      monitoring_plan: data.monitoring_plan,
+      next_appointment_date: data.next_appointment_date,
+    };
+
+    const entry: AuditEntry = {
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      patient_id: data.patient_id,
+      mrn: patient?.mrn,
+      alert_id: "plan:consultation_notes",
+      alert_title: "Clinician updated consultation & discharge notes",
+      action: "accept",
+      override_notes: `Plan: ${data.doctor_plan ?? "—"} | Meds: ${data.medication_plan ?? "—"} | Next Review: ${data.next_appointment_date ?? "—"}`,
+      engine_version: CDSS_ENGINE_VERSION,
+      rule_version: CDSS_RULE_VERSION,
+      clinician_id: patient?.encounter?.clinician_id ?? "DR-CAR-01",
+      visit_id: patient?.encounter?.visit_id ?? "VIS-2026-001",
+      timestamp: now,
+    };
+    auditLog.unshift(entry);
+    return { ok: true, plan: consultationNotesByPatient[data.patient_id] };
   });
 
 export const getAuditLog = createServerFn({ method: "GET" }).handler(

@@ -58,6 +58,13 @@ function AlertsReview() {
   const actionableAlerts = cdss.alerts;
   const missingDataReminders = cdss.reminders;
   const [picks, setPicks] = useState<Record<string, ClinicianAction | "">>({});
+  const [picksMeta, setPicksMeta] = useState<Record<string, string>>({});
+  const [checklist, setChecklist] = useState<Record<string, boolean>>({
+    comorbidities: false,
+    strokeBleeding: false,
+    symptomsRate: false,
+    managementPlan: false,
+  });
 
   const setPick = (id: string, a: ClinicianAction) =>
     setPicks((s) => ({ ...s, [id]: a }));
@@ -114,6 +121,7 @@ function AlertsReview() {
   const clcrScore = cdss.scores.clcr ? `${cdss.scores.clcr} mL/min` : "—";
   const pinrrScore = cdss.scores.pinrr != null ? `${cdss.scores.pinrr}%` : "—";
   const selectedCount = Object.values(picks).filter(Boolean).length;
+  const isProcessDisabled = actionableAlerts.length > 0 && selectedCount === 0;
 
   return (
     <AppShell selectedId={patient.patient_id} selectedName={patient.name}>
@@ -227,6 +235,7 @@ function AlertsReview() {
             <ul className="space-y-3">
               {actionableAlerts.map((al) => {
                 const pick = picks[al.id];
+                const isReevaluationAlert = al.id === "af-reevaluation-reassessment";
 
                 return (
                   <li
@@ -249,6 +258,61 @@ function AlertsReview() {
                         <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
                           {al.detail}
                         </p>
+
+                        {/* Quick Checklist for Reevaluation Alert */}
+                        {isReevaluationAlert && (
+                          <div className="mt-3 rounded-lg border border-border/80 bg-muted/30 p-3 text-xs space-y-2">
+                            <span className="text-[11px] font-bold uppercase tracking-wider text-foreground">
+                              Quick Checklist
+                            </span>
+                            <div className="space-y-1.5 pt-1">
+                              <label className="flex items-center gap-2 cursor-pointer text-xs text-foreground hover:text-primary transition">
+                                <input
+                                  type="checkbox"
+                                  checked={Boolean(checklist.comorbidities)}
+                                  onChange={(e) =>
+                                    setChecklist((s) => ({ ...s, comorbidities: e.target.checked }))
+                                  }
+                                  className="size-4 rounded border-border text-primary focus:ring-primary"
+                                />
+                                <span>Risk factors and comorbidities reviewed</span>
+                              </label>
+                              <label className="flex items-center gap-2 cursor-pointer text-xs text-foreground hover:text-primary transition">
+                                <input
+                                  type="checkbox"
+                                  checked={Boolean(checklist.strokeBleeding)}
+                                  onChange={(e) =>
+                                    setChecklist((s) => ({ ...s, strokeBleeding: e.target.checked }))
+                                  }
+                                  className="size-4 rounded border-border text-primary focus:ring-primary"
+                                />
+                                <span>Stroke/bleeding risk and anticoagulation reviewed</span>
+                              </label>
+                              <label className="flex items-center gap-2 cursor-pointer text-xs text-foreground hover:text-primary transition">
+                                <input
+                                  type="checkbox"
+                                  checked={Boolean(checklist.symptomsRate)}
+                                  onChange={(e) =>
+                                    setChecklist((s) => ({ ...s, symptomsRate: e.target.checked }))
+                                  }
+                                  className="size-4 rounded border-border text-primary focus:ring-primary"
+                                />
+                                <span>AF symptoms and rate/rhythm control reviewed</span>
+                              </label>
+                              <label className="flex items-center gap-2 cursor-pointer text-xs text-foreground hover:text-primary transition">
+                                <input
+                                  type="checkbox"
+                                  checked={Boolean(checklist.managementPlan)}
+                                  onChange={(e) =>
+                                    setChecklist((s) => ({ ...s, managementPlan: e.target.checked }))
+                                  }
+                                  className="size-4 rounded border-border text-primary focus:ring-primary"
+                                />
+                                <span>Management plan and next review date updated</span>
+                              </label>
+                            </div>
+                          </div>
+                        )}
 
                         {al.recommendation && (
                           <div className="mt-2 rounded-lg bg-primary/5 p-2.5 text-xs font-semibold text-foreground border border-primary/10">
@@ -278,69 +342,142 @@ function AlertsReview() {
                       </div>
                     </div>
 
-                    {/* 3-State Action Selection Radio Cards */}
+                    {/* Decision Action Selection */}
                     <div className="border-t border-border/60 pt-3">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                        <span className="text-xs font-bold text-foreground">Select Decision Action:</span>
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 w-full sm:w-auto">
-                          {/* Accept */}
-                          <label
-                            className={`flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold cursor-pointer border transition ${
-                              pick === "accept"
-                                ? "border-emerald-600 bg-emerald-600 text-white shadow-xs"
-                                : "border-border bg-background hover:bg-muted text-foreground"
-                            }`}
-                          >
-                            <input
-                              type="radio"
-                              name={al.id}
-                              checked={pick === "accept"}
-                              onChange={() => setPick(al.id, "accept")}
-                              className="sr-only"
-                            />
-                            <CheckCircle2 className="size-3.5" />
-                            <span>Accept / Act Now</span>
-                          </label>
+                      {isReevaluationAlert ? (
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                          <span className="text-xs font-bold text-foreground">Pilihan Tindakan:</span>
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 w-full sm:w-auto">
+                            {/* No Change Required */}
+                            <label
+                              className={`flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold cursor-pointer border transition ${
+                                pick === "accept" && (!picksMeta[al.id] || picksMeta[al.id] === "no_change")
+                                  ? "border-emerald-600 bg-emerald-600 text-white shadow-xs"
+                                  : "border-border bg-background hover:bg-muted text-foreground"
+                              }`}
+                            >
+                              <input
+                                type="radio"
+                                name={al.id}
+                                checked={pick === "accept" && (!picksMeta[al.id] || picksMeta[al.id] === "no_change")}
+                                onChange={() => {
+                                  setPick(al.id, "accept");
+                                  setPicksMeta((s) => ({ ...s, [al.id]: "no_change" }));
+                                }}
+                                className="sr-only"
+                              />
+                              <CheckCircle2 className="size-3.5" />
+                              <span>No Change Required</span>
+                            </label>
 
-                          {/* Override */}
-                          <label
-                            className={`flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold cursor-pointer border transition ${
-                              pick === "override"
-                                ? "border-rose-600 bg-rose-600 text-white shadow-xs"
-                                : "border-border bg-background hover:bg-muted text-foreground"
-                            }`}
-                          >
-                            <input
-                              type="radio"
-                              name={al.id}
-                              checked={pick === "override"}
-                              onChange={() => setPick(al.id, "override")}
-                              className="sr-only"
-                            />
-                            <AlertTriangle className="size-3.5" />
-                            <span>Override Alert</span>
-                          </label>
+                            {/* Update Management */}
+                            <label
+                              className={`flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold cursor-pointer border transition ${
+                                pick === "accept" && picksMeta[al.id] === "update_management"
+                                  ? "border-primary bg-primary text-primary-foreground shadow-xs"
+                                  : "border-border bg-background hover:bg-muted text-foreground"
+                              }`}
+                            >
+                              <input
+                                type="radio"
+                                name={al.id}
+                                checked={pick === "accept" && picksMeta[al.id] === "update_management"}
+                                onChange={() => {
+                                  setPick(al.id, "accept");
+                                  setPicksMeta((s) => ({ ...s, [al.id]: "update_management" }));
+                                }}
+                                className="sr-only"
+                              />
+                              <Activity className="size-3.5" />
+                              <span>Update Management</span>
+                            </label>
 
-                          {/* Defer */}
-                          <label
-                            className={`flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold cursor-pointer border transition ${
-                              pick === "defer"
-                                ? "border-amber-600 bg-amber-600 text-white shadow-xs"
-                                : "border-border bg-background hover:bg-muted text-foreground"
-                            }`}
-                          >
-                            <input
-                              type="radio"
-                              name={al.id}
-                              checked={pick === "defer"}
-                              onChange={() => setPick(al.id, "defer")}
-                              className="sr-only"
-                            />
-                            <Clock className="size-3.5" />
-                            <span>Defer / Review Later</span>
-                          </label>
+                            {/* Remind at Next Visit */}
+                            <label
+                              className={`flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold cursor-pointer border transition ${
+                                pick === "defer"
+                                  ? "border-amber-600 bg-amber-600 text-white shadow-xs"
+                                  : "border-border bg-background hover:bg-muted text-foreground"
+                              }`}
+                            >
+                              <input
+                                type="radio"
+                                name={al.id}
+                                checked={pick === "defer"}
+                                onChange={() => {
+                                  setPick(al.id, "defer");
+                                  setPicksMeta((s) => ({ ...s, [al.id]: "remind_next" }));
+                                }}
+                                className="sr-only"
+                              />
+                              <Clock className="size-3.5" />
+                              <span>Remind at Next Visit</span>
+                            </label>
+                          </div>
                         </div>
-                      </div>
+                      ) : (
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                          <span className="text-xs font-bold text-foreground">Select Decision Action:</span>
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 w-full sm:w-auto">
+                            {/* Accept */}
+                            <label
+                              className={`flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold cursor-pointer border transition ${
+                                pick === "accept"
+                                  ? "border-emerald-600 bg-emerald-600 text-white shadow-xs"
+                                  : "border-border bg-background hover:bg-muted text-foreground"
+                              }`}
+                            >
+                              <input
+                                type="radio"
+                                name={al.id}
+                                checked={pick === "accept"}
+                                onChange={() => setPick(al.id, "accept")}
+                                className="sr-only"
+                              />
+                              <CheckCircle2 className="size-3.5" />
+                              <span>Accept / Act Now</span>
+                            </label>
+
+                            {/* Override */}
+                            <label
+                              className={`flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold cursor-pointer border transition ${
+                                pick === "override"
+                                  ? "border-rose-600 bg-rose-600 text-white shadow-xs"
+                                  : "border-border bg-background hover:bg-muted text-foreground"
+                              }`}
+                            >
+                              <input
+                                type="radio"
+                                name={al.id}
+                                checked={pick === "override"}
+                                onChange={() => setPick(al.id, "override")}
+                                className="sr-only"
+                              />
+                              <AlertTriangle className="size-3.5" />
+                              <span>Override Alert</span>
+                            </label>
+
+                            {/* Defer */}
+                            <label
+                              className={`flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold cursor-pointer border transition ${
+                                pick === "defer"
+                                  ? "border-amber-600 bg-amber-600 text-white shadow-xs"
+                                  : "border-border bg-background hover:bg-muted text-foreground"
+                              }`}
+                            >
+                              <input
+                                type="radio"
+                                name={al.id}
+                                checked={pick === "defer"}
+                                onChange={() => setPick(al.id, "defer")}
+                                className="sr-only"
+                              />
+                              <Clock className="size-3.5" />
+                              <span>Defer / Review Later</span>
+                            </label>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </li>
                 );
@@ -378,19 +515,34 @@ function AlertsReview() {
         )}
 
         {/* Bottom Actions Execution Bar */}
-        <div className="sticky bottom-3 z-20 flex items-center justify-between rounded-xl border border-border bg-card/95 p-3.5 shadow-lg backdrop-blur-md">
+        <div className="sticky bottom-3 z-20 flex flex-col sm:flex-row items-center justify-between gap-3 rounded-xl border border-border bg-card/95 p-3.5 shadow-lg backdrop-blur-md">
           <Link to="/" search={{ p: patient.patient_id }}>
             <Button variant="outline" size="sm" className="text-xs h-8">
               <ArrowLeft className="mr-1.5 size-3.5" /> Back to Dashboard
             </Button>
           </Link>
-          <Button
-            onClick={handleSave}
-            size="sm"
-            className="text-xs h-8 bg-primary text-primary-foreground font-semibold shadow-xs"
-          >
-            Process Chosen Decisions ({selectedCount}) <ArrowRight className="ml-1.5 size-3.5" />
-          </Button>
+          <div className="flex items-center gap-3">
+            {isProcessDisabled && (
+              <span className="text-xs text-amber-600 dark:text-amber-400 font-medium">
+                Select an action for at least 1 alert to proceed
+              </span>
+            )}
+            <Button
+              onClick={handleSave}
+              disabled={isProcessDisabled}
+              size="sm"
+              className={`text-xs h-8 font-semibold shadow-xs transition ${
+                isProcessDisabled
+                  ? "opacity-50 cursor-not-allowed"
+                  : "bg-primary text-primary-foreground"
+              }`}
+            >
+              {actionableAlerts.length === 0
+                ? "Proceed to Summary"
+                : `Process Chosen Decisions (${selectedCount})`}
+              <ArrowRight className="ml-1.5 size-3.5" />
+            </Button>
+          </div>
         </div>
       </div>
     </AppShell>
