@@ -22,6 +22,7 @@ import {
   LayoutGrid,
   List,
   User,
+  FileSpreadsheet,
 } from "lucide-react";
 import { Input } from "@/shared/components/ui/input";
 
@@ -159,6 +160,66 @@ export function PatientsPage({ patients }: PatientsPageProps) {
     valvular: cohortPatients.filter((p: PatientRow) => p.is_valvular).length,
   };
 
+  const handleExportExcel = () => {
+    const headers = [
+      "Patient ID",
+      "Name",
+      "MRN",
+      "Age",
+      "Sex",
+      "Clinic Location",
+      "Cohort",
+      "Visit Date",
+      "Current Anticoagulant",
+      "CHA2DS2-VA Score",
+      "Stroke Risk Tier",
+      "HAS-BLED Score",
+      "Bleeding Risk Tier",
+      "Active Clinical Alerts Count",
+      "Valvular AF",
+      "Dose Alert Active",
+    ];
+
+    const rows = filtered.map((p: PatientRow) => {
+      const escape = (val: any) => `"${String(val ?? "").replace(/"/g, '""')}"`;
+      const strokeTier = (p.cha2ds2va_score ?? 0) >= 2 ? "High Risk (≥2)" : "Low Risk (<2)";
+      const bleedTier = (p.has_bled_score ?? 0) >= 3 ? "High Risk (≥3)" : "Standard Risk (<3)";
+
+      return [
+        escape(p.patient_id),
+        escape(p.name),
+        escape(p.mrn ?? "—"),
+        escape(p.age),
+        escape(p.sex),
+        escape(p.clinic_location),
+        escape(p.cohort ?? (p.patient_id.startsWith("REAL-") ? "hospital" : "benchmark")),
+        escape(p.visit_date ?? "—"),
+        escape(p.active_drug ?? "None"),
+        escape(p.cha2ds2va_score ?? 0),
+        escape(strokeTier),
+        escape(p.has_bled_score ?? 0),
+        escape(bleedTier),
+        escape(p.alerts_count ?? 0),
+        escape(p.is_valvular ? "Yes" : "No"),
+        escape(p.has_dose_alert ? "Yes" : "No"),
+      ].join(",");
+    });
+
+    const csvContent = "\uFEFF" + [headers.join(","), ...rows].join("\r\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute(
+      "download",
+      `AF_Care_Companion_Cohort_${cohortFilter}_${new Date().toISOString().slice(0, 10)}.csv`,
+    );
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <AppShell>
       <div className="mx-auto max-w-7xl px-3 sm:px-5 py-4 space-y-4">
@@ -191,8 +252,16 @@ export function PatientsPage({ patients }: PatientsPageProps) {
 
           <div className="flex items-center gap-2">
             <button
+              onClick={handleExportExcel}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-600/30 bg-emerald-600/10 text-emerald-700 dark:text-emerald-300 px-3 py-1.5 text-xs font-semibold shadow-2xs hover:bg-emerald-600/20 transition cursor-pointer"
+              title="Export filtered cohort to Excel CSV"
+            >
+              <FileSpreadsheet className="size-3.5 text-emerald-600" />
+              Export Excel ({filtered.length})
+            </button>
+            <button
               onClick={handleResetToBenchmark}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-3 py-1.5 text-xs font-medium text-muted-foreground shadow-2xs hover:bg-muted hover:text-foreground transition"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-3 py-1.5 text-xs font-medium text-muted-foreground shadow-2xs hover:bg-muted hover:text-foreground transition cursor-pointer"
               title="Reset view back to benchmark test cases"
             >
               <RotateCcw className="size-3.5" />

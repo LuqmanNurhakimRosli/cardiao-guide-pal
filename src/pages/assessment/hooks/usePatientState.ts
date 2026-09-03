@@ -129,6 +129,7 @@ export interface PatientStateApi {
   draft: ClinicianInputs;
   dirty: boolean;
   setField: <K extends keyof ClinicianInputs>(k: K, v: ClinicianInputs[K]) => void;
+  commitField: <K extends keyof ClinicianInputs>(k: K, v: ClinicianInputs[K]) => Promise<CdssResult>;
   reset: () => void;
   saveAndRecalculate: () => ClinicianInputs;
   mergedPatient: Patient;
@@ -173,6 +174,33 @@ export function usePatientState(patient: Patient): PatientStateApi {
   const setField = useCallback(<K extends keyof ClinicianInputs>(k: K, v: ClinicianInputs[K]) => {
     setDraft((d) => ({ ...d, [k]: v }));
   }, []);
+
+  const commitField = useCallback(
+    async <K extends keyof ClinicianInputs>(k: K, v: ClinicianInputs[K]): Promise<CdssResult> => {
+      const next: ClinicianInputs = {
+        ...draft,
+        [k]: v,
+        _lastSavedAt: new Date().toISOString(),
+      };
+      save(patient.patient_id, next);
+      setInputs(next);
+      setDraft(next);
+      setLoading(true);
+      try {
+        const r = await runCDSS({ patient_id: patient.patient_id }, next);
+        const result = toResult(r, localFallback);
+        setCdss(result);
+        setDraftCdss(result);
+        setSource(r.source);
+        setError(r.error);
+        saveResponse(patient.patient_id, r);
+        return result;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [draft, patient.patient_id, localFallback],
+  );
 
   const reset = useCallback(() => setDraft(inputs), [inputs]);
 
@@ -237,6 +265,7 @@ export function usePatientState(patient: Patient): PatientStateApi {
     draft,
     dirty,
     setField,
+    commitField,
     reset,
     saveAndRecalculate,
     mergedPatient,

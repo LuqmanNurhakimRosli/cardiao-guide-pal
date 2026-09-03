@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
 import { logFieldChange, logScoreCalculation } from "@/shared/cdss/server.functions";
@@ -33,6 +33,8 @@ import {
   Stethoscope,
   ShieldAlert,
   ArrowRightLeft,
+  Check,
+  ClipboardList,
 } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import type { Patient, CdssEvaluationResult } from "@/shared/cdss/types";
@@ -65,6 +67,7 @@ interface AssessmentPageProps {
 
 export function AssessmentPage({ current }: AssessmentPageProps) {
   const { patient } = current;
+  const navigate = useNavigate();
 
   const state = usePatientState(patient);
   const {
@@ -72,6 +75,7 @@ export function AssessmentPage({ current }: AssessmentPageProps) {
     inputs,
     dirty,
     setField,
+    commitField,
     reset,
     saveAndRecalculate,
     draftCdss,
@@ -198,13 +202,29 @@ export function AssessmentPage({ current }: AssessmentPageProps) {
               </div>
             </div>
 
-            <div className="flex items-center gap-2 self-end sm:self-auto">
-              <Link
-                to="/patients"
-                className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-3 py-1.5 text-xs font-medium text-muted-foreground shadow-2xs hover:bg-muted hover:text-foreground transition"
-              >
-                <ArrowRightLeft className="size-3.5" /> Change Patient
-              </Link>
+            {/* Quick Clinical Status Summary */}
+            <div className="flex flex-wrap items-center gap-2 self-start md:self-center">
+              <div className="flex items-center gap-1.5 rounded-lg border border-border bg-background/80 px-2.5 py-1.5 text-xs shadow-2xs">
+                <Pill className="size-3.5 text-primary" />
+                <span className="text-muted-foreground font-medium">Active Rx:</span>
+                <span className="font-bold text-foreground font-mono">
+                  {patient.current_anticoagulant ?? "None"}
+                </span>
+              </div>
+              <div className="flex items-center gap-1.5 rounded-lg border border-border bg-background/80 px-2.5 py-1.5 text-xs shadow-2xs">
+                <ShieldAlert className="size-3.5 text-red-500" />
+                <span className="text-muted-foreground font-medium">CHA₂DS₂-VA:</span>
+                <span className="font-bold text-foreground font-mono">
+                  {livecdss.scores.cha2ds2va?.total ?? livecdss.scores.cha2ds2vasc?.total ?? 0}
+                </span>
+              </div>
+              <div className="flex items-center gap-1.5 rounded-lg border border-border bg-background/80 px-2.5 py-1.5 text-xs shadow-2xs">
+                <Heart className="size-3.5 text-amber-500" />
+                <span className="text-muted-foreground font-medium">HAS-BLED:</span>
+                <span className="font-bold text-foreground font-mono">
+                  {livecdss.scores.hasbled?.total ?? 0}
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -217,37 +237,47 @@ export function AssessmentPage({ current }: AssessmentPageProps) {
               icon={<Stethoscope className="size-4 text-primary" />}
               title="Comorbidities (EMR)"
             >
-              <div className="divide-y divide-border/60">
+              <div className="space-y-1.5">
                 {Object.entries(patient.comorbidities).map(([k, v]) => (
-                  <Row
+                  <div
                     key={k}
-                    k={k}
-                    v={
-                      <span
-                        className={`font-semibold ${v ? "text-foreground" : "text-muted-foreground/60"}`}
-                      >
-                        {v === undefined ? "—" : v ? "Yes" : "No"}
-                      </span>
-                    }
-                  />
+                    className="flex items-center justify-between rounded-lg border border-border/50 bg-background/50 px-2.5 py-1.5 text-xs transition hover:bg-muted/30"
+                  >
+                    <span className="capitalize font-medium text-foreground/80">
+                      {k.replace(/([A-Z])/g, " $1")}
+                    </span>
+                    <span
+                      className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                        v
+                          ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20"
+                          : "bg-muted text-muted-foreground border border-border/60"
+                      }`}
+                    >
+                      {v ? "✓ Yes" : "No"}
+                    </span>
+                  </div>
                 ))}
               </div>
             </Section>
 
             <Section icon={<FileText className="size-4 text-purple-600" />} title="Diagnoses & ECG">
-              <ul className="space-y-1.5">
-                {patient.diagnoses.map((d: string) => (
-                  <li
-                    key={d}
-                    className="rounded-lg bg-muted/60 px-2.5 py-1 font-mono text-[11px] text-foreground"
-                  >
-                    {d}
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-2.5 rounded-lg border border-border/80 bg-background/50 p-2 text-[11px] text-muted-foreground">
-                <span className="font-semibold text-foreground">ECG Rhythm:</span>{" "}
-                {patient.ecg_results.join(", ") || "Atrial Fibrillation"}
+              <div className="space-y-2">
+                <div className="flex flex-wrap gap-1.5">
+                  {patient.diagnoses.map((d: string) => (
+                    <span
+                      key={d}
+                      className="rounded-md bg-purple-500/10 border border-purple-500/20 px-2.5 py-1 font-mono text-[11px] font-semibold text-purple-700 dark:text-purple-300"
+                    >
+                      {d}
+                    </span>
+                  ))}
+                </div>
+                <div className="rounded-lg border border-border bg-muted/40 p-2.5 text-xs text-muted-foreground">
+                  <p className="font-semibold text-foreground text-[11px] mb-0.5">Recorded Rhythm:</p>
+                  <p className="font-mono text-xs text-foreground/90 font-medium">
+                    {patient.ecg_results.join(", ") || "Atrial Fibrillation"}
+                  </p>
+                </div>
               </div>
             </Section>
 
@@ -293,8 +323,12 @@ export function AssessmentPage({ current }: AssessmentPageProps) {
                 (draft.afConfirmed ?? null) === null
               }
               evidence={livecdss.afEvidence}
-              onConfirm={() => setField("afConfirmed", true)}
-              onReject={() => setField("afConfirmed", false)}
+              onConfirm={async () => {
+                await commitField("afConfirmed", true);
+              }}
+              onReject={async () => {
+                await commitField("afConfirmed", false);
+              }}
             />
 
             <Cha2ds2VaConfirmationModal
@@ -307,13 +341,17 @@ export function AssessmentPage({ current }: AssessmentPageProps) {
               patient={patient}
               draft={draft}
               score={livecdss.scores.cha2ds2va?.total ?? livecdss.scores.cha2ds2vasc?.total ?? 0}
-              onConfirm={() => {
-                setField("chaConfirmed", true);
+              setField={setField}
+              onConfirm={async () => {
+                await commitField("chaConfirmed", true);
                 setManualScoreModal(null);
               }}
-              onEdit={() => {
-                setField("chaConfirmed", true);
-                setManualScoreModal(null);
+              onResetToEmr={() => {
+                setField("chf", undefined);
+                setField("hypertension", undefined);
+                setField("diabetes", undefined);
+                setField("stroke", undefined);
+                setField("vascular", undefined);
               }}
             />
 
@@ -328,13 +366,24 @@ export function AssessmentPage({ current }: AssessmentPageProps) {
               patient={patient}
               draft={draft}
               score={livecdss.scores.hasbled?.total ?? 0}
-              onConfirm={() => {
-                setField("hasBledConfirmed", true);
+              setField={setField}
+              onConfirm={async () => {
+                const res = await commitField("hasBledConfirmed", true);
                 setManualScoreModal(null);
+                if (res && res.alerts && res.alerts.length > 0) {
+                  navigate({ to: "/alerts", search: { p: patient.patient_id } });
+                }
               }}
-              onEdit={() => {
-                setField("hasBledConfirmed", true);
-                setManualScoreModal(null);
+              onResetToEmr={() => {
+                setField("hb_hypertension", undefined);
+                setField("hb_abnormalRenal", undefined);
+                setField("abnormalLiver", undefined);
+                setField("hb_stroke", undefined);
+                setField("bleedingHistory", undefined);
+                setField("hb_labileINR", undefined);
+                setField("hb_elderly", undefined);
+                setField("hb_drugs", undefined);
+                setField("alcohol", undefined);
               }}
             />
 
@@ -343,12 +392,24 @@ export function AssessmentPage({ current }: AssessmentPageProps) {
               icon={<Activity className="size-4 text-blue-600" />}
               title="Vitals & Encounters"
             >
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-                <Stat label="BP Latest" value={patient.vitals.bp_latest ?? "—"} />
-                <Stat label="BP Prior" value={patient.vitals.bp_second ?? "—"} />
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <Stat
+                  label="BP Latest"
+                  value={patient.vitals.bp_latest ?? "—"}
+                  subLabel={patient.vitals.bp_second ? `Prior: ${patient.vitals.bp_second}` : "Latest recorded BP"}
+                  flag={patient.vitals.bp_latest ? Number(patient.vitals.bp_latest.split("/")[0]) >= 140 : false}
+                />
+                <Stat
+                  label="BP Prior"
+                  value={patient.vitals.bp_second ?? "—"}
+                  subLabel="Confirmation Reading"
+                  flag={patient.vitals.bp_second ? Number(patient.vitals.bp_second.split("/")[0]) >= 140 : false}
+                />
                 <Stat
                   label="Weight"
                   value={patient.vitals.weight ? `${patient.vitals.weight} kg` : "—"}
+                  subLabel="Used in DOAC & CrCl dosing"
+                  flag={patient.vitals.weight ? patient.vitals.weight <= 60 : false}
                 />
               </div>
             </Section>
@@ -358,22 +419,24 @@ export function AssessmentPage({ current }: AssessmentPageProps) {
               icon={<FlaskConical className="size-4 text-purple-600" />}
               title="Laboratory Metrics & Clearance"
             >
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 <Stat
                   label="Creatinine"
                   value={
                     patient.labs.creatinine
-                      ? `${patient.labs.creatinine} ${patient.labs.creatinine_unit ?? "umol/L"}`
+                      ? `${patient.labs.creatinine} ${patient.labs.creatinine_unit ?? "µmol/L"}`
                       : "—"
                   }
                   subLabel={
                     patient.labs.creatinine_record?.date
                       ? `Sample: ${patient.labs.creatinine_record.date}`
-                      : undefined
+                      : "Biochemistry"
                   }
+                  badge="Renal"
+                  flag={(patient.labs.creatinine ?? 0) >= 133}
                 />
                 <Stat
-                  label="eGFR (Lab Report)"
+                  label="eGFR"
                   value={
                     patient.labs.egfr
                       ? `${patient.labs.egfr} mL/min`
@@ -381,24 +444,16 @@ export function AssessmentPage({ current }: AssessmentPageProps) {
                         ? `${patient.labs.egfr_record.value} mL/min`
                         : "—"
                   }
-                  subLabel={
-                    patient.labs.egfr_record?.date
-                      ? `Date: ${patient.labs.egfr_record.date}`
-                      : "Direct from Lab"
-                  }
-                  badge="EMR Lab Direct"
+                  subLabel="Standardized 1.73m²"
+                  badge="EMR Direct"
                   flag={(patient.labs.egfr ?? patient.labs.egfr_record?.value ?? 100) < 60}
-                  title="Estimated GFR direct from laboratory biochemistry report (standardized to 1.73m²)"
+                  title="Estimated GFR direct from laboratory biochemistry report"
                 />
                 <Stat
-                  label="CrCl (Cockcroft)"
-                  value={livecdss.scores.clcr ? `${livecdss.scores.clcr} mL/min` : "insufficient"}
-                  subLabel={
-                    patient.age_at_encounter && patient.vitals.weight && patient.labs.creatinine
-                      ? `${patient.sex === "female" ? "1.04" : "1.23"} × (140-${patient.age_at_encounter}) × ${patient.vitals.weight}kg / ${patient.labs.creatinine}`
-                      : "Weight-adjusted"
-                  }
-                  badge="DOAC Dosing"
+                  label="CrCl (CG)"
+                  value={livecdss.scores.clcr ? `${livecdss.scores.clcr} mL/min` : "No Data"}
+                  subLabel="Cockcroft-Gault (DOAC)"
+                  badge="DOAC"
                   flag={(livecdss.scores.clcr ?? 100) < 50}
                   title="Calculated via Cockcroft-Gault: (140 - Age) × Weight (kg) × [1.23 male / 1.04 female] / Serum Creatinine (µmol/L)"
                 />
@@ -407,17 +462,29 @@ export function AssessmentPage({ current }: AssessmentPageProps) {
                   value={patient.labs.hba1c ? `${patient.labs.hba1c}%` : "—"}
                   subLabel={
                     patient.labs.hba1c_record?.date
-                      ? `Date: ${patient.labs.hba1c_record.date}`
+                      ? `Tested: ${patient.labs.hba1c_record.date}`
                       : patient.comorbidities.diabetes
-                        ? "Diabetic"
+                        ? "Diabetic (Target ≤7.0%)"
                         : "Non-diabetic"
                   }
+                  badge="Glycaemic"
                   flag={(patient.labs.hba1c ?? 0) > 7.0}
                 />
                 <Stat
-                  label="Warfarin PINRR"
-                  value={livecdss.scores.pinrr != null ? `${livecdss.scores.pinrr}%` : "—"}
-                  subLabel="TTR Quality"
+                  label="INR / PINRR"
+                  value={
+                    patient.labs.inr_latest
+                      ? `Latest: ${patient.labs.inr_latest}`
+                      : livecdss.scores.pinrr != null
+                        ? `${livecdss.scores.pinrr}% TTR`
+                        : "—"
+                  }
+                  subLabel={
+                    livecdss.scores.pinrr != null
+                      ? `PINRR: ${livecdss.scores.pinrr}% in range`
+                      : "Target INR 2.0–3.0"
+                  }
+                  badge="Warfarin"
                   flag={(livecdss.scores.pinrr ?? 100) < 56}
                 />
               </div>
@@ -470,49 +537,49 @@ export function AssessmentPage({ current }: AssessmentPageProps) {
               </>
             )}
 
-            {/* Sticky Floating Save & Recalculate Bar */}
-            <div className="sticky bottom-3 z-20 rounded-xl border border-border bg-card/95 p-3.5 shadow-lg backdrop-blur-md">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2">
-                    {dirty ? (
-                      <span className="flex size-2.5 rounded-full bg-amber-500 animate-pulse" />
-                    ) : (
-                      <span className="flex size-2.5 rounded-full bg-emerald-500" />
-                    )}
-                    <p className="text-xs font-bold text-foreground">
-                      {dirty
-                        ? "Unsaved Clinician Input Changes"
-                        : saveFlash
-                          ? "✓ Saved & CDSS Recalculated!"
-                          : "All Clinician Inputs Synchronized"}
+            {/* Sticky Floating Save & Recalculate Bar (Only shown when manual edits exist on the page) */}
+            {(dirty || saveFlash) && (
+              <div className="sticky bottom-3 z-20 rounded-xl border border-border bg-card/95 p-3.5 shadow-lg backdrop-blur-md animate-in fade-in slide-in-from-bottom-2">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      {dirty ? (
+                        <span className="flex size-2.5 rounded-full bg-amber-500 animate-pulse" />
+                      ) : (
+                        <span className="flex size-2.5 rounded-full bg-emerald-500" />
+                      )}
+                      <p className="text-xs font-bold text-foreground">
+                        {dirty
+                          ? "Unsaved Clinician Input Changes"
+                          : "✓ Saved & CDSS Recalculated!"}
+                      </p>
+                    </div>
+                    <p className="text-[11px] text-muted-foreground mt-0.5">
+                      Recalculates guideline rules and writes snapshot to the audit log.
                     </p>
                   </div>
-                  <p className="text-[11px] text-muted-foreground mt-0.5">
-                    Recalculates guideline rules and writes snapshot to the audit log.
-                  </p>
-                </div>
-                <div className="flex shrink-0 items-center gap-2 w-full sm:w-auto justify-end">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={reset}
-                    disabled={!dirty}
-                    className="text-xs h-8"
-                  >
-                    <RotateCcw className="mr-1.5 size-3" /> Reset
-                  </Button>
-                  <Button
-                    size="sm"
-                    onClick={handleSave}
-                    disabled={!dirty}
-                    className="text-xs h-8 bg-primary text-primary-foreground font-semibold shadow-xs"
-                  >
-                    <Save className="mr-1.5 size-3" /> Save & Recalculate
-                  </Button>
+                  <div className="flex shrink-0 items-center gap-2 w-full sm:w-auto justify-end">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={reset}
+                      disabled={!dirty}
+                      className="text-xs h-8"
+                    >
+                      <RotateCcw className="mr-1.5 size-3" /> Reset
+                    </Button>
+                    <Button
+                      size="sm"
+                      onClick={handleSave}
+                      disabled={!dirty}
+                      className="text-xs h-8 bg-primary text-primary-foreground font-semibold shadow-xs"
+                    >
+                      <Save className="mr-1.5 size-3" /> Save & Recalculate
+                    </Button>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </section>
 
           {/* RIGHT: Combined Clinical Alert Panel */}
@@ -579,10 +646,23 @@ export function AssessmentPage({ current }: AssessmentPageProps) {
                 )}
 
                 {livecdss.alerts.length === 0 && livecdss.reminders.length === 0 && (
-                  <div className="rounded-lg border border-dashed border-border p-6 text-center text-xs text-muted-foreground">
-                    <CheckCircle2 className="mx-auto mb-2 size-6 text-emerald-500" />
-                    <p className="font-semibold text-foreground">No Active Alerts</p>
-                    <p className="text-[11px] mt-0.5">Current therapy meets guidelines.</p>
+                  <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-5 text-center text-xs">
+                    <div className="mx-auto mb-3 flex size-11 items-center justify-center rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 shadow-xs">
+                      <CheckCircle2 className="size-5" />
+                    </div>
+                    <p className="text-sm font-bold text-foreground">All Protocols Verified</p>
+                    <p className="text-xs text-muted-foreground mt-1 max-w-[240px] mx-auto leading-relaxed">
+                      Patient medication, stroke risk, and clinical monitoring align fully with guidelines.
+                    </p>
+                    <div className="mt-4 pt-3 border-t border-emerald-500/20">
+                      <Link
+                        to="/summary"
+                        search={{ p: patient.patient_id }}
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-300 hover:underline"
+                      >
+                        <ClipboardList className="size-3.5" /> View Consultation Summary
+                      </Link>
+                    </div>
                   </div>
                 )}
 
@@ -653,25 +733,25 @@ function Stat({
   return (
     <div
       title={title}
-      className={`rounded-xl border p-2.5 shadow-2xs transition hover:border-primary/40 flex flex-col justify-between ${
+      className={`rounded-xl border p-3 shadow-2xs transition hover:border-primary/40 flex flex-col justify-between min-h-[105px] overflow-hidden ${
         flag
           ? "border-amber-500/40 bg-amber-500/5 ring-1 ring-amber-500/20"
-          : "border-border bg-background/60"
+          : "border-border bg-card hover:bg-muted/10"
       }`}
     >
-      <div>
-        <div className="flex items-center justify-between gap-1">
-          <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground truncate">
+      <div className="space-y-1">
+        <div className="flex items-center justify-between gap-1 flex-wrap">
+          <span className="text-[10.5px] font-bold uppercase tracking-wider text-muted-foreground leading-tight">
             {label}
           </span>
           {badge && (
-            <span className="rounded bg-primary/10 px-1 py-0.2 text-[8px] font-bold text-primary shrink-0">
+            <span className="inline-flex items-center rounded bg-primary/10 px-1.5 py-0.5 text-[8.5px] font-bold text-primary shrink-0 border border-primary/20">
               {badge}
             </span>
           )}
         </div>
         <div
-          className={`mt-1 text-sm font-bold font-mono ${
+          className={`text-sm sm:text-base font-bold font-mono tracking-tight leading-snug pt-0.5 ${
             flag ? "text-amber-700 dark:text-amber-300" : "text-foreground"
           }`}
         >
@@ -680,7 +760,7 @@ function Stat({
       </div>
       {subLabel && (
         <div
-          className="mt-1 text-[9.5px] text-muted-foreground truncate font-mono"
+          className="mt-1.5 text-[10px] text-muted-foreground font-mono truncate"
           title={subLabel}
         >
           {subLabel}

@@ -1,9 +1,9 @@
-import { evaluate } from '../src/cdss/engine.ts';
+import { evaluate } from '../src/shared/cdss/engine.ts';
 import fs from 'fs';
 import path from 'path';
 
-const benchmarkPath = path.resolve('./src/data/benchmark_patients.json');
-const hospitalPath = path.resolve('./src/data/hospital_patients_2024.json');
+const benchmarkPath = path.resolve('./src/shared/data/benchmark_patients.json');
+const hospitalPath = path.resolve('./src/shared/data/hospital_patients_2024.json');
 
 const benchmark = JSON.parse(fs.readFileSync(benchmarkPath, 'utf8'));
 const hospital = JSON.parse(fs.readFileSync(hospitalPath, 'utf8'));
